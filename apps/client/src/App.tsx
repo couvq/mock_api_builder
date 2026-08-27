@@ -1,3 +1,4 @@
+import AddEndpoint from "./components/add_endpoint"
 
 
 function App() {
@@ -5,7 +6,7 @@ function App() {
 
   return (
     <>
-      Hello world
+      <AddEndpoint />
     </>
   )
 }
