@@ -1,0 +1,2 @@
+# Mock API Builder
+A React application that enables creating mock apis with fake data based on a provided schema. Useful for creating mock apis for frontend applications before a real backend has been built.
