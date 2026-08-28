@@ -1,1 +1,0 @@
-{"version":3,"file":"config.js","sourceRoot":"","sources":["../../../src/dto/endpoint/config.ts"],"names":[],"mappings":";;;AAAA,6BAAwB;AACxB,mDAA+C;AAElC,QAAA,cAAc,GAAG,OAAC,CAAC,MAAM,CAAC;IACnC,EAAE,EAAE,OAAC,CAAC,MAAM,EAAE;IACd,MAAM,EAAE,OAAC,CAAC,IAAI,CAAC,CAAC,KAAK,CAAC,CAAC;IACvB,IAAI,EAAE,OAAC,CAAC,MAAM,EAAE;IAChB,cAAc,EAAE,wBAAU;CAC7B,CAAC,CAAC"}
