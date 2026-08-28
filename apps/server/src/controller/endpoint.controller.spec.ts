@@ -1,9 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller.js';
-import { AppService } from '../service/app.service.js';
-import { EndpointController } from './endpoint.controller.js';
-import { EndpointService } from '../service/endpoint.service.js';
 import { EndpointRepository } from '../repository/endpoint.repository.js';
+import { EndpointService } from '../service/endpoint.service.js';
+import { EndpointController } from './endpoint.controller.js';
 
 describe('EndpointController', () => {
   let endpointController: EndpointController;
