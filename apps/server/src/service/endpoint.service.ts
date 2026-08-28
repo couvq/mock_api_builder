@@ -11,6 +11,10 @@ export class EndpointService {
     return this.endpointRepository.getAllEndpoints();
   }
 
+  getEndpointById(id: string): EndpointConfig | undefined {
+    return this.endpointRepository.getEndpointById(id);
+  }
+
   addEndpoint(createEndpointRequest: CreateEndpointRequest) {
     const requestWithId = { ...createEndpointRequest, id: crypto.randomUUID() };
     this.endpointRepository.addEndpoint(requestWithId);

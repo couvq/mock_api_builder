@@ -13,6 +13,10 @@ export class EndpointRepository {
     return Array.from(this.endpoints.values());
   }
 
+  getEndpointById(id: string): EndpointConfig | undefined {
+    return this.endpoints.get(id);
+  }
+
   addEndpoint(endpoint: EndpointConfig) {
     const { id } = endpoint;
     this.endpoints.set(id, endpoint)
