@@ -17,9 +17,20 @@ export class EndpointRepository {
     return this.endpoints.get(id);
   }
 
-  addEndpoint(endpoint: EndpointConfig) {
+  addEndpoint(endpoint: EndpointConfig): EndpointConfig {
     const { id } = endpoint;
     this.endpoints.set(id, endpoint);
+    return this.endpoints.get(id) as EndpointConfig;
+  }
+
+  updateEndpoint(endpoint: EndpointConfig): EndpointConfig {
+    const { id } = endpoint;
+    this.endpoints.set(id, endpoint);
+    return this.endpoints.get(id) as EndpointConfig;
+  }
+
+  hasEndpointWithId(id: string): boolean {
+    return this.endpoints.has(id);
   }
 
   /**

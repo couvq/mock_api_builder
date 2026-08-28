@@ -2,13 +2,20 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { EndpointRepository } from '../repository/endpoint.repository.js';
-import type { EndpointConfig } from '@mock-api-builder/schema/dist/dto/endpoint/config.js';
+import type {
+  CreateEndpointResponse,
+  EndpointConfig,
+  UpdateEndpointResponse,
+} from '@mock-api-builder/schema';
 import {
   CreateEndpointRequestSchema,
+  UpdateEndpointRequest,
+  UpdateEndpointRequestSchema,
   type CreateEndpointRequest,
-} from '@mock-api-builder/schema/dist/dto/endpoint/index.js';
+} from '@mock-api-builder/schema';
 
 @Injectable()
 export class EndpointService {
@@ -23,27 +30,36 @@ export class EndpointService {
     return this.endpointRepository.getEndpointById(id);
   }
 
-  addEndpoint(createEndpointRequest: CreateEndpointRequest) {
-    const parsedRequest = CreateEndpointRequestSchema.safeParse(
+  addEndpoint(
+    createEndpointRequest: CreateEndpointRequest,
+  ): CreateEndpointResponse {
+    const { success, data, error } = CreateEndpointRequestSchema.safeParse(
       createEndpointRequest,
     );
 
-    const { success, data, error } = parsedRequest;
+    if (!success) throw new BadRequestException(error.message);
 
-    if (!success)
-      throw new BadRequestException(error.message);
-
-    if (
-      this.endpointRepository.hasEndpoint(
-        data.method,
-        data.path,
-      )
-    )
+    if (this.endpointRepository.hasEndpoint(data.method, data.path))
       throw new ConflictException(
         'Endpoint with method and path already exist.',
       );
 
     const requestWithId = { ...data, id: crypto.randomUUID() };
-    this.endpointRepository.addEndpoint(requestWithId);
+    return this.endpointRepository.addEndpoint(requestWithId);
+  }
+
+  updateEndpoint(
+    updateEndpointRequest: UpdateEndpointRequest,
+  ): UpdateEndpointResponse {
+    const { success, data, error } = UpdateEndpointRequestSchema.safeParse(
+      updateEndpointRequest,
+    );
+
+    if (!success) throw new BadRequestException(error.message);
+
+    if (!this.endpointRepository.hasEndpointWithId(data.id))
+      throw new NotFoundException('Could not find endpoint with provided id.');
+
+    return this.endpointRepository.updateEndpoint(data);
   }
 }

@@ -1,10 +1,17 @@
-import type { CreateEndpointRequest, EndpointConfig } from '@mock-api-builder/schema';
+import type {
+  CreateEndpointRequest,
+  CreateEndpointResponse,
+  EndpointConfig,
+  UpdateEndpointRequest,
+  UpdateEndpointResponse,
+} from '@mock-api-builder/schema';
 import {
   Body,
   Controller,
   Get,
   Param,
-  Post
+  Post,
+  Put
 } from '@nestjs/common';
 import { RESOURCES } from '../constants.js';
 import { EndpointService } from '../service/endpoint.service.js';
@@ -24,7 +31,16 @@ export class EndpointController {
   }
 
   @Post()
-  addEndpoint(@Body() createEndpointRequest: CreateEndpointRequest) {
-    this.endpointService.addEndpoint(createEndpointRequest);
+  addEndpoint(
+    @Body() createEndpointRequest: CreateEndpointRequest,
+  ): CreateEndpointResponse {
+    return this.endpointService.addEndpoint(createEndpointRequest);
+  }
+
+  @Put()
+  updateEndpoint(
+    @Body() updateEndpointRequest: UpdateEndpointRequest,
+  ): UpdateEndpointResponse {
+    return this.endpointService.updateEndpoint(updateEndpointRequest);
   }
 }
