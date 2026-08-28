@@ -21,4 +21,13 @@ export class EndpointRepository {
     const { id } = endpoint;
     this.endpoints.set(id, endpoint);
   }
+
+  /**
+   * Determines whether an endpoint with the specified method and path are currently stored.
+   */
+  hasEndpoint(method: string, path: string): boolean {
+    return Array.from(this.endpoints.values()).some(
+      (endpoint) => endpoint.method === method && endpoint.path === path,
+    );
+  }
 }

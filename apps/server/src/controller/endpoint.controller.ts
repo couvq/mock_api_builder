@@ -1,8 +1,13 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { EndpointService } from '../service/endpoint.service.js';
+import type { CreateEndpointRequest, EndpointConfig } from '@mock-api-builder/schema';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post
+} from '@nestjs/common';
 import { RESOURCES } from '../constants.js';
-import type { EndpointConfig } from '@mock-api-builder/schema';
-import type { CreateEndpointRequest } from '@mock-api-builder/schema';
+import { EndpointService } from '../service/endpoint.service.js';
 
 @Controller(RESOURCES.ENDPOINT)
 export class EndpointController {
