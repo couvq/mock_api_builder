@@ -126,4 +126,30 @@ describe('EndpointController', () => {
       expect(updatedEndpoint.path).toBe('updated_path');
     });
   });
+
+  it('should throw bad request exception if no id is passed to delete by id handler', () => {
+    // @ts-ignore
+    expect(() => endpointController.deleteEndpointById(undefined)).toThrow(
+      BadRequestException,
+    );
+  });
+
+  it('should throw not found exception if no matching id found in storage for delete by id handler', () => {
+    expect(() =>
+      endpointController.deleteEndpointById('id_that_doesnt_exist'),
+    ).toThrow(NotFoundException);
+  });
+
+  it('should delete endpoint by id', () => {
+    expect(endpointController.getAllEndpoints()).toHaveLength(0);
+    const { id } = endpointController.addEndpoint({
+      method: 'GET',
+      path: 'test',
+      responseSchema: {},
+    });
+    expect(endpointController.getAllEndpoints()).toHaveLength(1);
+
+    endpointController.deleteEndpointById(id);
+    expect(endpointController.getAllEndpoints()).toHaveLength(0);
+  });
 });

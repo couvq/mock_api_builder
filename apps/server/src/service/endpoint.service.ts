@@ -62,4 +62,13 @@ export class EndpointService {
 
     return this.endpointRepository.updateEndpoint(data);
   }
+
+  deleteEndpointById(id: string) {
+    if (!id) throw new BadRequestException('No id provided in request.');
+
+    if (!this.endpointRepository.hasEndpointWithId(id))
+      throw new NotFoundException('Could not find endpoint with provided id.');
+
+    this.endpointRepository.deleteEndpointById(id);
+  }
 }

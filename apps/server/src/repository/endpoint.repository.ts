@@ -29,6 +29,10 @@ export class EndpointRepository {
     return this.endpoints.get(id) as EndpointConfig;
   }
 
+  deleteEndpointById(id: string) {
+    this.endpoints.delete(id);
+  }
+
   hasEndpointWithId(id: string): boolean {
     return this.endpoints.has(id);
   }

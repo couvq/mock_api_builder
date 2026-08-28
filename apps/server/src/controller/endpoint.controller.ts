@@ -8,10 +8,11 @@ import type {
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
-  Put
+  Put,
 } from '@nestjs/common';
 import { RESOURCES } from '../constants.js';
 import { EndpointService } from '../service/endpoint.service.js';
@@ -42,5 +43,10 @@ export class EndpointController {
     @Body() updateEndpointRequest: UpdateEndpointRequest,
   ): UpdateEndpointResponse {
     return this.endpointService.updateEndpoint(updateEndpointRequest);
+  }
+
+  @Delete()
+  deleteEndpointById(@Param('id') id: string) {
+    return this.endpointService.deleteEndpointById(id);
   }
 }
