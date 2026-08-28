@@ -1,4 +1,4 @@
-import { FakerType } from "./schema";
+import type { FakerType } from "./mock_schema";
 import { faker } from "@faker-js/faker";
 
 export const fakerGenerators: Record<FakerType, () => string> = {

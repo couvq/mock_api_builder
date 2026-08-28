@@ -1,19 +1,24 @@
+import type { EndpointConfig } from '@mock-api-builder/schema/dist/config.js';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class EndpointRepository {
-  private endpoints: any[] = [];
+  private endpoints: Map<string, EndpointConfig>;
 
   constructor() {
-    // Initialize with some sample endpoints
-    this.endpoints = [
-      { id: 1, name: 'Endpoint 1', url: '/api/endpoint1' },
-      { id: 2, name: 'Endpoint 2', url: '/api/endpoint2' },
-      { id: 3, name: 'Endpoint 3', url: '/api/endpoint3' },
-    ];
+    this.endpoints = new Map<string, EndpointConfig>([
+      [
+        'GET:users',
+        {
+          method: 'GET',
+          path: 'endpoint',
+          responseSchema: {},
+        },
+      ],
+    ]);
   }
 
-  getAllEndpoints(): any[] {
-    return this.endpoints;
+  getAllEndpoints(): EndpointConfig[] {
+    return Array.from(this.endpoints.values());
   }
 }
