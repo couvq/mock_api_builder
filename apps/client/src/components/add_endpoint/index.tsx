@@ -1,3 +1,4 @@
+import { JsonEditor } from "json-edit-react"
 
 const AddEndpoint = () => {
     return (
@@ -5,7 +6,7 @@ const AddEndpoint = () => {
             <form>
                 <input type="text" placeholder="Resource name" />
                 <input type="text" placeholder="REST Method" />
-                <textarea placeholder={JSON.stringify({ firstName: 'faker.person.firstName', lastName: 'faker.person.lastName', email: 'faker.internet.email' })}></textarea>
+                <JsonEditor data={{ firstName: 'faker.person.firstName', lastName: 'faker.person.lastName', email: 'faker.internet.email' }} />
                 <button type="submit">Add Endpoint</button>
             </form>
             <ul>
