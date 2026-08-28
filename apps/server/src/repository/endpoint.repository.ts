@@ -19,6 +19,6 @@ export class EndpointRepository {
 
   addEndpoint(endpoint: EndpointConfig) {
     const { id } = endpoint;
-    this.endpoints.set(id, endpoint)
+    this.endpoints.set(id, endpoint);
   }
 }

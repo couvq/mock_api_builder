@@ -5,7 +5,7 @@ import type { CreateEndpointRequest } from '@mock-api-builder/schema/dist/dto/en
 
 @Injectable()
 export class EndpointService {
-  constructor(private readonly endpointRepository: EndpointRepository) { }
+  constructor(private readonly endpointRepository: EndpointRepository) {}
 
   getAllEndpoints(): EndpointConfig[] {
     return this.endpointRepository.getAllEndpoints();
