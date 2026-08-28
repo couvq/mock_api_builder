@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EndpointRepository } from '../repository/endpoint.repository.js';
-import type { EndpointConfig } from '@mock-api-builder/schema/dist/config.js';
+import type { EndpointConfig } from '@mock-api-builder/schema/dist/dto/endpoint/config.js';
+import type { CreateEndpointRequest } from '@mock-api-builder/schema/dist/dto/endpoint/index.js';
 
 @Injectable()
 export class EndpointService {
@@ -10,7 +11,8 @@ export class EndpointService {
     return this.endpointRepository.getAllEndpoints();
   }
 
-  addEndpoint(endpoint: EndpointConfig) {
-    this.endpointRepository.addEndpoint(endpoint)
+  addEndpoint(createEndpointRequest: CreateEndpointRequest) {
+    const requestWithId = { ...createEndpointRequest, id: crypto.randomUUID() };
+    this.endpointRepository.addEndpoint(requestWithId);
   }
 }

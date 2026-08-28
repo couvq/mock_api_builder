@@ -1,4 +1,4 @@
-export * from './config';
+export * from './dto/endpoint/config';
 export * from './generators';
 export * from './mock_schema';
 export * from './transpiler';

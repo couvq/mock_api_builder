@@ -1,5 +1,6 @@
 import { z } from 'zod';
 export declare const EndpointConfig: z.ZodObject<{
+    id: z.ZodString;
     method: z.ZodEnum<{
         GET: "GET";
     }>;

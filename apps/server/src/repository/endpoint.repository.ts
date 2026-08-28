@@ -1,4 +1,4 @@
-import type { EndpointConfig } from '@mock-api-builder/schema/dist/config.js';
+import type { EndpointConfig } from '@mock-api-builder/schema/dist/dto/endpoint/config.js';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class EndpointRepository {
   }
 
   addEndpoint(endpoint: EndpointConfig) {
-    const key = `${endpoint.method}:${endpoint.path}`
-    this.endpoints.set(key, endpoint)
+    const { id } = endpoint;
+    this.endpoints.set(id, endpoint)
   }
 }

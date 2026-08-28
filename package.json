@@ -1,0 +1,8 @@
+{
+  "name": "mock-api-builder",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf node_modules dist apps/*/node_modules apps/*/dist packages/*/node_modules packages/*/dist",
+    "build": "pnpm install && pnpm --filter \"./packages/*\" run build"
+  }
+}
