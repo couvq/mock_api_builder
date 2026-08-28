@@ -6,19 +6,15 @@ export class EndpointRepository {
   private endpoints: Map<string, EndpointConfig>;
 
   constructor() {
-    this.endpoints = new Map<string, EndpointConfig>([
-      [
-        'GET:users',
-        {
-          method: 'GET',
-          path: 'endpoint',
-          responseSchema: {},
-        },
-      ],
-    ]);
+    this.endpoints = new Map<string, EndpointConfig>();
   }
 
   getAllEndpoints(): EndpointConfig[] {
     return Array.from(this.endpoints.values());
+  }
+
+  addEndpoint(endpoint: EndpointConfig) {
+    const key = `${endpoint.method}:${endpoint.path}`
+    this.endpoints.set(key, endpoint)
   }
 }
