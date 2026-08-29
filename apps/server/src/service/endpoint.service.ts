@@ -27,6 +27,10 @@ export class EndpointService {
 
   getEndpointById(id: string): EndpointConfig | undefined {
     if (!id) throw new BadRequestException('No id provided in request.');
+
+    if (!this.endpointRepository.hasEndpointWithId(id))
+      throw new NotFoundException('Endpoint with id does not exist.');
+
     return this.endpointRepository.getEndpointById(id);
   }
 

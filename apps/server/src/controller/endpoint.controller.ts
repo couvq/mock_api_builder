@@ -45,7 +45,7 @@ export class EndpointController {
     return this.endpointService.updateEndpoint(updateEndpointRequest);
   }
 
-  @Delete()
+  @Delete(':id')
   deleteEndpointById(@Param('id') id: string) {
     return this.endpointService.deleteEndpointById(id);
   }
