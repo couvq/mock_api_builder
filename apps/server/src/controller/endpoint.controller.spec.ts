@@ -51,6 +51,12 @@ describe('EndpointController', () => {
       );
     });
 
+    it('should throw not found exception if id passed to get by id not found in storage', () => {
+      expect(() =>
+        endpointController.getEndpointById('id_that_does_not_exist'),
+      ).toThrow(NotFoundException);
+    });
+
     it('should throw bad request exception if trying to create endpoint with invalid schema', () => {
       const invalidSchema = {
         responseSchema: {},
