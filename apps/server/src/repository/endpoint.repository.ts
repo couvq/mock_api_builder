@@ -1,48 +1,68 @@
-import type { EndpointConfig } from '@mock-api-builder/schema/dist/dto/endpoint/config.js';
+import type { EndpointConfig } from '@mock-api-builder/schema';
 import { Injectable } from '@nestjs/common';
+import { db, endpointTable } from '../clients/endpointDbClient.js';
+import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class EndpointRepository {
-  private endpoints: Map<string, EndpointConfig>;
 
-  constructor() {
-    this.endpoints = new Map<string, EndpointConfig>();
+  async getAllEndpoints(): Promise<EndpointConfig[]> {
+    return await db.select().from(endpointTable);
   }
 
-  getAllEndpoints(): EndpointConfig[] {
-    return Array.from(this.endpoints.values());
+  async getEndpointById(id: string): Promise<EndpointConfig | undefined> {
+    const res = await db
+      .select()
+      .from(endpointTable)
+      .where(eq(endpointTable.id, id));
+    return res.at(0);
   }
 
-  getEndpointById(id: string): EndpointConfig | undefined {
-    return this.endpoints.get(id);
+  async addEndpoint(
+    endpoint: EndpointConfig,
+  ): Promise<EndpointConfig | undefined> {
+    await db.insert(endpointTable).values(endpoint);
+    const createdEndpoint = await db
+      .select()
+      .from(endpointTable)
+      .where(eq(endpointTable.id, endpoint.id));
+    return createdEndpoint.at(0);
   }
 
-  addEndpoint(endpoint: EndpointConfig): EndpointConfig {
-    const { id } = endpoint;
-    this.endpoints.set(id, endpoint);
-    return this.endpoints.get(id) as EndpointConfig;
+  async updateEndpoint(
+    endpoint: EndpointConfig,
+  ): Promise<EndpointConfig | undefined> {
+    await db.update(endpointTable).set(endpoint);
+    const updatedEndpoint = await db
+      .select()
+      .from(endpointTable)
+      .where(eq(endpointTable.id, endpoint.id));
+    return updatedEndpoint.at(0);
   }
 
-  updateEndpoint(endpoint: EndpointConfig): EndpointConfig {
-    const { id } = endpoint;
-    this.endpoints.set(id, endpoint);
-    return this.endpoints.get(id) as EndpointConfig;
+  async deleteEndpointById(id: string) {
+    await db.delete(endpointTable).where(eq(endpointTable.id, id));
   }
 
-  deleteEndpointById(id: string) {
-    this.endpoints.delete(id);
-  }
+  async hasEndpointWithId(id: string): Promise<boolean> {
+    const res = await db
+      .select()
+      .from(endpointTable)
+      .where(eq(endpointTable.id, id));
 
-  hasEndpointWithId(id: string): boolean {
-    return this.endpoints.has(id);
+    return res.length > 0;
   }
 
   /**
    * Determines whether an endpoint with the specified method and path are currently stored.
    */
-  hasEndpoint(method: string, path: string): boolean {
-    return Array.from(this.endpoints.values()).some(
-      (endpoint) => endpoint.method === method && endpoint.path === path,
-    );
+  async hasEndpoint(method: 'GET', path: string): Promise<boolean> {
+    const res = await db
+      .select()
+      .from(endpointTable)
+      .where(
+        and(eq(endpointTable.method, method), eq(endpointTable.path, path)),
+      );
+      return res.length > 0;
   }
 }

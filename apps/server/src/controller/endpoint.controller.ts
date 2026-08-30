@@ -22,31 +22,33 @@ export class EndpointController {
   constructor(private readonly endpointService: EndpointService) {}
 
   @Get()
-  getAllEndpoints(): EndpointConfig[] {
-    return this.endpointService.getAllEndpoints();
+  async getAllEndpoints(): Promise<EndpointConfig[]> {
+    return await this.endpointService.getAllEndpoints();
   }
 
   @Get(':id')
-  getEndpointById(@Param('id') id: string): EndpointConfig | undefined {
-    return this.endpointService.getEndpointById(id);
+  async getEndpointById(
+    @Param('id') id: string,
+  ): Promise<EndpointConfig | undefined> {
+    return await this.endpointService.getEndpointById(id);
   }
 
   @Post()
-  addEndpoint(
+  async addEndpoint(
     @Body() createEndpointRequest: CreateEndpointRequest,
-  ): CreateEndpointResponse {
-    return this.endpointService.addEndpoint(createEndpointRequest);
+  ): Promise<CreateEndpointResponse | undefined> {
+    return await this.endpointService.addEndpoint(createEndpointRequest);
   }
 
   @Put()
-  updateEndpoint(
+  async updateEndpoint(
     @Body() updateEndpointRequest: UpdateEndpointRequest,
-  ): UpdateEndpointResponse {
-    return this.endpointService.updateEndpoint(updateEndpointRequest);
+  ): Promise<UpdateEndpointResponse | undefined> {
+    return await this.endpointService.updateEndpoint(updateEndpointRequest);
   }
 
   @Delete(':id')
-  deleteEndpointById(@Param('id') id: string) {
-    return this.endpointService.deleteEndpointById(id);
+  async deleteEndpointById(@Param('id') id: string) {
+    return await this.endpointService.deleteEndpointById(id);
   }
 }

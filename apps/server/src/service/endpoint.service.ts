@@ -21,58 +21,58 @@ import {
 export class EndpointService {
   constructor(private readonly endpointRepository: EndpointRepository) {}
 
-  getAllEndpoints(): EndpointConfig[] {
-    return this.endpointRepository.getAllEndpoints();
+  async getAllEndpoints(): Promise<EndpointConfig[]> {
+    return await this.endpointRepository.getAllEndpoints();
   }
 
-  getEndpointById(id: string): EndpointConfig | undefined {
+  async getEndpointById(id: string): Promise<EndpointConfig | undefined> {
     if (!id) throw new BadRequestException('No id provided in request.');
 
-    if (!this.endpointRepository.hasEndpointWithId(id))
+    if (!await this.endpointRepository.hasEndpointWithId(id))
       throw new NotFoundException('Endpoint with id does not exist.');
 
-    return this.endpointRepository.getEndpointById(id);
+    return await this.endpointRepository.getEndpointById(id);
   }
 
-  addEndpoint(
+  async addEndpoint(
     createEndpointRequest: CreateEndpointRequest,
-  ): CreateEndpointResponse {
+  ): Promise<CreateEndpointResponse | undefined> {
     const { success, data, error } = CreateEndpointRequestSchema.safeParse(
       createEndpointRequest,
     );
 
     if (!success) throw new BadRequestException(error.message);
 
-    if (this.endpointRepository.hasEndpoint(data.method, data.path))
+    if (await this.endpointRepository.hasEndpoint(data.method, data.path))
       throw new ConflictException(
         'Endpoint with method and path already exist.',
       );
 
     const requestWithId = { ...data, id: crypto.randomUUID() };
-    return this.endpointRepository.addEndpoint(requestWithId);
+    return await this.endpointRepository.addEndpoint(requestWithId);
   }
 
-  updateEndpoint(
+  async updateEndpoint(
     updateEndpointRequest: UpdateEndpointRequest,
-  ): UpdateEndpointResponse {
+  ): Promise<UpdateEndpointResponse | undefined> {
     const { success, data, error } = UpdateEndpointRequestSchema.safeParse(
       updateEndpointRequest,
     );
 
     if (!success) throw new BadRequestException(error.message);
 
-    if (!this.endpointRepository.hasEndpointWithId(data.id))
+    if (!await this.endpointRepository.hasEndpointWithId(data.id))
       throw new NotFoundException('Could not find endpoint with provided id.');
 
-    return this.endpointRepository.updateEndpoint(data);
+    return await this.endpointRepository.updateEndpoint(data);
   }
 
-  deleteEndpointById(id: string) {
+  async deleteEndpointById(id: string) {
     if (!id) throw new BadRequestException('No id provided in request.');
 
-    if (!this.endpointRepository.hasEndpointWithId(id))
+    if (!await this.endpointRepository.hasEndpointWithId(id))
       throw new NotFoundException('Could not find endpoint with provided id.');
 
-    this.endpointRepository.deleteEndpointById(id);
+    await this.endpointRepository.deleteEndpointById(id);
   }
 }
