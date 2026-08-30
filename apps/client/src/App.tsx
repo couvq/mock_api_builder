@@ -1,11 +1,15 @@
-import AddEndpoint from "./components/add_endpoint";
+import AddEndpointPanel from "./components/add_endpoint_panel";
+import EndpointViewer from "./components/endpoint_viewer";
+import ResponseViewer from "./components/response_viewer";
 
-function App() {
+const App = () => {
   return (
     <>
-      <AddEndpoint />
+      <AddEndpointPanel />
+      <EndpointViewer />
+      <ResponseViewer />
     </>
   );
-}
+};
 
 export default App;
