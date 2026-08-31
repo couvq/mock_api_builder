@@ -1,13 +1,16 @@
 import {
   Box,
+  Divider,
   List,
   ListItem,
   ListSubheader,
   Skeleton,
   Stack,
+  Typography,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getAllEndpoints } from "../../api/endpoint";
+import EndpointBtn from "./EndpointBtn";
 
 const LoadingSkeleton = () => (
   <Stack direction="column" spacing={0.5}>
@@ -27,13 +30,16 @@ const EndpointList = () => {
   if (isError) return error.message;
 
   return (
-    <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
-      {data.map((endpoint) => (
-        <ListItem>
-          {endpoint.method} {endpoint.path}
-        </ListItem>
-      ))}
-    </List>
+    <>
+      <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
+        {data.map((endpoint) => (
+          <ListItem>
+            <EndpointBtn endpoint={endpoint} />
+          </ListItem>
+        ))}
+      </List>
+      <Typography>{data.length} endpoints</Typography>
+    </>
   );
 };
 
