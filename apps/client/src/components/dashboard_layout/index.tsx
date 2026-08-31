@@ -1,4 +1,4 @@
-import { Container, Paper, Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import type { ReactNode } from "react";
 
 interface DashboardLayoutProps {
