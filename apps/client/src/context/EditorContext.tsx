@@ -1,11 +1,10 @@
 import type { EndpointConfig } from "@mock-api-builder/schema";
 import {
-  act,
   createContext,
   useContext,
   useReducer,
   type ActionDispatch,
-  type ReactNode,
+  type ReactNode
 } from "react";
 
 type EditorState = {
@@ -13,7 +12,9 @@ type EditorState = {
   draft: EndpointConfig | undefined;
 };
 
-type EditorAction = { type: "ADD_ENDPOINT"; endpoint: EndpointConfig };
+type EditorAction =
+  | { type: "ADD_ENDPOINT"; endpoint: EndpointConfig }
+  | { type: "UPDATE_DRAFT"; draft: EndpointConfig };
 
 const initialState: EditorState = {
   activeEndpointId: undefined,
@@ -38,6 +39,16 @@ const editorReducer = (
       return {
         activeEndpointId: action.endpoint.id,
         draft: action.endpoint,
+      };
+
+    case "UPDATE_DRAFT":
+      console.log(JSON.stringify({
+        ...state,
+        draft: action.draft,
+      }))
+      return {
+        ...state,
+        draft: action.draft,
       };
 
     default:
