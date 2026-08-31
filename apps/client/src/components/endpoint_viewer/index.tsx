@@ -8,6 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import { useEditor } from "../../context/EditorContext";
+import { JsonEditor } from 'json-edit-react'
 
 const EndpointViewer = () => {
   const { activeEndpointId, draft } = useEditor();
@@ -19,7 +20,7 @@ const EndpointViewer = () => {
   return (
     <Box>
       <Stack direction="column">
-        <Stack direction="row">
+        <Stack direction="row" spacing={4}>
           <TextField
             fullWidth
             label="Endpoint"
@@ -37,12 +38,14 @@ const EndpointViewer = () => {
             }}
           />
 
-          <Stack direction="row">
+          <Stack direction="row" spacing={1}>
             <Button variant="outlined">Save</Button>
             <Button variant="contained">Send</Button>
           </Stack>
         </Stack>
-        <Box>{JSON.stringify(responseSchema)}</Box>
+        <Box>
+          <JsonEditor data={responseSchema} />
+        </Box>
       </Stack>
     </Box>
   );
