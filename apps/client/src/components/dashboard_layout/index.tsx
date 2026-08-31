@@ -13,14 +13,22 @@ const DashboardLayout = ({
   responsePanel,
 }: DashboardLayoutProps) => {
   return (
-    <Box sx={{ maxHeight: "100vh", maxWidth: "100vw" }}>
-        <Stack direction="row" spacing={1}>
-          <Paper>{sidePanel}</Paper>
-          <Stack direction="column" spacing={1} sx={{ width: "100%", padding: 1.5 }}>
-            <Paper>{editorPanel}</Paper>
-            <Paper>{responsePanel}</Paper>
-          </Stack>
+    <Box sx={{ height: "100vh", width: "100vw", overflow: "hidden" }}>
+      <Stack direction="row" spacing={1} sx={{ height: "100%" }}>
+        <Paper>{sidePanel}</Paper>
+        <Stack
+          direction="column"
+          spacing={1}
+          sx={{ flex: 1, minWidth: 0, padding: 1.5 }}
+        >
+          <Paper sx={{ flex: 1, minHeight: 0, overflow: "auto", padding: 1 }}>
+            {editorPanel}
+          </Paper>
+          <Paper sx={{ flex: 1, minHeight: 0, overflow: "auto", padding: 1 }}>
+            {responsePanel}
+          </Paper>
         </Stack>
+      </Stack>
     </Box>
   );
 };
