@@ -9,11 +9,16 @@ import EndpointList from "./EndpointList";
 
 const AddEndpointPanel = () => {
   return (
-    <Container>
+    <Container sx={{
+      minWidth: '25vw',
+      height: '100vh',
+      padding: 2
+    }}>
       <Stack direction="column">
         <Button variant="contained" startIcon={<AddIcon />}>
           New endpoint
         </Button>
+        <br />
         <TextField placeholder="Search endpoints" />
         <EndpointList />
       </Stack>

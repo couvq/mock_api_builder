@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import type { ReactNode } from "react";
 
 interface DashboardLayoutProps {
@@ -14,10 +14,10 @@ const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   return (
     <Stack direction="row" spacing={1}>
-      <Box>{sidePanel}</Box>
+      <Paper>{sidePanel}</Paper>
       <Stack direction="column" spacing={1}>
-        <Box>{editorPanel}</Box>
-        <Box>{responsePanel}</Box>
+        <Paper>{editorPanel}</Paper>
+        <Paper>{responsePanel}</Paper>
       </Stack>
     </Stack>
   );
