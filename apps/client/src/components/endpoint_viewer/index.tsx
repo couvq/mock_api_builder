@@ -1,20 +1,9 @@
-import { Tab, Tabs } from "@mui/material";
+import { useEditor } from "../../context/EditorContext";
 
 const EndpointViewer = () => {
-  return (
-    <>
-      <Tabs
-        value={"Item One"}
-        variant="scrollable"
-        scrollButtons="auto"
-        aria-label="scrollable auto tabs example"
-      >
-        {Array.from({ length: 10 }).map((_, i) => (
-          <Tab label={`Item ${i}`} />
-        ))}
-      </Tabs>
-    </>
-  );
+  const { activeEndpointId, draft } = useEditor();
+
+  return <>{activeEndpointId}{" "}{JSON.stringify(draft)}</>;
 };
 
 export default EndpointViewer;
