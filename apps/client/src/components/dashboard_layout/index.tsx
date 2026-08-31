@@ -13,9 +13,9 @@ const DashboardLayout = ({
   responsePanel,
 }: DashboardLayoutProps) => {
   return (
-    <Stack direction="row">
+    <Stack direction="row" spacing={1}>
       <Box>{sidePanel}</Box>
-      <Stack direction="column">
+      <Stack direction="column" spacing={1}>
         <Box>{editorPanel}</Box>
         <Box>{responsePanel}</Box>
       </Stack>

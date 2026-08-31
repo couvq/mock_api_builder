@@ -1,6 +1,21 @@
-import { CircularProgress, List, ListItem, ListSubheader } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  ListSubheader,
+  Skeleton,
+  Stack,
+} from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getAllEndpoints } from "../../api/endpoint";
+
+const LoadingSkeleton = () => (
+  <Stack direction="column" spacing={0.5}>
+    {Array.from({ length: 5 }).map(() => (
+      <Skeleton variant="rectangular" width={"100%"} height={20} />
+    ))}
+  </Stack>
+);
 
 const EndpointList = () => {
   const { isPending, isError, data, error } = useQuery({
@@ -8,7 +23,7 @@ const EndpointList = () => {
     queryFn: getAllEndpoints,
   });
 
-  if (isPending) return <CircularProgress />;
+  if (isPending) return <LoadingSkeleton />;
   if (isError) return error.message;
 
   return (
