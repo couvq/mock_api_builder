@@ -1,7 +1,9 @@
 import type { EndpointConfig } from "@mock-api-builder/schema";
 
+const endpointBaseUrl = "/v1/api";
+
 export const getAllEndpoints = async (): Promise<EndpointConfig[]> => {
-  const response = await fetch(`/endpoint`);
+  const response = await fetch(`${endpointBaseUrl}/endpoint`);
 
   if (!response.ok) {
     throw new Error(

@@ -9,17 +9,17 @@ const EndpointList = () => {
   });
 
   if (isPending) return <CircularProgress />;
-  if(isError) return error.message
+  if (isError) return error.message;
 
-    return (
-      <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
-        {data.map((endpoint) => (
-          <ListItem>
-            {endpoint.method} {endpoint.path}
-          </ListItem>
-        ))}
-      </List>
-    );
+  return (
+    <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
+      {data.map((endpoint) => (
+        <ListItem>
+          {endpoint.method} {endpoint.path}
+        </ListItem>
+      ))}
+    </List>
+  );
 };
 
 export default EndpointList;
