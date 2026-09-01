@@ -1,7 +1,7 @@
 import {
-  FakerType,
+  FakerSchema,
   type EndpointConfig,
-  type MockSchema
+  type MockSchemaType
 } from "@mock-api-builder/schema";
 import {
   Box,
@@ -41,7 +41,7 @@ const EndpointViewer = () => {
     });
   };
 
-  const handleResponseSchemaChange = (newSchema: MockSchema) => {
+  const handleResponseSchemaChange = (newSchema: MockSchemaType) => {
     dispatch({
       type: "UPDATE_DRAFT",
       draft: { ...draft, responseSchema: newSchema },
@@ -87,17 +87,17 @@ const EndpointViewer = () => {
           <Typography>Response schema</Typography>
           <JsonEditor
             data={responseSchema}
-            defaultValue={FakerType.options[0]}
+            defaultValue={FakerSchema.options[0]}
             restrictTypeSelection={[
               "object",
               {
                 enum: "Faker Type",
-                values: FakerType.options,
+                values: FakerSchema.options,
                 matchPriority: 1,
               },
             ]}
             onUpdate={(newSchema) =>
-              handleResponseSchemaChange(newSchema.newData as MockSchema)
+              handleResponseSchemaChange(newSchema.newData as MockSchemaType)
             }
           />
         </Box>

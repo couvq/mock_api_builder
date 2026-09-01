@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const FakerType = z.enum([
+export const FakerSchema = z.enum([
   "faker.string.uuid",
   "faker.internet.email",
   "faker.person.firstName",
@@ -8,8 +8,16 @@ export const FakerType = z.enum([
   "faker.person.fullName",
 ]);
 
-export type FakerType = z.infer<typeof FakerType>;
+export type FakerType = z.infer<typeof FakerSchema>;
 
-export const MockSchema = z.record(z.string(), FakerType);
+export type MockSchemaValueType =
+  | FakerType
+  | { [key: string]: MockSchemaValueType };
 
-export type MockSchema = z.infer<typeof MockSchema>;
+export const MockSchemaValue: z.ZodType<MockSchemaValueType> = z.lazy(() =>
+  z.union([FakerSchema, z.record(z.string(), MockSchemaValue)]),
+);
+
+export const MockSchema = z.record(z.string(), MockSchemaValue);
+
+export type MockSchemaType = z.infer<typeof MockSchema>;

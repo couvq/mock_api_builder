@@ -1,7 +1,31 @@
 import { fakerGenerators } from "./generators.js";
-import { MockSchema } from "./mock_schema.js";
+import {
+  FakerSchema,
+  MockSchema,
+  type FakerType,
+  type MockSchemaValueType,
+  type MockSchemaType,
+} from "./mock_schema.js";
 
-export const transpile = (schema: MockSchema): Record<string, string> => {
+export type TranspiledSchema = { [key: string]: string | TranspiledSchema };
+
+const transpileValue = (
+  value: MockSchemaValueType,
+): string | TranspiledSchema => {
+  if (FakerSchema.safeParse(value).success) {
+    return fakerGenerators[value as FakerType]();
+  }
+
+  const nested: TranspiledSchema = {};
+  for (const [key, childValue] of Object.entries(
+    value as Record<string, MockSchemaValueType>,
+  )) {
+    nested[key] = transpileValue(childValue);
+  }
+  return nested;
+};
+
+export const transpile = (schema: MockSchemaType): TranspiledSchema => {
   const parsed = MockSchema.safeParse(schema);
 
   if (!parsed.success) {
@@ -9,10 +33,10 @@ export const transpile = (schema: MockSchema): Record<string, string> => {
     return {};
   }
 
-  const transpiledSchema: Record<string, string> = {};
+  const transpiledSchema: TranspiledSchema = {};
 
-  for (const [key, fakerType] of Object.entries(parsed.data)) {
-    transpiledSchema[key] = fakerGenerators[fakerType]();
+  for (const [key, value] of Object.entries(parsed.data)) {
+    transpiledSchema[key] = transpileValue(value);
   }
 
   return transpiledSchema;
