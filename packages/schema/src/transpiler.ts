@@ -7,16 +7,21 @@ import {
   type MockSchemaType,
 } from "./mock_schema.js";
 
-export type TranspiledSchema = { [key: string]: string | TranspiledSchema };
+export type TranspiledSchema =
+  | string
+  | TranspiledSchema[]
+  | { [key: string]: TranspiledSchema };
 
-const transpileValue = (
-  value: MockSchemaValueType,
-): string | TranspiledSchema => {
+const transpileValue = (value: MockSchemaValueType): TranspiledSchema => {
   if (FakerSchema.safeParse(value).success) {
     return fakerGenerators[value as FakerType]();
   }
 
-  const nested: TranspiledSchema = {};
+  if(Array.isArray(value)) {
+    return value.map((val) => transpileValue(val));
+  }
+
+  const nested: Record<string, TranspiledSchema> = {};
   for (const [key, childValue] of Object.entries(
     value as Record<string, MockSchemaValueType>,
   )) {
@@ -33,7 +38,7 @@ export const transpile = (schema: MockSchemaType): TranspiledSchema => {
     return {};
   }
 
-  const transpiledSchema: TranspiledSchema = {};
+  const transpiledSchema: Record<string, TranspiledSchema> = {};
 
   for (const [key, value] of Object.entries(parsed.data)) {
     transpiledSchema[key] = transpileValue(value);

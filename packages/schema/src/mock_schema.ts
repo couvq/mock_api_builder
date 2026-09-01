@@ -12,10 +12,11 @@ export type FakerType = z.infer<typeof FakerSchema>;
 
 export type MockSchemaValueType =
   | FakerType
+  | Array<MockSchemaValueType>
   | { [key: string]: MockSchemaValueType };
 
 export const MockSchemaValue: z.ZodType<MockSchemaValueType> = z.lazy(() =>
-  z.union([FakerSchema, z.record(z.string(), MockSchemaValue)]),
+  z.union([FakerSchema, z.array(MockSchemaValue), z.record(z.string(), MockSchemaValue)]),
 );
 
 export const MockSchema = z.record(z.string(), MockSchemaValue);
