@@ -1,5 +1,5 @@
 import z from "zod";
-import { EndpointConfig } from "./config";
+import { EndpointConfig } from "./config.js";
 
 export const CreateEndpointRequestSchema = EndpointConfig.omit({ id: true });
 

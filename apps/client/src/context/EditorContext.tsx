@@ -4,7 +4,7 @@ import {
   useContext,
   useReducer,
   type ActionDispatch,
-  type ReactNode
+  type ReactNode,
 } from "react";
 
 type EditorState = {
@@ -42,10 +42,6 @@ const editorReducer = (
       };
 
     case "UPDATE_DRAFT":
-      console.log(JSON.stringify({
-        ...state,
-        draft: action.draft,
-      }))
       return {
         ...state,
         draft: action.draft,

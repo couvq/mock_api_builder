@@ -1,4 +1,9 @@
 import {
+  FakerType,
+  type EndpointConfig,
+  type MockSchema
+} from "@mock-api-builder/schema";
+import {
   Box,
   Button,
   InputAdornment,
@@ -6,6 +11,8 @@ import {
   Select,
   Stack,
   TextField,
+  Typography,
+  type SelectChangeEvent,
 } from "@mui/material";
 import { JsonEditor } from "json-edit-react";
 import { useEditor, useEditorDispatch } from "../../context/EditorContext";
@@ -16,23 +23,25 @@ const EndpointViewer = () => {
 
   if (!activeEndpointId || !draft) return "No endpoint selected.";
 
-  const { id, method, path, responseSchema } = draft;
+  const { method, path, responseSchema } = draft;
 
-  const handleMethodChange = (e) => {
+  const handleMethodChange = (
+    e: SelectChangeEvent<EndpointConfig["method"]>,
+  ) => {
     dispatch({
       type: "UPDATE_DRAFT",
       draft: { ...draft, method: e.target.value },
     });
   };
 
-  const handlePathChange = (e) => {
+  const handlePathChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       type: "UPDATE_DRAFT",
       draft: { ...draft, path: e.target.value },
     });
   };
 
-  const handleResponseSchemaChange = (newSchema) => {
+  const handleResponseSchemaChange = (newSchema: MockSchema) => {
     dispatch({
       type: "UPDATE_DRAFT",
       draft: { ...draft, responseSchema: newSchema },
@@ -69,13 +78,27 @@ const EndpointViewer = () => {
 
           <Stack direction="row" spacing={1}>
             <Button variant="outlined">Save</Button>
-            <Button variant="contained">Send</Button>
+            <Button variant="contained">
+              Send
+            </Button>
           </Stack>
         </Stack>
         <Box>
+          <Typography>Response schema</Typography>
           <JsonEditor
             data={responseSchema}
-            onUpdate={(newSchema) => handleResponseSchemaChange(newSchema.newData)}
+            defaultValue={FakerType.options[0]}
+            restrictTypeSelection={[
+              "object",
+              {
+                enum: "Faker Type",
+                values: FakerType.options,
+                matchPriority: 1,
+              },
+            ]}
+            onUpdate={(newSchema) =>
+              handleResponseSchemaChange(newSchema.newData as MockSchema)
+            }
           />
         </Box>
       </Stack>

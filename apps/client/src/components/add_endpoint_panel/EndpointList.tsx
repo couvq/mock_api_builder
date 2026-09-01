@@ -1,6 +1,4 @@
 import {
-  Box,
-  Divider,
   List,
   ListItem,
   ListSubheader,

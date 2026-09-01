@@ -56,7 +56,10 @@ export class EndpointRepository {
   /**
    * Determines whether an endpoint with the specified method and path are currently stored.
    */
-  async hasEndpoint(method: 'GET', path: string): Promise<boolean> {
+  async hasEndpoint(
+    method: EndpointConfig['method'],
+    path: string,
+  ): Promise<boolean> {
     const res = await db
       .select()
       .from(endpointTable)
