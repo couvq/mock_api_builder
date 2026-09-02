@@ -11,6 +11,7 @@ import {
   Select,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { JsonEditor } from "json-edit-react";
@@ -68,12 +69,23 @@ const EndpointViewer = () => {
           />
 
           <Stack direction="row" spacing={1}>
-            <Button variant="outlined">
-              Save
-            </Button>
-            <Button variant="contained" disabled={isEditing}>
-              Send
-            </Button>
+            <Button variant="outlined">Save</Button>
+            {isEditing ? (
+              <Tooltip
+                describeChild
+                title="Cannot send mock requests while editing."
+              >
+                <span style={{ display: "flex" }}>
+                  <Button variant="contained" disabled>
+                    Send
+                  </Button>
+                </span>
+              </Tooltip>
+            ) : (
+              <Button variant="contained">
+                Send
+              </Button>
+            )}
           </Stack>
         </Stack>
         <Box>
