@@ -4,18 +4,21 @@ import EndpointViewer from "./components/endpoint_viewer";
 import ResponseViewer from "./components/response_viewer";
 import EditorContextProvider from "./context/EditorContext";
 import TanstackQueryProvider from "./context/TanstackQueryProvider";
+import ToastProvider from "./context/ToastProvider";
 
 const App = () => {
   return (
     <>
       <TanstackQueryProvider>
-        <EditorContextProvider>
-          <DashboardLayout
-            sidePanel={<AddEndpointPanel />}
-            editorPanel={<EndpointViewer />}
-            responsePanel={<ResponseViewer />}
-          />
-        </EditorContextProvider>
+        <ToastProvider>
+          <EditorContextProvider>
+            <DashboardLayout
+              sidePanel={<AddEndpointPanel />}
+              editorPanel={<EndpointViewer />}
+              responsePanel={<ResponseViewer />}
+            />
+          </EditorContextProvider>
+        </ToastProvider>
       </TanstackQueryProvider>
     </>
   );
