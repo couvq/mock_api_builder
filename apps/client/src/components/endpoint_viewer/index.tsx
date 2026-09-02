@@ -1,7 +1,7 @@
 import {
   FakerSchema,
   type EndpointConfig,
-  type MockSchemaType
+  type MockSchemaType,
 } from "@mock-api-builder/schema";
 import {
   Box,
@@ -12,40 +12,28 @@ import {
   Stack,
   TextField,
   Typography,
-  type SelectChangeEvent,
 } from "@mui/material";
 import { JsonEditor } from "json-edit-react";
 import { useEditor, useEditorDispatch } from "../../context/EditorContext";
+import { useEndpoints } from "../../hooks/endpoints";
+import { isEqual } from "lodash";
 
 const EndpointViewer = () => {
   const { activeEndpointId, draft } = useEditor();
   const dispatch = useEditorDispatch();
+  const { isSuccess, data } = useEndpoints();
 
   if (!activeEndpointId || !draft) return "No endpoint selected.";
 
   const { method, path, responseSchema } = draft;
 
-  const handleMethodChange = (
-    e: SelectChangeEvent<EndpointConfig["method"]>,
-  ) => {
-    dispatch({
-      type: "UPDATE_DRAFT",
-      draft: { ...draft, method: e.target.value },
-    });
-  };
+  const matchesServerData =
+    isSuccess && data.some((serverEndpoint) => isEqual(serverEndpoint, draft));
+  const isEditing = !matchesServerData;
+  console.log(isEditing);
 
-  const handlePathChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      type: "UPDATE_DRAFT",
-      draft: { ...draft, path: e.target.value },
-    });
-  };
-
-  const handleResponseSchemaChange = (newSchema: MockSchemaType) => {
-    dispatch({
-      type: "UPDATE_DRAFT",
-      draft: { ...draft, responseSchema: newSchema },
-    });
+  const updateDraft = (changes: Partial<EndpointConfig>) => {
+    dispatch({ type: "UPDATE_DRAFT", draft: { ...draft, ...changes } });
   };
 
   return (
@@ -56,14 +44,14 @@ const EndpointViewer = () => {
             fullWidth
             label="Endpoint"
             value={path}
-            onChange={handlePathChange}
+            onChange={(e) => updateDraft({ path: e.target.value })}
             slotProps={{
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
                     <Select
                       value={method}
-                      onChange={handleMethodChange}
+                      onChange={(e) => updateDraft({ method: e.target.value })}
                       variant="standard"
                       disableUnderline
                     >
@@ -77,8 +65,10 @@ const EndpointViewer = () => {
           />
 
           <Stack direction="row" spacing={1}>
-            <Button variant="outlined">Save</Button>
-            <Button variant="contained">
+            <Button variant="outlined" disabled={isEditing}>
+              Save
+            </Button>
+            <Button variant="contained" disabled={isEditing}>
               Send
             </Button>
           </Stack>
@@ -90,7 +80,7 @@ const EndpointViewer = () => {
             defaultValue={FakerSchema.options[0]}
             restrictTypeSelection={[
               "object",
-              'array',
+              "array",
               {
                 enum: "Faker Type",
                 values: FakerSchema.options,
@@ -98,7 +88,9 @@ const EndpointViewer = () => {
               },
             ]}
             onUpdate={(newSchema) =>
-              handleResponseSchemaChange(newSchema.newData as MockSchemaType)
+              updateDraft({
+                responseSchema: newSchema.newData as MockSchemaType,
+              })
             }
           />
         </Box>

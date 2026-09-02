@@ -6,8 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { getAllEndpoints } from "../../api/endpoint";
+import { useEndpoints } from "../../hooks/endpoints";
 import EndpointBtn from "./EndpointBtn";
 
 const LoadingSkeleton = () => (
@@ -19,10 +18,7 @@ const LoadingSkeleton = () => (
 );
 
 const EndpointList = () => {
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: ["endpoints"],
-    queryFn: getAllEndpoints,
-  });
+  const { isPending, isError, data, error } = useEndpoints();
 
   if (isPending) return <LoadingSkeleton />;
   if (isError) return error.message;
