@@ -5,7 +5,6 @@ import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class EndpointRepository {
-
   async getAllEndpoints(): Promise<EndpointConfig[]> {
     return await db.select().from(endpointTable);
   }
@@ -32,7 +31,10 @@ export class EndpointRepository {
   async updateEndpoint(
     endpoint: EndpointConfig,
   ): Promise<EndpointConfig | undefined> {
-    await db.update(endpointTable).set(endpoint);
+    await db
+      .update(endpointTable)
+      .set(endpoint)
+      .where(eq(endpointTable.id, endpoint.id));
     const updatedEndpoint = await db
       .select()
       .from(endpointTable)
@@ -54,6 +56,23 @@ export class EndpointRepository {
   }
 
   /**
+   * Looks up the endpoint with the specified method and path using the
+   * UNIQUE(method, path) index instead of scanning the whole table.
+   */
+  async getEndpointByMethodAndPath(
+    method: EndpointConfig['method'],
+    path: string,
+  ): Promise<EndpointConfig | undefined> {
+    const res = await db
+      .select()
+      .from(endpointTable)
+      .where(
+        and(eq(endpointTable.method, method), eq(endpointTable.path, path)),
+      );
+    return res.at(0);
+  }
+
+  /**
    * Determines whether an endpoint with the specified method and path are currently stored.
    */
   async hasEndpoint(
@@ -66,6 +85,6 @@ export class EndpointRepository {
       .where(
         and(eq(endpointTable.method, method), eq(endpointTable.path, path)),
       );
-      return res.length > 0;
+    return res.length > 0;
   }
 }

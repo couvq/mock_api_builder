@@ -14,15 +14,8 @@ export class MockApiService {
     method: EndpointConfig['method'],
     path: EndpointConfig['path'],
   ): Promise<TranspiledSchema> {
-    if (!(await this.endpointRepository.hasEndpoint(method, path)))
-      throw new NotFoundException('Endpoint does not exist.');
-
-    // TODO: not the most efficient, could either pass id to get it more efficiently or add another api for method + path querying efficiently
-    const [matchingEndpoint] = (
-      await this.endpointRepository.getAllEndpoints()
-    ).filter(
-      (endpoint) => endpoint.method === method && endpoint.path === path,
-    );
+    const matchingEndpoint =
+      await this.endpointRepository.getEndpointByMethodAndPath(method, path);
 
     if (!matchingEndpoint)
       throw new NotFoundException('Endpoint does not exist.');
