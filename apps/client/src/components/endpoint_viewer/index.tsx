@@ -1,5 +1,6 @@
 import {
   FakerSchema,
+  transpile,
   type EndpointConfig,
   type MockSchemaType,
 } from "@mock-api-builder/schema";
@@ -108,6 +109,10 @@ const EndpointViewer = () => {
               })
             }
           />
+        </Box>
+        <Box>
+          <Typography>Generated response</Typography>
+          <JsonEditor data={transpile(responseSchema)} viewOnly/>
         </Box>
       </Stack>
     </Box>
