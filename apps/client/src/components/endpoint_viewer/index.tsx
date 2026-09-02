@@ -25,12 +25,15 @@ const EndpointViewer = () => {
 
   if (!activeEndpointId || !draft) return "No endpoint selected.";
 
-  const { method, path, responseSchema } = draft;
+  const { id, method, path, responseSchema } = draft;
 
   const matchesServerData =
-    isSuccess && data.some((serverEndpoint) => isEqual(serverEndpoint, draft));
+    isSuccess &&
+    isEqual(
+      data.find((value) => value.id === id),
+      draft,
+    );
   const isEditing = !matchesServerData;
-  console.log(isEditing);
 
   const updateDraft = (changes: Partial<EndpointConfig>) => {
     dispatch({ type: "UPDATE_DRAFT", draft: { ...draft, ...changes } });
@@ -65,7 +68,7 @@ const EndpointViewer = () => {
           />
 
           <Stack direction="row" spacing={1}>
-            <Button variant="outlined" disabled={isEditing}>
+            <Button variant="outlined">
               Save
             </Button>
             <Button variant="contained" disabled={isEditing}>
