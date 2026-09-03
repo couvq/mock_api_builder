@@ -3,7 +3,7 @@ import type {
   TranspiledSchema,
 } from "@mock-api-builder/schema";
 
-const mockApiBaseUrl = '"/v1/api/mock_api';
+const mockApiBaseUrl = '/v1/api/mock_api';
 
 export const serveMockRequest = async (
   payload: Pick<EndpointConfig, "method" | "path">,

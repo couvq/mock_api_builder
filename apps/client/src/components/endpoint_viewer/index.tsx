@@ -19,7 +19,7 @@ import { JsonEditor } from "json-edit-react";
 import { useEditor, useEditorDispatch } from "../../context/EditorContext";
 import { useEndpoints } from "../../hooks/endpoints";
 import { isEqual } from "lodash";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateEndpoint } from "../../api/endpoint";
 import { useToast } from "../../hooks/toast";
 import { useMockRequest } from "../../context/MockRequestProvider";
@@ -29,9 +29,13 @@ const EndpointViewer = () => {
   const { activeEndpointId, draft } = useEditor();
   const dispatch = useEditorDispatch();
   const { isSuccess, data } = useEndpoints();
+  const queryClient = useQueryClient();
   const updateEndpointMutation = useMutation({
     mutationFn: updateEndpoint,
-    onSuccess: () => toast.success("Endpoint saved successfully."),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["endpoints"] });
+      toast.success("Endpoint saved successfully.");
+    },
   });
   const serveMockRequestMutation = useMockRequest();
 
@@ -109,35 +113,39 @@ const EndpointViewer = () => {
                 </span>
               </Tooltip>
             ) : (
-              <Button variant="contained" onClick={handleSend}>Send</Button>
+              <Button variant="contained" onClick={handleSend}>
+                Send
+              </Button>
             )}
           </Stack>
         </Stack>
-        <Box>
-          <Typography>Response schema</Typography>
-          <JsonEditor
-            data={responseSchema}
-            defaultValue={FakerSchema.options[0]}
-            restrictTypeSelection={[
-              "object",
-              "array",
-              {
-                enum: "Faker Type",
-                values: FakerSchema.options,
-                matchPriority: 1,
-              },
-            ]}
-            onUpdate={(newSchema) =>
-              updateDraft({
-                responseSchema: newSchema.newData as MockSchemaType,
-              })
-            }
-          />
-        </Box>
-        <Box>
-          <Typography>Generated response</Typography>
-          <JsonEditor data={transpile(responseSchema)} viewOnly />
-        </Box>
+        <Stack direction="row" spacing={3}>
+          <Box>
+            <Typography>Response schema</Typography>
+            <JsonEditor
+              data={responseSchema}
+              defaultValue={FakerSchema.options[0]}
+              restrictTypeSelection={[
+                "object",
+                "array",
+                {
+                  enum: "Faker Type",
+                  values: FakerSchema.options,
+                  matchPriority: 1,
+                },
+              ]}
+              onUpdate={(newSchema) =>
+                updateDraft({
+                  responseSchema: newSchema.newData as MockSchemaType,
+                })
+              }
+            />
+          </Box>
+          <Box>
+            <Typography>Generated response</Typography>
+            <JsonEditor data={transpile(responseSchema)} viewOnly />
+          </Box>
+        </Stack>
       </Stack>
     </Box>
   );

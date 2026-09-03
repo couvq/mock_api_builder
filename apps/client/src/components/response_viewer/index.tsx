@@ -6,13 +6,15 @@ const ResponseViewer = () => {
   const serveMockRequestMutation = useMockRequest();
 
   // @ts-ignore
-  if(serveMockRequestMutation.isPending) return <CircularProgress />;
+  if (serveMockRequestMutation.isPending) return <CircularProgress />;
 
   // @ts-ignore
-  if(serveMockRequestMutation.isError) return serveMockRequestMutation.error.message;
+  if (serveMockRequestMutation.isError)
+     // @ts-ignore
+    return serveMockRequestMutation.error.message;
 
   // @ts-ignore
-  return serveMockRequestMutation.data;
+  return JSON.stringify(serveMockRequestMutation.data);
 };
 
 export default ResponseViewer;
