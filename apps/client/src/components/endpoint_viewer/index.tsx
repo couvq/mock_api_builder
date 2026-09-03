@@ -19,12 +19,19 @@ import { JsonEditor } from "json-edit-react";
 import { useEditor, useEditorDispatch } from "../../context/EditorContext";
 import { useEndpoints } from "../../hooks/endpoints";
 import { isEqual } from "lodash";
+import { useMutation } from "@tanstack/react-query";
+import { updateEndpoint } from "../../api/endpoint";
+import { useToast } from "../../hooks/toast";
 
 const EndpointViewer = () => {
+  const toast = useToast();
   const { activeEndpointId, draft } = useEditor();
   const dispatch = useEditorDispatch();
   const { isSuccess, data } = useEndpoints();
-
+  const updateEndpointMutation = useMutation({
+    mutationFn: updateEndpoint,
+    onSuccess: () => toast.success("Endpoint saved successfully."),
+  });
   if (!activeEndpointId || !draft) return "No endpoint selected.";
 
   const { id, method, path, responseSchema } = draft;
@@ -39,6 +46,10 @@ const EndpointViewer = () => {
 
   const updateDraft = (changes: Partial<EndpointConfig>) => {
     dispatch({ type: "UPDATE_DRAFT", draft: { ...draft, ...changes } });
+  };
+
+  const handleSave = () => {
+    updateEndpointMutation.mutate(draft);
   };
 
   return (
@@ -70,7 +81,13 @@ const EndpointViewer = () => {
           />
 
           <Stack direction="row" spacing={1}>
-            <Button variant="outlined">Save</Button>
+            <Button
+              variant="outlined"
+              onClick={handleSave}
+              loading={updateEndpointMutation.isPending}
+            >
+              Save
+            </Button>
             {isEditing ? (
               <Tooltip
                 describeChild
@@ -83,9 +100,7 @@ const EndpointViewer = () => {
                 </span>
               </Tooltip>
             ) : (
-              <Button variant="contained">
-                Send
-              </Button>
+              <Button variant="contained">Send</Button>
             )}
           </Stack>
         </Stack>
@@ -112,7 +127,7 @@ const EndpointViewer = () => {
         </Box>
         <Box>
           <Typography>Generated response</Typography>
-          <JsonEditor data={transpile(responseSchema)} viewOnly/>
+          <JsonEditor data={transpile(responseSchema)} viewOnly />
         </Box>
       </Stack>
     </Box>

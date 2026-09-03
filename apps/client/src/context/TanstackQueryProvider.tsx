@@ -1,4 +1,5 @@
 import {
+  MutationCache,
   QueryCache,
   QueryClient,
   QueryClientProvider,
@@ -12,6 +13,11 @@ interface TanstackQueryProviderProps {
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
+    onError: (error) => {
+      enqueueSnackbar(error.message, { variant: "error" });
+    },
+  }),
+  mutationCache: new MutationCache({
     onError: (error) => {
       enqueueSnackbar(error.message, { variant: "error" });
     },
