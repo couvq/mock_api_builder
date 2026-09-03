@@ -1,5 +1,4 @@
 import type { EndpointConfig } from "@mock-api-builder/schema";
-import { delay } from "lodash";
 
 const endpointBaseUrl = "/v1/api/endpoint";
 
@@ -17,7 +16,7 @@ export const getAllEndpoints = async (): Promise<EndpointConfig[]> => {
 
 export const updateEndpoint = async (
   newEndpointConfiguration: EndpointConfig,
-) => {
+): Promise<EndpointConfig> => {
   const response = await fetch(endpointBaseUrl, {
     headers: {
       "Content-Type": "application/json",

@@ -22,6 +22,7 @@ import { isEqual } from "lodash";
 import { useMutation } from "@tanstack/react-query";
 import { updateEndpoint } from "../../api/endpoint";
 import { useToast } from "../../hooks/toast";
+import { useMockRequest } from "../../context/MockRequestProvider";
 
 const EndpointViewer = () => {
   const toast = useToast();
@@ -32,6 +33,8 @@ const EndpointViewer = () => {
     mutationFn: updateEndpoint,
     onSuccess: () => toast.success("Endpoint saved successfully."),
   });
+  const serveMockRequestMutation = useMockRequest();
+
   if (!activeEndpointId || !draft) return "No endpoint selected.";
 
   const { id, method, path, responseSchema } = draft;
@@ -50,6 +53,12 @@ const EndpointViewer = () => {
 
   const handleSave = () => {
     updateEndpointMutation.mutate(draft);
+  };
+
+  const handleSend = () => {
+    // TODO: strongly type my context
+    // @ts-ignore
+    serveMockRequestMutation.mutate({ method, path });
   };
 
   return (
@@ -100,7 +109,7 @@ const EndpointViewer = () => {
                 </span>
               </Tooltip>
             ) : (
-              <Button variant="contained">Send</Button>
+              <Button variant="contained" onClick={handleSend}>Send</Button>
             )}
           </Stack>
         </Stack>
