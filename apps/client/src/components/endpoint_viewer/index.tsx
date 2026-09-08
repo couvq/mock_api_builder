@@ -118,7 +118,11 @@ const EndpointViewer = () => {
                 </span>
               </Tooltip>
             ) : (
-              <Button variant="contained" onClick={handleSend}>
+              <Button
+                variant="contained"
+                onClick={handleSend}
+                loading={serveMockRequestMutation.isPending}
+              >
                 Send
               </Button>
             )}
