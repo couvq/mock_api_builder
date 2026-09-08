@@ -128,33 +128,27 @@ const EndpointViewer = () => {
             )}
           </Stack>
         </Stack>
-        <Stack direction="row" spacing={3}>
-          <Box>
-            <Typography>Response schema</Typography>
-            <JsonEditor
-              data={responseSchema}
-              defaultValue={FakerSchema.options[0]}
-              restrictTypeSelection={[
-                "object",
-                "array",
-                {
-                  enum: "Faker Type",
-                  values: FakerSchema.options,
-                  matchPriority: 1,
-                },
-              ]}
-              onUpdate={(newSchema) =>
-                updateDraft({
-                  responseSchema: newSchema.newData as MockSchemaType,
-                })
-              }
-            />
-          </Box>
-          <Box>
-            <Typography>Generated response</Typography>
-            <JsonEditor data={transpile(responseSchema)} viewOnly />
-          </Box>
-        </Stack>
+        <Box>
+          <Typography>Response schema</Typography>
+          <JsonEditor
+            data={responseSchema}
+            defaultValue={FakerSchema.options[0]}
+            restrictTypeSelection={[
+              "object",
+              "array",
+              {
+                enum: "Faker Type",
+                values: FakerSchema.options,
+                matchPriority: 1,
+              },
+            ]}
+            onUpdate={(newSchema) =>
+              updateDraft({
+                responseSchema: newSchema.newData as MockSchemaType,
+              })
+            }
+          />
+        </Box>
       </Stack>
     </Box>
   );
