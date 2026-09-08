@@ -24,6 +24,8 @@ import { updateEndpoint } from "../../api/endpoint";
 import { useToast } from "../../hooks/toast";
 import { useMockRequest } from "../../context/MockRequestProvider";
 
+const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
+
 const EndpointViewer = () => {
   const toast = useToast();
   const { activeEndpointId, draft } = useEditor();
@@ -75,17 +77,22 @@ const EndpointViewer = () => {
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <Select
-                      value={method}
-                      onChange={(e) => updateDraft({ method: e.target.value })}
-                      variant="standard"
-                      disableUnderline
-                    >
-                      <MenuItem value="GET">GET</MenuItem>
-                      <MenuItem value="POST">POST</MenuItem>
-                    </Select>
-                  </InputAdornment>
+                  <>
+                    <InputAdornment position="start">
+                      <Select
+                        value={method}
+                        onChange={(e) =>
+                          updateDraft({ method: e.target.value })
+                        }
+                        variant="standard"
+                        disableUnderline
+                      >
+                        <MenuItem value="GET">GET</MenuItem>
+                        <MenuItem value="POST">POST</MenuItem>
+                      </Select>
+                    </InputAdornment>
+                    {MOCK_API_BASE_URL}
+                  </>
                 ),
               },
             }}
