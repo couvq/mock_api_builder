@@ -60,8 +60,6 @@ const EndpointViewer = () => {
   };
 
   const handleSend = () => {
-    // TODO: strongly type my context
-    // @ts-ignore
     serveMockRequestMutation.mutate({ method, path });
   };
 

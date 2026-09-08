@@ -3,10 +3,12 @@ import type {
   TranspiledSchema,
 } from "@mock-api-builder/schema";
 
-const mockApiBaseUrl = '/v1/api/mock_api';
+const mockApiBaseUrl = "/v1/api/mock_api";
+
+export type ServeMockRequestPayload = Pick<EndpointConfig, "method" | "path">;
 
 export const serveMockRequest = async (
-  payload: Pick<EndpointConfig, "method" | "path">,
+  payload: ServeMockRequestPayload,
 ): Promise<TranspiledSchema> => {
   const response = await fetch(`${mockApiBaseUrl}/${payload.path}`, {
     headers: {

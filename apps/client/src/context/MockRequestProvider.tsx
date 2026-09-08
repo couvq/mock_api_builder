@@ -1,13 +1,19 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { createContext, useContext, type ReactNode } from "react";
-import { serveMockRequest } from "../api/mock_api";
+import {
+  serveMockRequest,
+  type ServeMockRequestPayload,
+} from "../api/mock_api";
+import type { TranspiledSchema } from "@mock-api-builder/schema";
 
 interface MockRequestProviderProps {
   children: ReactNode;
 }
 
-// @ts-ignore
-const MockRequestContext = createContext();
+const MockRequestContext = createContext<
+  | UseMutationResult<TranspiledSchema, Error, ServeMockRequestPayload>
+  | undefined
+>(undefined);
 
 const MockRequestProvider = ({ children }: MockRequestProviderProps) => {
   const serveMockRequestMutation = useMutation({
