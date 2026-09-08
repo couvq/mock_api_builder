@@ -3,6 +3,7 @@ import DashboardLayout from "./components/dashboard_layout";
 import EndpointViewer from "./components/endpoint_viewer";
 import ResponseViewer from "./components/response_viewer";
 import EditorContextProvider from "./context/EditorContext";
+import MockRequestProvider from "./context/MockRequestProvider";
 import TanstackQueryProvider from "./context/TanstackQueryProvider";
 import ToastProvider from "./context/ToastProvider";
 
@@ -12,11 +13,13 @@ const App = () => {
       <TanstackQueryProvider>
         <ToastProvider>
           <EditorContextProvider>
-            <DashboardLayout
-              sidePanel={<AddEndpointPanel />}
-              editorPanel={<EndpointViewer />}
-              responsePanel={<ResponseViewer />}
-            />
+            <MockRequestProvider>
+              <DashboardLayout
+                sidePanel={<AddEndpointPanel />}
+                editorPanel={<EndpointViewer />}
+                responsePanel={<ResponseViewer />}
+              />
+            </MockRequestProvider>
           </EditorContextProvider>
         </ToastProvider>
       </TanstackQueryProvider>

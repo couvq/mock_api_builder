@@ -19,11 +19,25 @@ import { JsonEditor } from "json-edit-react";
 import { useEditor, useEditorDispatch } from "../../context/EditorContext";
 import { useEndpoints } from "../../hooks/endpoints";
 import { isEqual } from "lodash";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateEndpoint } from "../../api/endpoint";
+import { useToast } from "../../hooks/toast";
+import { useMockRequest } from "../../context/MockRequestProvider";
 
 const EndpointViewer = () => {
+  const toast = useToast();
   const { activeEndpointId, draft } = useEditor();
   const dispatch = useEditorDispatch();
   const { isSuccess, data } = useEndpoints();
+  const queryClient = useQueryClient();
+  const updateEndpointMutation = useMutation({
+    mutationFn: updateEndpoint,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["endpoints"] });
+      toast.success("Endpoint saved successfully.");
+    },
+  });
+  const serveMockRequestMutation = useMockRequest();
 
   if (!activeEndpointId || !draft) return "No endpoint selected.";
 
@@ -39,6 +53,14 @@ const EndpointViewer = () => {
 
   const updateDraft = (changes: Partial<EndpointConfig>) => {
     dispatch({ type: "UPDATE_DRAFT", draft: { ...draft, ...changes } });
+  };
+
+  const handleSave = () => {
+    updateEndpointMutation.mutate(draft);
+  };
+
+  const handleSend = () => {
+    serveMockRequestMutation.mutate({ method, path });
   };
 
   return (
@@ -70,7 +92,13 @@ const EndpointViewer = () => {
           />
 
           <Stack direction="row" spacing={1}>
-            <Button variant="outlined">Save</Button>
+            <Button
+              variant="outlined"
+              onClick={handleSave}
+              loading={updateEndpointMutation.isPending}
+            >
+              Save
+            </Button>
             {isEditing ? (
               <Tooltip
                 describeChild
@@ -83,37 +111,39 @@ const EndpointViewer = () => {
                 </span>
               </Tooltip>
             ) : (
-              <Button variant="contained">
+              <Button variant="contained" onClick={handleSend}>
                 Send
               </Button>
             )}
           </Stack>
         </Stack>
-        <Box>
-          <Typography>Response schema</Typography>
-          <JsonEditor
-            data={responseSchema}
-            defaultValue={FakerSchema.options[0]}
-            restrictTypeSelection={[
-              "object",
-              "array",
-              {
-                enum: "Faker Type",
-                values: FakerSchema.options,
-                matchPriority: 1,
-              },
-            ]}
-            onUpdate={(newSchema) =>
-              updateDraft({
-                responseSchema: newSchema.newData as MockSchemaType,
-              })
-            }
-          />
-        </Box>
-        <Box>
-          <Typography>Generated response</Typography>
-          <JsonEditor data={transpile(responseSchema)} viewOnly/>
-        </Box>
+        <Stack direction="row" spacing={3}>
+          <Box>
+            <Typography>Response schema</Typography>
+            <JsonEditor
+              data={responseSchema}
+              defaultValue={FakerSchema.options[0]}
+              restrictTypeSelection={[
+                "object",
+                "array",
+                {
+                  enum: "Faker Type",
+                  values: FakerSchema.options,
+                  matchPriority: 1,
+                },
+              ]}
+              onUpdate={(newSchema) =>
+                updateDraft({
+                  responseSchema: newSchema.newData as MockSchemaType,
+                })
+              }
+            />
+          </Box>
+          <Box>
+            <Typography>Generated response</Typography>
+            <JsonEditor data={transpile(responseSchema)} viewOnly />
+          </Box>
+        </Stack>
       </Stack>
     </Box>
   );
