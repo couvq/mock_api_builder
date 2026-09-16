@@ -81,7 +81,19 @@ export class EndpointService {
     if (!(await this.endpointRepository.hasEndpointWithId(data.id)))
       throw new NotFoundException('Could not find endpoint with provided id.');
 
-    return await this.endpointRepository.updateEndpoint(data);
+    const updatedEndpoint = await this.endpointRepository.updateEndpoint(data);
+    if (!updatedEndpoint) {
+      throw new InternalServerErrorException(
+        `Failed to update endpoint with id: ${data.id}`,
+      );
+    }
+
+    this.logger.log('Endpoint updated', {
+      id: updatedEndpoint.id,
+      method: updatedEndpoint.method,
+      path: updatedEndpoint.path,
+    });
+    return updatedEndpoint;
   }
 
   async deleteEndpointById(id: string) {
@@ -91,5 +103,6 @@ export class EndpointService {
       throw new NotFoundException('Could not find endpoint with provided id.');
 
     await this.endpointRepository.deleteEndpointById(id);
+    this.logger.log('Endpoint deleted', { id });
   }
 }
