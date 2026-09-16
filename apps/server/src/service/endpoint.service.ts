@@ -2,6 +2,8 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { EndpointRepository } from '../repository/endpoint.repository.js';
@@ -19,6 +21,8 @@ import {
 
 @Injectable()
 export class EndpointService {
+  private readonly logger = new Logger(EndpointService.name);
+
   constructor(private readonly endpointRepository: EndpointRepository) {}
 
   async getAllEndpoints(): Promise<EndpointConfig[]> {
@@ -28,7 +32,7 @@ export class EndpointService {
   async getEndpointById(id: string): Promise<EndpointConfig | undefined> {
     if (!id) throw new BadRequestException('No id provided in request.');
 
-    if (!await this.endpointRepository.hasEndpointWithId(id))
+    if (!(await this.endpointRepository.hasEndpointWithId(id)))
       throw new NotFoundException('Endpoint with id does not exist.');
 
     return await this.endpointRepository.getEndpointById(id);
@@ -49,7 +53,20 @@ export class EndpointService {
       );
 
     const requestWithId = { ...data, id: crypto.randomUUID() };
-    return await this.endpointRepository.addEndpoint(requestWithId);
+    const createdEndpoint =
+      await this.endpointRepository.addEndpoint(requestWithId);
+
+    if (!createdEndpoint)
+      throw new InternalServerErrorException(
+        `Failed to create endpoint with method: ${data.method} and path: ${data.path}`,
+      );
+
+    this.logger.log('Endpoint created', {
+      id: createdEndpoint.id,
+      method: data.method,
+      path: data.path,
+    });
+    return createdEndpoint;
   }
 
   async updateEndpoint(
@@ -61,7 +78,7 @@ export class EndpointService {
 
     if (!success) throw new BadRequestException(error.message);
 
-    if (!await this.endpointRepository.hasEndpointWithId(data.id))
+    if (!(await this.endpointRepository.hasEndpointWithId(data.id)))
       throw new NotFoundException('Could not find endpoint with provided id.');
 
     return await this.endpointRepository.updateEndpoint(data);
@@ -70,7 +87,7 @@ export class EndpointService {
   async deleteEndpointById(id: string) {
     if (!id) throw new BadRequestException('No id provided in request.');
 
-    if (!await this.endpointRepository.hasEndpointWithId(id))
+    if (!(await this.endpointRepository.hasEndpointWithId(id)))
       throw new NotFoundException('Could not find endpoint with provided id.');
 
     await this.endpointRepository.deleteEndpointById(id);
