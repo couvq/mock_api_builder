@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf dist node_modules"
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist node_modules",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,6 +15,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.6.0"
+    "@faker-js/faker": "^10.6.0",
+    "vitest": "^4.1.2"
   }
 }
