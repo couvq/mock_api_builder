@@ -136,6 +136,9 @@ const EndpointViewer = () => {
             restrictTypeSelection={[
               "object",
               "array",
+              "string",
+              "number",
+              "boolean",
               {
                 enum: "Faker Type",
                 values: FakerSchema.options,

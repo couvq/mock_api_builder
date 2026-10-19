@@ -9,15 +9,24 @@ import {
 
 export type TranspiledSchema =
   | string
+  | number
+  | boolean
   | TranspiledSchema[]
   | { [key: string]: TranspiledSchema };
 
 const transpileValue = (value: MockSchemaValueType): TranspiledSchema => {
-  if (FakerSchema.safeParse(value).success) {
-    return fakerGenerators[value as FakerType]();
+  if (typeof value === "string") {
+    if (FakerSchema.safeParse(value).success) {
+      return fakerGenerators[value as FakerType]();
+    }
+    return value;
   }
 
-  if(Array.isArray(value)) {
+  if (typeof value === "number" || typeof value === "boolean") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
     return value.map((val) => transpileValue(val));
   }
 
@@ -38,11 +47,5 @@ export const transpile = (schema: MockSchemaType): TranspiledSchema => {
     return {};
   }
 
-  const transpiledSchema: Record<string, TranspiledSchema> = {};
-
-  for (const [key, value] of Object.entries(parsed.data)) {
-    transpiledSchema[key] = transpileValue(value);
-  }
-
-  return transpiledSchema;
+  return transpileValue(parsed.data);
 };
