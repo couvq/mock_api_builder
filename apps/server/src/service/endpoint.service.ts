@@ -30,10 +30,15 @@ export class EndpointService {
   }
 
   async getEndpointById(id: string): Promise<EndpointConfig | undefined> {
-    if (!id) throw new BadRequestException('No id provided in request.');
+    if (!id) {
+      this.logger.error('getEndpointById failed: no id provided');
+      throw new BadRequestException('No id provided in request.');
+    }
 
-    if (!(await this.endpointRepository.hasEndpointWithId(id)))
+    if (!(await this.endpointRepository.hasEndpointWithId(id))) {
+      this.logger.error('getEndpointById failed: endpoint not found', { id });
       throw new NotFoundException('Endpoint with id does not exist.');
+    }
 
     return await this.endpointRepository.getEndpointById(id);
   }
@@ -45,21 +50,36 @@ export class EndpointService {
       createEndpointRequest,
     );
 
-    if (!success) throw new BadRequestException(error.message);
+    if (!success) {
+      this.logger.error('addEndpoint failed: invalid request schema', {
+        error: error.message,
+      });
+      throw new BadRequestException(error.message);
+    }
 
-    if (await this.endpointRepository.hasEndpoint(data.method, data.path))
+    if (await this.endpointRepository.hasEndpoint(data.method, data.path)) {
+      this.logger.error('addEndpoint failed: endpoint already exists', {
+        method: data.method,
+        path: data.path,
+      });
       throw new ConflictException(
         'Endpoint with method and path already exist.',
       );
+    }
 
     const requestWithId = { ...data, id: crypto.randomUUID() };
     const createdEndpoint =
       await this.endpointRepository.addEndpoint(requestWithId);
 
-    if (!createdEndpoint)
+    if (!createdEndpoint) {
+      this.logger.error('addEndpoint failed: repository returned no endpoint', {
+        method: data.method,
+        path: data.path,
+      });
       throw new InternalServerErrorException(
         `Failed to create endpoint with method: ${data.method} and path: ${data.path}`,
       );
+    }
 
     this.logger.log('Endpoint created', {
       id: createdEndpoint.id,
@@ -76,13 +96,26 @@ export class EndpointService {
       updateEndpointRequest,
     );
 
-    if (!success) throw new BadRequestException(error.message);
+    if (!success) {
+      this.logger.error('updateEndpoint failed: invalid request schema', {
+        error: error.message,
+      });
+      throw new BadRequestException(error.message);
+    }
 
-    if (!(await this.endpointRepository.hasEndpointWithId(data.id)))
+    if (!(await this.endpointRepository.hasEndpointWithId(data.id))) {
+      this.logger.error('updateEndpoint failed: endpoint not found', {
+        id: data.id,
+      });
       throw new NotFoundException('Could not find endpoint with provided id.');
+    }
 
     const updatedEndpoint = await this.endpointRepository.updateEndpoint(data);
     if (!updatedEndpoint) {
+      this.logger.error(
+        'updateEndpoint failed: repository returned no endpoint',
+        { id: data.id },
+      );
       throw new InternalServerErrorException(
         `Failed to update endpoint with id: ${data.id}`,
       );
@@ -97,10 +130,17 @@ export class EndpointService {
   }
 
   async deleteEndpointById(id: string) {
-    if (!id) throw new BadRequestException('No id provided in request.');
+    if (!id) {
+      this.logger.error('deleteEndpointById failed: no id provided');
+      throw new BadRequestException('No id provided in request.');
+    }
 
-    if (!(await this.endpointRepository.hasEndpointWithId(id)))
+    if (!(await this.endpointRepository.hasEndpointWithId(id))) {
+      this.logger.error('deleteEndpointById failed: endpoint not found', {
+        id,
+      });
       throw new NotFoundException('Could not find endpoint with provided id.');
+    }
 
     await this.endpointRepository.deleteEndpointById(id);
     this.logger.log('Endpoint deleted', { id });
