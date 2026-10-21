@@ -20,8 +20,13 @@ export class MockApiService {
     const matchingEndpoint =
       await this.endpointRepository.getEndpointByMethodAndPath(method, path);
 
-    if (!matchingEndpoint)
+    if (!matchingEndpoint) {
+      this.logger.error('serveMock failed: no matching endpoint', {
+        method,
+        path,
+      });
       throw new NotFoundException(`Endpoint does not exist for method: ${method} and path: ${path}`);
+    }
 
     const { responseSchema } = matchingEndpoint;
     return transpile(responseSchema);
