@@ -1,8 +1,7 @@
 import {
   FakerSchema,
-  transpile,
   type EndpointConfig,
-  type MockSchemaType,
+  type MockSchemaType
 } from "@mock-api-builder/schema";
 import {
   Box,
@@ -15,14 +14,14 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { JsonEditor } from "json-edit-react";
-import { useEditor, useEditorDispatch } from "../../context/EditorContext";
-import { useEndpoints } from "../../hooks/endpoints";
-import { isEqual } from "lodash";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { JsonEditor } from "json-edit-react";
+import { isEqual } from "lodash";
 import { updateEndpoint } from "../../api/endpoint";
-import { useToast } from "../../hooks/toast";
+import { useEditor, useEditorDispatch } from "../../context/EditorContext";
 import { useMockRequest } from "../../context/MockRequestProvider";
+import { useEndpoints } from "../../hooks/endpoints";
+import { useToast } from "../../hooks/toast";
 
 const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
 
