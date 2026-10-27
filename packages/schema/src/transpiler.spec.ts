@@ -1,6 +1,31 @@
 import { describe, expect, it, vi } from "vitest";
 import { transpile } from "./transpiler.js";
-import { fakerGenerators } from "./generators.js";
+
+const MOCK_FAKER_VALUES: Record<string, string> = {
+  "faker.string.uuid": "test-uuid",
+  "faker.internet.email": "test@example.com",
+  "faker.person.firstName": "John",
+  "faker.person.lastName": "Doe",
+  "faker.person.fullName": "John Doe",
+};
+
+vi.mock("@faker-js/faker", () => {
+  return {
+    faker: {
+      string: {
+        uuid: () => MOCK_FAKER_VALUES["faker.string.uuid"],
+      },
+      internet: {
+        email: () => MOCK_FAKER_VALUES["faker.internet.email"],
+      },
+      person: {
+        firstName: () => MOCK_FAKER_VALUES["faker.person.firstName"],
+        lastName: () => MOCK_FAKER_VALUES["faker.person.lastName"],
+        fullName: () => MOCK_FAKER_VALUES["faker.person.fullName"],
+      },
+    },
+  };
+});
 
 describe("transpiler", () => {
   describe("plain root values", () => {
@@ -20,35 +45,22 @@ describe("transpiler", () => {
 
   describe("faker values", () => {
     it("transpiles a faker type at the root into its generated value", () => {
-      const spy = vi
-        .spyOn(fakerGenerators, "faker.string.uuid")
-        .mockReturnValue("generated-uuid");
-
-      expect(transpile("faker.string.uuid")).toBe("generated-uuid");
-      expect(spy).toHaveBeenCalledOnce();
-
-      spy.mockRestore();
+      expect(transpile("faker.string.uuid")).toBe(MOCK_FAKER_VALUES["faker.string.uuid"]);
+      expect(transpile("faker.internet.email")).toBe(MOCK_FAKER_VALUES["faker.internet.email"]);
+      expect(transpile("faker.person.firstName")).toBe(MOCK_FAKER_VALUES["faker.person.firstName"]);
+      expect(transpile("faker.person.lastName")).toBe(MOCK_FAKER_VALUES["faker.person.lastName"]);
+      expect(transpile("faker.person.fullName")).toBe(MOCK_FAKER_VALUES["faker.person.fullName"]);
     });
 
     it("transpiles a faker type nested in an object", () => {
-      const spy = vi
-        .spyOn(fakerGenerators, "faker.internet.email")
-        .mockReturnValue("test@example.com");
-
       expect(transpile({ email: "faker.internet.email" })).toEqual({
-        email: "test@example.com",
+        email: MOCK_FAKER_VALUES["faker.internet.email"],
       });
-
-      spy.mockRestore();
     });
   });
 
   describe("objects", () => {
     it("transpiles an object mixing plain primitives and faker types", () => {
-      const uuidSpy = vi
-        .spyOn(fakerGenerators, "faker.string.uuid")
-        .mockReturnValue("generated-uuid");
-
       expect(
         transpile({
           id: "faker.string.uuid",
@@ -57,13 +69,11 @@ describe("transpiler", () => {
           isActive: true,
         }),
       ).toEqual({
-        id: "generated-uuid",
+        id: MOCK_FAKER_VALUES["faker.string.uuid"],
         name: "Alice",
         age: 30,
         isActive: true,
       });
-
-      uuidSpy.mockRestore();
     });
 
     it("transpiles nested objects", () => {
@@ -95,27 +105,19 @@ describe("transpiler", () => {
     });
 
     it("transpiles arrays containing faker types", () => {
-      const spy = vi
-        .spyOn(fakerGenerators, "faker.person.firstName")
-        .mockReturnValue("Charlie");
-
       expect(transpile(["faker.person.firstName", "literal"])).toEqual([
-        "Charlie",
+        MOCK_FAKER_VALUES["faker.person.firstName"],
         "literal",
       ]);
-
-      spy.mockRestore();
     });
   });
 
   describe("invalid input", () => {
     it("returns an empty object when schema parsing fails", () => {
-      const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      vi.spyOn(console, "error").mockImplementation(() => {});
 
       // null is not a supported mock schema value
       expect(transpile(null as never)).toEqual({});
-
-      errorSpy.mockRestore();
     });
   });
 });
