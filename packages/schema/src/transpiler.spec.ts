@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { transpile } from "./transpiler.js";
+import { FakerType } from "./index.js";
 
-const MOCK_FAKER_VALUES: Record<string, string> = {
+const MOCK_FAKER_VALUES: Record<FakerType, string> = {
   "faker.string.uuid": "test-uuid",
   "faker.internet.email": "test@example.com",
   "faker.person.firstName": "John",
