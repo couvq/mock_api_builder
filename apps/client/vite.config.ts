@@ -1,4 +1,3 @@
-/// <reference types="vitest/config" />
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 import { defineConfig } from "vite";
@@ -17,16 +16,5 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ["@mock-api-builder/schema"],
-  },
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["./src/test/setup.ts"],
-    css: true,
-    coverage: {
-      reporter: ["text", "html"],
-      include: ["src/**/*.{ts,tsx}"],
-      exclude: ["src/**/*.test.{ts,tsx}", "src/test/**", "src/main.tsx"],
-    },
   },
 });
