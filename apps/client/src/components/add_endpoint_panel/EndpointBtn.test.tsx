@@ -1,6 +1,6 @@
 import type { EndpointConfig } from "@mock-api-builder/schema";
 import { render, screen } from "@testing-library/react";
-import EditorContextProvider from "../../context/EditorContext";
+import EditorContextProvider from "../../context/Editor/EditorContext";
 import EndpointBtn from "./EndpointBtn";
 
 describe("EndpointBtn component tests", () => {
