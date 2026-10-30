@@ -65,7 +65,7 @@ const EndpointViewer = () => {
   };
 
   return (
-    <Box>
+    <Box data-testid="endpoint-viewer">
       <Stack direction="column">
         <Stack direction="row" spacing={4}>
           <TextField
