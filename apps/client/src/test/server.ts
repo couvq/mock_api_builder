@@ -5,8 +5,12 @@ import { setupServer } from "msw/node";
 export const sampleEndpoint: EndpointConfig = {
   id: "123",
   method: "GET",
-  path: "friends",
+  path: "friend",
   responseSchema: {},
+};
+
+export const sampleMockApiResponse = {
+  friends: [],
 };
 
 export const server = setupServer(
@@ -14,4 +18,5 @@ export const server = setupServer(
   http.put("*/endpoint", async ({ request }) =>
     HttpResponse.json(await request.json()),
   ),
+  http.get("*/mock_api/*", async () => HttpResponse.json(sampleMockApiResponse)),
 );

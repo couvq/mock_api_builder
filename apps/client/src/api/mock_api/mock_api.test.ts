@@ -1,35 +1,33 @@
+import { http, HttpResponse } from "msw";
 import { serveMockRequest, type ServeMockRequestPayload } from ".";
+import { sampleMockApiResponse, server } from "../../test/server";
 
 const MOCK_API_REQUEST: ServeMockRequestPayload = {
   method: "GET",
-  path: "friends",
+  path: "friend",
 };
 
+beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
 describe("mock api tests", () => {
-  let fetchMock: ReturnType<typeof vi.fn>;
-
-  beforeEach(() => {
-    fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
-  });
-
   it("should perform a mock API request", async () => {
-    const expectedResponse = { data: [] };
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => expectedResponse,
-    });
     const response = await serveMockRequest(MOCK_API_REQUEST);
-    expect(response).toEqual(expectedResponse);
+    expect(response).toEqual(sampleMockApiResponse);
   });
 
   it("should handle a failed mock API request", async () => {
-    fetchMock.mockResolvedValue({
-      ok: false,
-      status: 404,
-      statusText: "Not Found",
-      json: async () => ({ error: "Not Found" }),
-    });
-    await expect(serveMockRequest(MOCK_API_REQUEST)).rejects.toThrow('An error occurred calling mock endpoint: 404 Not Found');
+    const statusCode = 500;
+    const statusText = "Internal Server Error";
+    server.use(
+      http.get(
+        "*/mock_api/*",
+        async () => new HttpResponse(null, { status: statusCode, statusText }),
+      ),
+    );
+    await expect(serveMockRequest(MOCK_API_REQUEST)).rejects.toThrow(
+      `An error occurred calling mock endpoint: ${statusCode} ${statusText}`,
+    );
   });
 });
