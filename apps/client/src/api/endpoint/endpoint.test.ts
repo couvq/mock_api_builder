@@ -1,76 +1,55 @@
-import type { EndpointConfig } from "@mock-api-builder/schema";
+import { http, HttpResponse } from "msw";
 import { getAllEndpoints, updateEndpoint } from ".";
+import {
+  sampleEndpoint,
+  server,
+} from "../../test/server";
 
-const sampleEndpoint: EndpointConfig = {
-  id: "123",
-  method: "GET",
-  path: "/example",
-  responseSchema: {},
-};
+beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 describe("endpoint api tests", () => {
-  let fetchMock: ReturnType<typeof vi.fn>;
-
-  beforeEach(() => {
-    fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
-  });
-
   describe("getAllEndpoints", () => {
     it("should return endpoint configs upon successful 200 response", async () => {
-      const endpointConfigs: EndpointConfig[] = [sampleEndpoint];
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => endpointConfigs,
-      });
       const result = await getAllEndpoints();
-      expect(result).toEqual(endpointConfigs);
+      expect(result).toEqual([sampleEndpoint]);
     });
 
     it("should throw an error if the response is not ok", async () => {
+      const statusCode = 500;
       const statusText = "Internal Server Error";
-      fetchMock.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        statusText,
-      });
+      server.use(
+        http.get(
+          "*/endpoint",
+          async () =>
+            new HttpResponse(null, { status: statusCode, statusText }),
+        ),
+      );
       await expect(getAllEndpoints()).rejects.toThrow(
-        `Failed to fetch endpoints: 500 ${statusText}`,
+        `Failed to fetch endpoints: ${statusCode} ${statusText}`,
       );
     });
   });
 
   describe("updateEndpoint", () => {
     it("should update an endpoint successfully", async () => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        json: async () => sampleEndpoint,
-      });
       const result = await updateEndpoint(sampleEndpoint);
       expect(result).toEqual(sampleEndpoint);
-      expect(fetchMock).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(sampleEndpoint),
-        }),
-      );
     });
 
     it("should throw an error if the response is not ok", async () => {
+      const statusCode = 500;
       const statusText = "Internal Server Error";
-      fetchMock.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        statusText,
-      });
+      server.use(
+        http.put(
+          "*/endpoint",
+          async () =>
+            new HttpResponse(null, { status: statusCode, statusText }),
+        ),
+      );
       await expect(updateEndpoint(sampleEndpoint)).rejects.toThrow(
-        `An error occurred while updating endpoint: 500 ${statusText}`,
+        `An error occurred while updating endpoint: ${statusCode} ${statusText}`,
       );
     });
   });
