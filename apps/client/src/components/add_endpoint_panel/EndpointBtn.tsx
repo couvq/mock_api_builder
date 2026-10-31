@@ -1,6 +1,6 @@
 import type { EndpointConfig } from "@mock-api-builder/schema";
 import { Button } from "@mui/material";
-import { useEditorDispatch } from "../../context/EditorContext";
+import { useEditorDispatch } from "../../context/Editor/EditorContext";
 
 interface EndpointBtnProps {
   endpoint: EndpointConfig;

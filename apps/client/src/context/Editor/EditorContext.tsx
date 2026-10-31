@@ -6,13 +6,14 @@ import {
   type ActionDispatch,
   type ReactNode,
 } from "react";
+import { editorReducer } from "./editorReducer";
 
-type EditorState = {
+export type EditorState = {
   activeEndpointId: string | undefined;
   draft: EndpointConfig | undefined;
 };
 
-type EditorAction =
+export type EditorAction =
   | { type: "ADD_ENDPOINT"; endpoint: EndpointConfig }
   | { type: "UPDATE_DRAFT"; draft: EndpointConfig };
 
@@ -29,28 +30,6 @@ const EditorContext = createContext<EditorState | undefined>(undefined);
 const EditorDispatchContext = createContext<
   ActionDispatch<[action: EditorAction]> | undefined
 >(undefined);
-
-const editorReducer = (
-  state: EditorState,
-  action: EditorAction,
-): EditorState => {
-  switch (action.type) {
-    case "ADD_ENDPOINT":
-      return {
-        activeEndpointId: action.endpoint.id,
-        draft: action.endpoint,
-      };
-
-    case "UPDATE_DRAFT":
-      return {
-        ...state,
-        draft: action.draft,
-      };
-
-    default:
-      return state;
-  }
-};
 
 const EditorContextProvider = ({ children }: EditorContextProviderProps) => {
   const [state, dispatch] = useReducer(editorReducer, initialState);

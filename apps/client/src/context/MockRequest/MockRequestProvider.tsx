@@ -3,7 +3,7 @@ import { createContext, useContext, type ReactNode } from "react";
 import {
   serveMockRequest,
   type ServeMockRequestPayload,
-} from "../api/mock_api";
+} from "../../api/mock_api";
 import type { TranspiledSchema } from "@mock-api-builder/schema";
 
 interface MockRequestProviderProps {

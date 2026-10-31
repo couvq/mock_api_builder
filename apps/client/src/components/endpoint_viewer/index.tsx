@@ -18,12 +18,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { JsonEditor } from "json-edit-react";
 import { isEqual } from "lodash";
 import { updateEndpoint } from "../../api/endpoint";
-import { useEditor, useEditorDispatch } from "../../context/EditorContext";
-import { useMockRequest } from "../../context/MockRequestProvider";
+import { useEditor, useEditorDispatch } from "../../context/Editor/EditorContext";
+import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { useEndpoints } from "../../hooks/endpoints";
 import { useToast } from "../../hooks/toast";
 
-const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
+export const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
 
 const EndpointViewer = () => {
   const toast = useToast();
@@ -65,7 +65,7 @@ const EndpointViewer = () => {
   };
 
   return (
-    <Box>
+    <Box data-testid="endpoint-viewer">
       <Stack direction="column">
         <Stack direction="row" spacing={4}>
           <TextField

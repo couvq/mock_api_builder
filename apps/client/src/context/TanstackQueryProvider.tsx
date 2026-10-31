@@ -11,18 +11,21 @@ interface TanstackQueryProviderProps {
   children: ReactNode;
 }
 
-const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error) => {
-      enqueueSnackbar(error.message, { variant: "error" });
-    },
-  }),
-  mutationCache: new MutationCache({
-    onError: (error) => {
-      enqueueSnackbar(error.message, { variant: "error" });
-    },
-  }),
-});
+export const createQueryClient = () =>
+  new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error) => {
+        enqueueSnackbar(error.message, { variant: "error" });
+      },
+    }),
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        enqueueSnackbar(error.message, { variant: "error" });
+      },
+    }),
+  });
+
+const queryClient = createQueryClient();
 
 const TanstackQueryProvider = ({ children }: TanstackQueryProviderProps) => {
   return (
