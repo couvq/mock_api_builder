@@ -23,7 +23,7 @@ import { useMockRequest } from "../../context/MockRequestProvider";
 import { useEndpoints } from "../../hooks/endpoints";
 import { useToast } from "../../hooks/toast";
 
-const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
+export const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
 
 const EndpointViewer = () => {
   const toast = useToast();
