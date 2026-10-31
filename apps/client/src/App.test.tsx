@@ -82,4 +82,8 @@ describe("App", () => {
     ).toBeInTheDocument();
     expect(saveBtn).toBeEnabled();
   });
+
+  it.todo('should support sending mock requests for a given endpoint config (full send flow)', async () => {
+    // TODO
+  })
 });
