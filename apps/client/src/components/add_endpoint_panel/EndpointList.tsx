@@ -10,9 +10,13 @@ import { useEndpoints } from "../../hooks/endpoints";
 import EndpointBtn from "./EndpointBtn";
 
 const LoadingSkeleton = () => (
-  <Stack direction="column" spacing={0.5}>
-    {Array.from({ length: 5 }).map(() => (
-      <Skeleton variant="rectangular" width={"100%"} height={20} />
+  <Stack
+    direction="column"
+    spacing={0.5}
+    data-testid="endpoint-list-loading-skeleton"
+  >
+    {Array.from({ length: 5 }).map((_, i) => (
+      <Skeleton key={i} variant="rectangular" width={"100%"} height={20} />
     ))}
   </Stack>
 );

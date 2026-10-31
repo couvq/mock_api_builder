@@ -16,10 +16,14 @@ export const sampleMockApiResponse = {
 };
 
 export const server = setupServer(
-  http.get("*/endpoint", async () => HttpResponse.json([sampleEndpoint])),
-  http.put("*/endpoint", async ({ request }) =>
-    HttpResponse.json(await request.json()),
-  ),
+  http.get("*/endpoint", async () => {
+    await delay(50);
+    return HttpResponse.json([sampleEndpoint]);
+  }),
+  http.put("*/endpoint", async ({ request }) => {
+    await delay(50);
+    return HttpResponse.json(await request.json());
+  }),
   http.get("*/mock_api/*", async () => {
     await delay(50);
     return HttpResponse.json(sampleMockApiResponse);
