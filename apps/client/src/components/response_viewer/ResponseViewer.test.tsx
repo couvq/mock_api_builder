@@ -5,7 +5,7 @@ import { http, HttpResponse } from "msw";
 import type { ReactNode } from "react";
 import MockRequestProvider, {
   useMockRequest,
-} from "../../context/MockRequestProvider";
+} from "../../context/MockRequest/MockRequestProvider";
 import {
   sampleEndpoint,
   sampleMockApiResponse,

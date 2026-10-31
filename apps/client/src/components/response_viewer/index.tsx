@@ -1,5 +1,5 @@
 import { CircularProgress } from "@mui/material";
-import { useMockRequest } from "../../context/MockRequestProvider";
+import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { JsonEditor } from "json-edit-react";
 
 const ResponseViewer = () => {

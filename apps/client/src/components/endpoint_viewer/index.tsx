@@ -19,7 +19,7 @@ import { JsonEditor } from "json-edit-react";
 import { isEqual } from "lodash";
 import { updateEndpoint } from "../../api/endpoint";
 import { useEditor, useEditorDispatch } from "../../context/Editor/EditorContext";
-import { useMockRequest } from "../../context/MockRequestProvider";
+import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { useEndpoints } from "../../hooks/endpoints";
 import { useToast } from "../../hooks/toast";
 

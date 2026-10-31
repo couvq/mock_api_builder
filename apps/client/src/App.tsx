@@ -3,7 +3,7 @@ import DashboardLayout from "./components/dashboard_layout";
 import EndpointViewer from "./components/endpoint_viewer";
 import ResponseViewer from "./components/response_viewer";
 import EditorContextProvider from "./context/Editor/EditorContext";
-import MockRequestProvider from "./context/MockRequestProvider";
+import MockRequestProvider from "./context/MockRequest/MockRequestProvider";
 import TanstackQueryProvider from "./context/TanstackQueryProvider";
 import ToastProvider from "./context/ToastProvider";
 
