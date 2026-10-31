@@ -27,7 +27,7 @@ const EndpointList = () => {
     <>
       <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
         {data.map((endpoint) => (
-          <ListItem>
+          <ListItem key={endpoint.id}>
             <EndpointBtn endpoint={endpoint} />
           </ListItem>
         ))}
