@@ -3,3 +3,4 @@ node_modules/
 dist/
 apps/server/data/*
 !apps/server/data/.gitkeep
+.claude/
