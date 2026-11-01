@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  client:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,9 +22,21 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Build workspace packages: the client imports @mock-api-builder/schema from its dist output.
-      - run: pnpm --filter "./packages/*" run build
+      # Build workspace packages first: client and server import
+      # @mock-api-builder/schema from its dist output.
+      - run: pnpm build:packages
 
-      - run: pnpm --filter client lint
+      # Prettier enforces code styling.
+      - run: pnpm format:check
 
-      - run: pnpm --filter client test:coverage
+      # Linting passes.
+      - run: pnpm lint
+
+      # Type checks pass (tests included).
+      - run: pnpm typecheck
+
+      # Tests pass with coverage thresholds met.
+      - run: pnpm test
+
+      # Everything builds.
+      - run: pnpm build:apps

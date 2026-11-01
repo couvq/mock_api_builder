@@ -1,0 +1,10 @@
+# Use the repo's pinned Node (.nvmrc) before running anything: git launches
+# hooks with the login shell's default Node, and the global pnpm crashes on
+# Node < 22 (node:sqlite). No-op when nvm isn't installed.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+  nvm use >/dev/null 2>&1
+fi
+
+npx lint-staged
