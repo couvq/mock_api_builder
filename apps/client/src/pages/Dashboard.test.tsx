@@ -1,14 +1,31 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { sampleEndpoint, sampleMockApiResponse, server } from "./test/server";
-import App from "./App";
+import { sampleEndpoint, sampleMockApiResponse, server } from "../test/server";
 import { http, HttpResponse } from "msw";
 import type { EndpointConfig } from "@mock-api-builder/schema";
-import { MOCK_API_BASE_URL } from "./components/endpoint_viewer";
+import { MOCK_API_BASE_URL } from "../components/endpoint_viewer";
+import Dashboard from "./Dashboard";
+import TanstackQueryProvider from "../context/TanstackQueryProvider";
+import type { ReactElement } from "react";
+import ToastProvider from "../context/ToastProvider";
+import EditorContextProvider from "../context/Editor/EditorContext";
+import MockRequestProvider from "../context/MockRequest/MockRequestProvider";
+
+const renderWithProviders = (ui: ReactElement) => {
+  return render(
+    <TanstackQueryProvider>
+      <ToastProvider>
+        <EditorContextProvider>
+          <MockRequestProvider>{ui}</MockRequestProvider>
+        </EditorContextProvider>
+      </ToastProvider>
+    </TanstackQueryProvider>,
+  );
+};
 
 const user = userEvent.setup();
 
-describe("App", () => {
+describe("Dashboard", () => {
   it("should support editing an endpoint configuration (full edit flow)", async () => {
     const editedEndpoint = {
       ...sampleEndpoint,
@@ -23,7 +40,7 @@ describe("App", () => {
     server.use(
       http.get("*/endpoint", () => HttpResponse.json([sampleEndpoint])),
     );
-    render(<App />);
+    renderWithProviders(<Dashboard />);
 
     // click the endpoint btn to enable editing in the endpoint viewer
     const endpointBtnLabel = `${sampleEndpoint.method} ${sampleEndpoint.path}`;
@@ -88,7 +105,7 @@ describe("App", () => {
   });
 
   it("should support sending mock requests for a given endpoint config (full send flow)", async () => {
-    render(<App />);
+    renderWithProviders(<Dashboard />);
 
     // click the endpoint btn to show the endpoint in the endpoint viewer
     const endpointBtnLabel = `${sampleEndpoint.method} ${sampleEndpoint.path}`;
@@ -110,7 +127,7 @@ describe("App", () => {
     expect(responseJsonViewer).toBeInTheDocument();
     const [sampleMockResponseObjectKey] = Object.keys(sampleMockApiResponse);
     expect(responseJsonViewer).toHaveTextContent(sampleMockResponseObjectKey);
-    for(const friend of sampleMockApiResponse.friends) {
+    for (const friend of sampleMockApiResponse.friends) {
       expect(responseJsonViewer).toHaveTextContent(friend);
     }
   });

@@ -1,8 +1,5 @@
-
 const CreateEndpoint = () => {
-  return (
-    <div>CreateEndpoint</div>
-  )
-}
+  return <div>CreateEndpoint</div>;
+};
 
-export default CreateEndpoint
+export default CreateEndpoint;
