@@ -25,7 +25,9 @@ export class MockApiService {
         method,
         path,
       });
-      throw new NotFoundException(`Endpoint does not exist for method: ${method} and path: ${path}`);
+      throw new NotFoundException(
+        `Endpoint does not exist for method: ${method} and path: ${path}`,
+      );
     }
 
     const { responseSchema } = matchingEndpoint;

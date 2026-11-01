@@ -1,6 +1,10 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { sampleEndpoint, sampleMockApiResponse, server } from "../../test/server";
+import {
+  sampleEndpoint,
+  sampleMockApiResponse,
+  server,
+} from "../../test/server";
 import { http, HttpResponse } from "msw";
 import type { EndpointConfig } from "@mock-api-builder/schema";
 import { MOCK_API_BASE_URL } from "../../components/endpoint_viewer";

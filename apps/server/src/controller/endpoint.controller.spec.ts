@@ -159,16 +159,16 @@ describe('EndpointController', () => {
   });
 
   it('should delete endpoint by id', async () => {
-    expect((await endpointController.getAllEndpoints())).toHaveLength(0)
+    expect(await endpointController.getAllEndpoints()).toHaveLength(0);
     const createdEndpoint = await endpointController.addEndpoint({
       method: 'GET',
       path: 'test',
       responseSchema: {},
     });
-    expect((await endpointController.getAllEndpoints())).toHaveLength(1)
+    expect(await endpointController.getAllEndpoints()).toHaveLength(1);
 
     // @ts-ignore
     await endpointController.deleteEndpointById(createdEndpoint?.id);
-    expect((await endpointController.getAllEndpoints())).toHaveLength(0)
+    expect(await endpointController.getAllEndpoints()).toHaveLength(0);
   });
 });

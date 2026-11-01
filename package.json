@@ -3,6 +3,20 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf node_modules dist apps/*/node_modules apps/*/dist packages/*/node_modules packages/*/dist",
-    "build": "pnpm install && pnpm --filter \"./packages/*\" run build"
+    "build": "pnpm install && pnpm --filter \"./packages/*\" run build",
+    "prepare": "husky",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "pnpm --filter client lint && pnpm --filter server lint",
+    "typecheck": "pnpm --filter client typecheck && pnpm --filter server typecheck && pnpm --filter @mock-api-builder/schema typecheck",
+    "test": "pnpm --filter @mock-api-builder/schema test && pnpm --filter client test:coverage && pnpm --filter server test:cov",
+    "build:packages": "pnpm --filter \"./packages/*\" run build",
+    "build:apps": "pnpm --filter client build && pnpm --filter server build",
+    "verify": "pnpm build:packages && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build:apps"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.4.2"
   }
 }
