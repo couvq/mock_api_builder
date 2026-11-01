@@ -25,11 +25,11 @@ name: Claude - Diff-Aware PR Reviewer
 # SAFETY
 # - This workflow does not change code. It only writes report files and posts a review.
 # - The review uses the COMMENT event (never APPROVE / REQUEST_CHANGES), so it cannot gate merges.
-# - Runs automatically on pull_request events (opened, reopened, synchronize) and can also be invoked manually.
+# - Runs automatically on pull_request events (opened, reopened, synchronize, ready_for_review) and can also be invoked manually.
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
     inputs:
       pr_number:
