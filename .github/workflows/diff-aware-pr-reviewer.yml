@@ -89,7 +89,7 @@ jobs:
             - Keep suggestions minimal and safe; do not assume project-specific build steps.
           claude_args: |
             --model claude-sonnet-5-5
-            --allowedTools Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(mkdir -p reports)
+            --allowedTools "Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(mkdir -p reports)"
 
       - name: Upload reports artifact
         if: ${{ hashFiles('reports/**') != '' }}
