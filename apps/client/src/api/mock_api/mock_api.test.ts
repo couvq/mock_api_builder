@@ -7,10 +7,6 @@ const MOCK_API_REQUEST: ServeMockRequestPayload = {
   path: "friend",
 };
 
-beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
 describe("mock api tests", () => {
   it("should perform a mock API request", async () => {
     const response = await serveMockRequest(MOCK_API_REQUEST);

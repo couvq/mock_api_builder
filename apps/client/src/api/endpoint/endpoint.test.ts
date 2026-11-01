@@ -5,10 +5,6 @@ import {
   server,
 } from "../../test/server";
 
-beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
 describe("endpoint api tests", () => {
   describe("getAllEndpoints", () => {
     it("should return endpoint configs upon successful 200 response", async () => {

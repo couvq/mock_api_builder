@@ -70,8 +70,7 @@ describe("editorReducer", () => {
 
   it("should throw an error for unknown actions", () => {
     const unknownAction: EditorAction = {
-      // adding an unkown action just for test purposes, typescript helps us out here and won't transpile without the ts-ignore
-      // @ts-ignore
+      // @ts-expect-error intentionally invalid action type to test the reducer's unknown-action branch
       type: "UNKNOWN_ACTION",
     };
 

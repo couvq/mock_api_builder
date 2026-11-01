@@ -17,10 +17,6 @@ function renderWithProviders(ui: ReactNode) {
   );
 }
 
-beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
 describe("EndpointList", () => {
   it("should display the correct list of endpoints", async () => {
     renderWithProviders(<EndpointList />);

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { sampleEndpoint, sampleMockApiResponse, server } from "./test/server";
 import App from "./App";
@@ -8,17 +8,13 @@ import { MOCK_API_BASE_URL } from "./components/endpoint_viewer";
 
 const user = userEvent.setup();
 
-beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
 describe("App", () => {
   it("should support editing an endpoint configuration (full edit flow)", async () => {
     const editedEndpoint = {
       ...sampleEndpoint,
       method: "POST",
       path: "best_friend",
-      responseSchema: { best_friends: "firstName" },
+      responseSchema: { best_friends: [] },
     } satisfies EndpointConfig;
 
     const [initialKey] = Object.keys(sampleEndpoint.responseSchema);
@@ -57,11 +53,18 @@ describe("App", () => {
     // edit response schema
     await user.dblClick(screen.getByText(initialKey));
     const keyInput = screen.getByDisplayValue(initialKey);
+    await user.clear(keyInput);
     await user.type(keyInput, `${editedKey}{Enter}`);
 
-    // api should return the endpoint we just edited now
+    // api should return the endpoint we just edited now, and capture the
+    // PUT body so we can assert the save sent the edited config
+    let putBody: EndpointConfig | undefined;
     server.use(
       http.get("*/endpoint", () => HttpResponse.json([editedEndpoint])),
+      http.put("*/endpoint", async ({ request }) => {
+        putBody = (await request.json()) as EndpointConfig;
+        return HttpResponse.json(putBody);
+      }),
     );
     // disabled since we need to save our edits before we can send again
     const sendBtn = screen.getByRole("button", {
@@ -76,6 +79,12 @@ describe("App", () => {
       await screen.findByText("Endpoint saved successfully."),
     ).toBeInTheDocument();
     expect(saveBtn).toBeEnabled();
+    expect(putBody).toEqual(editedEndpoint);
+    // once saved, sending is enabled again (the disabled button is swapped
+    // for a fresh enabled one, so re-query rather than reuse sendBtn)
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /send/i })).toBeEnabled(),
+    );
   });
 
   it("should support sending mock requests for a given endpoint config (full send flow)", async () => {
