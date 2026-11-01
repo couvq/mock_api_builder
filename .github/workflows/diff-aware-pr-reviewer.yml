@@ -3,7 +3,8 @@ name: Claude - Diff-Aware PR Reviewer
 # ABOUT THIS WORKFLOW
 # - Purpose: Generate a thorough, diff-aware review for a specific PR and write a markdown report under reports/.
 # - Trigger: Automatically on PR open/reopen/new commit (pull_request), plus manual (workflow_dispatch).
-# - Outputs: reports/pr-<PR>-review.md and optional PR comment linking to it.
+# - Outputs: reports/pr-<PR>-review.md (human-readable) and reports/pr-<PR>-review.json
+#   (GitHub review payload), then posts ONE pull request review with inline line comments.
 # - Copy/Paste Ready: You can drop this file into other repos and adjust:
 #   - inputs, prompt, claude_args, and permissions for your stack.
 #
@@ -22,12 +23,13 @@ name: Claude - Diff-Aware PR Reviewer
 # - If you prefer different output paths, change reports/ to your desired directory.
 #
 # SAFETY
-# - This workflow does not change code. It only writes a report file and can optionally post a comment.
-# - Runs automatically on pull_request events (opened, reopened, synchronize) and can also be invoked manually.
+# - This workflow does not change code. It only writes report files and posts a review.
+# - The review uses the COMMENT event (never APPROVE / REQUEST_CHANGES), so it cannot gate merges.
+# - Runs automatically on pull_request events (opened, reopened, synchronize, ready_for_review) and can also be invoked manually.
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, ready_for_review]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -70,26 +72,52 @@ jobs:
             PR NUMBER: ${{ env.PR_NUMBER }}
             POST COMMENT: ${{ env.POST_COMMENT }}
 
-            You are a careful PR reviewer.
+            You are a careful PR reviewer. You post a single GitHub pull request REVIEW
+            whose findings are attached as inline comments on specific lines of the diff.
 
-            Goal:
-            - Review pull request #${{ env.PR_NUMBER }}.
-            - First, post a short execution plan inline in the report (checks to run, files to touch).
-            - Analyze the diff and run lightweight checks (no builds): lint-like reasoning, potential bugs, risky changes.
-            - Produce a concise markdown report at reports/pr-${{ env.PR_NUMBER }}-review.md with:
-              - Summary
-              - Strengths
-              - Risks / Potential bugs
-              - Suggested minimal patch as a unified diff inside a fenced code block
-              - Next actions for the author
+            Gather context (no builds):
+            - Read PR metadata: `gh pr view ${{ env.PR_NUMBER }} --json title,body,headRefOid,files`.
+            - Read the diff: `gh pr diff ${{ env.PR_NUMBER }}`.
+            - Note the PR head commit SHA (headRefOid); every inline comment is anchored to it.
+
+            Analyze the diff with lint-like reasoning: potential bugs, risky changes, unclear code.
+            Anchor each finding to a concrete line WHERE POSSIBLE.
+
+            Line-anchoring rules (GitHub rejects comments on lines outside the diff with a 422):
+            - Only comment on lines shown in the diff hunks.
+            - For an added ('+') or context line, use its NEW-file line number and "side": "RIGHT".
+            - For a removed ('-') line, use its OLD-file line number and "side": "LEFT".
+            - For a multi-line range, also set "start_line" and "start_side".
+            - If a finding cannot be anchored to a diff line, put it in the review body instead,
+              not as an inline comment.
+
+            Create the output dir with `mkdir -p reports`, then write TWO files:
+            1. reports/pr-${{ env.PR_NUMBER }}-review.md — human-readable report:
+               Summary, Strengths, Risks / Potential bugs, Next actions for the author.
+            2. reports/pr-${{ env.PR_NUMBER }}-review.json — the exact GitHub review payload:
+               {
+                 "commit_id": "<headRefOid>",
+                 "event": "COMMENT",
+                 "body": "<Summary + Strengths + Next actions, as markdown>",
+                 "comments": [
+                   { "path": "<repo-relative path>", "line": <int>, "side": "RIGHT",
+                     "body": "<finding in markdown; may include a ```suggestion``` block>" }
+                 ]
+               }
+               - Use "event": "COMMENT" ONLY (never APPROVE or REQUEST_CHANGES).
+               - "comments" may be an empty array when there are no line-anchored findings.
+
+            Post the review when ${{ env.POST_COMMENT }} is "true":
+            - `gh api repos/${{ github.repository }}/pulls/${{ env.PR_NUMBER }}/reviews --method POST --input reports/pr-${{ env.PR_NUMBER }}-review.json`
+            - If that call fails (e.g. a line could not be mapped), fall back to a single
+              top-level comment: `gh pr comment ${{ env.PR_NUMBER }} --body-file reports/pr-${{ env.PR_NUMBER }}-review.md`.
 
             Rules:
-            - Do NOT modify repository files beyond writing the single report file in reports/.
-            - If ${{ env.POST_COMMENT }} is "true", post the full review inline as a markdown PR comment using the report file as the body: `gh pr comment ${{ env.PR_NUMBER }} --body-file reports/pr-${{ env.PR_NUMBER }}-review.md`. Passing the file with --body-file renders the whole report as markdown on the PR (the report is still uploaded as the 'claude-reports' artifact as well).
+            - Do NOT modify repository files beyond writing the two report files in reports/.
             - Keep suggestions minimal and safe; do not assume project-specific build steps.
           claude_args: |
             --model claude-sonnet-5-5
-            --allowedTools "Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(mkdir -p reports)"
+            --allowedTools "Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh api:*),Bash(gh pr comment:*),Bash(mkdir -p reports)"
 
       - name: Upload reports artifact
         if: ${{ hashFiles('reports/**') != '' }}
