@@ -1,0 +1,99 @@
+name: Claude - Diff-Aware PR Reviewer
+
+# ABOUT THIS WORKFLOW
+# - Purpose: Generate a thorough, diff-aware review for a specific PR and write a markdown report under reports/.
+# - Trigger: Automatically on PR open/reopen/new commit (pull_request), plus manual (workflow_dispatch).
+# - Outputs: reports/pr-<PR>-review.md and optional PR comment linking to it.
+# - Copy/Paste Ready: You can drop this file into other repos and adjust:
+#   - inputs, prompt, claude_args, and permissions for your stack.
+#
+# REQUIRED SECRETS
+# - CLAUDE_CODE_OAUTH_TOKEN: A long-lived Claude Code OAuth token (see docs/claude-code-action.md).
+#
+# PERMISSIONS EXPLAINED
+# - contents: read, pull-requests: write, issues: read enable reading repo/PR metadata and posting PR comments when enabled.
+# - id-token: write is required by the action runtime.
+# - actions: read lets Claude read CI results on PRs if you include that in additional_permissions.
+#
+# CUSTOMIZATION TIPS
+# - Adjust --allowedTools to restrict/enable commands. Keep the scope tight. Remove gh comment tool if you don't want comments.
+# - Update the prompt sections (checks, formatting, tone) to match your review style.
+# - If you want sticky comments, change logic to maintain a single comment (see docs).
+# - If you prefer different output paths, change reports/ to your desired directory.
+#
+# SAFETY
+# - This workflow does not change code. It only writes a report file and can optionally post a comment.
+# - Runs automatically on pull_request events (opened, reopened, synchronize) and can also be invoked manually.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: PR number to review
+        required: true
+      post_comment:
+        description: Also post a PR comment (true/false)
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: read
+  id-token: write
+  actions: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    # Normalize the PR number and comment flag so the same job works for both
+    # pull_request events (which have no inputs) and manual workflow_dispatch.
+    env:
+      PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+      POST_COMMENT: ${{ inputs.post_comment || 'true' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Diff-aware PR Review with Plan
+        uses: anthropics/claude-code-action@v1
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ env.PR_NUMBER }}
+            POST COMMENT: ${{ env.POST_COMMENT }}
+
+            You are a careful PR reviewer.
+
+            Goal:
+            - Review pull request #${{ env.PR_NUMBER }}.
+            - First, post a short execution plan inline in the report (checks to run, files to touch).
+            - Analyze the diff and run lightweight checks (no builds): lint-like reasoning, potential bugs, risky changes.
+            - Produce a concise markdown report at reports/pr-${{ env.PR_NUMBER }}-review.md with:
+              - Summary
+              - Strengths
+              - Risks / Potential bugs
+              - Suggested minimal patch as a unified diff inside a fenced code block
+              - Next actions for the author
+
+            Rules:
+            - Do NOT modify repository files beyond writing the single report file in reports/.
+            - If ${{ env.POST_COMMENT }} is "true", also post a PR comment: "📄 Review report generated and attached as workflow artifact 'claude-reports' (reports/pr-${{ env.PR_NUMBER }}-review.md)." Use: `gh pr comment ${{ env.PR_NUMBER }} --body "📄 Review report is attached as artifact 'claude-reports' (reports/pr-${{ env.PR_NUMBER }}-review.md)"`.
+            - Keep suggestions minimal and safe; do not assume project-specific build steps.
+          claude_args: |
+            --model claude-4-0-sonnet-20250805
+            --allowedTools Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(mkdir -p reports)
+
+      - name: Upload reports artifact
+        if: ${{ hashFiles('reports/**') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-reports
+          path: reports/**
