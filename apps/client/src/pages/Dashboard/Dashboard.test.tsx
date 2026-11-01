@@ -1,15 +1,15 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { sampleEndpoint, sampleMockApiResponse, server } from "../test/server";
+import { sampleEndpoint, sampleMockApiResponse, server } from "../../test/server";
 import { http, HttpResponse } from "msw";
 import type { EndpointConfig } from "@mock-api-builder/schema";
-import { MOCK_API_BASE_URL } from "../components/endpoint_viewer";
-import Dashboard from "./Dashboard";
-import TanstackQueryProvider from "../context/TanstackQueryProvider";
+import { MOCK_API_BASE_URL } from "../../components/endpoint_viewer";
+import Dashboard from ".";
+import TanstackQueryProvider from "../../context/TanstackQueryProvider";
 import type { ReactElement } from "react";
-import ToastProvider from "../context/ToastProvider";
-import EditorContextProvider from "../context/Editor/EditorContext";
-import MockRequestProvider from "../context/MockRequest/MockRequestProvider";
+import ToastProvider from "../../context/ToastProvider";
+import EditorContextProvider from "../../context/Editor/EditorContext";
+import MockRequestProvider from "../../context/MockRequest/MockRequestProvider";
 
 const renderWithProviders = (ui: ReactElement) => {
   return render(
