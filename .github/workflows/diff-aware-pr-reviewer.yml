@@ -88,7 +88,7 @@ jobs:
             - If ${{ env.POST_COMMENT }} is "true", also post a PR comment: "📄 Review report generated and attached as workflow artifact 'claude-reports' (reports/pr-${{ env.PR_NUMBER }}-review.md)." Use: `gh pr comment ${{ env.PR_NUMBER }} --body "📄 Review report is attached as artifact 'claude-reports' (reports/pr-${{ env.PR_NUMBER }}-review.md)"`.
             - Keep suggestions minimal and safe; do not assume project-specific build steps.
           claude_args: |
-            --model claude-4-0-sonnet-20250805
+            --model claude-sonnet-5-5
             --allowedTools Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*),Bash(mkdir -p reports)
 
       - name: Upload reports artifact
