@@ -18,6 +18,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "oxlint src/",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "dotenv -v DB_FILE_NAME=:memory: -- vitest run",
     "test:watch": "dotenv -v DB_FILE_NAME=:memory: -- vitest",
     "test:cov": "dotenv -v DB_FILE_NAME=:memory: -- vitest run --coverage",
