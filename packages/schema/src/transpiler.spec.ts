@@ -46,11 +46,21 @@ describe("transpiler", () => {
 
   describe("faker values", () => {
     it("transpiles a faker type at the root into its generated value", () => {
-      expect(transpile("faker.string.uuid")).toBe(MOCK_FAKER_VALUES["faker.string.uuid"]);
-      expect(transpile("faker.internet.email")).toBe(MOCK_FAKER_VALUES["faker.internet.email"]);
-      expect(transpile("faker.person.firstName")).toBe(MOCK_FAKER_VALUES["faker.person.firstName"]);
-      expect(transpile("faker.person.lastName")).toBe(MOCK_FAKER_VALUES["faker.person.lastName"]);
-      expect(transpile("faker.person.fullName")).toBe(MOCK_FAKER_VALUES["faker.person.fullName"]);
+      expect(transpile("faker.string.uuid")).toBe(
+        MOCK_FAKER_VALUES["faker.string.uuid"],
+      );
+      expect(transpile("faker.internet.email")).toBe(
+        MOCK_FAKER_VALUES["faker.internet.email"],
+      );
+      expect(transpile("faker.person.firstName")).toBe(
+        MOCK_FAKER_VALUES["faker.person.firstName"],
+      );
+      expect(transpile("faker.person.lastName")).toBe(
+        MOCK_FAKER_VALUES["faker.person.lastName"],
+      );
+      expect(transpile("faker.person.fullName")).toBe(
+        MOCK_FAKER_VALUES["faker.person.fullName"],
+      );
     });
 
     it("transpiles a faker type nested in an object", () => {

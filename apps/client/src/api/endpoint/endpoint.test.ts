@@ -1,9 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { getAllEndpoints, updateEndpoint } from ".";
-import {
-  sampleEndpoint,
-  server,
-} from "../../test/server";
+import { sampleEndpoint, server } from "../../test/server";
 
 describe("endpoint api tests", () => {
   describe("getAllEndpoints", () => {

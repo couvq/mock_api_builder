@@ -39,17 +39,18 @@ describe("EndpointList", () => {
 
   it("should display error message when fetching endpoints fails", async () => {
     const statusCode = 500;
-      const statusText = "Internal Server Error";
-      server.use(
-        http.get(
-          "*/endpoint",
-          async () =>
-            new HttpResponse(null, { status: statusCode, statusText }),
-        ),
-      );
+    const statusText = "Internal Server Error";
+    server.use(
+      http.get(
+        "*/endpoint",
+        async () => new HttpResponse(null, { status: statusCode, statusText }),
+      ),
+    );
     renderWithProviders(<EndpointList />);
 
-    const errorMessage = await screen.findByText(`Failed to fetch endpoints: ${statusCode} ${statusText}`);
+    const errorMessage = await screen.findByText(
+      `Failed to fetch endpoints: ${statusCode} ${statusText}`,
+    );
     expect(errorMessage).toBeInTheDocument();
   });
 });

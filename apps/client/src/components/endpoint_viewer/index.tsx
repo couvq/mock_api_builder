@@ -1,7 +1,7 @@
 import {
   FakerSchema,
   type EndpointConfig,
-  type MockSchemaType
+  type MockSchemaType,
 } from "@mock-api-builder/schema";
 import {
   Box,
@@ -18,7 +18,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { JsonEditor } from "json-edit-react";
 import { isEqual } from "lodash";
 import { updateEndpoint } from "../../api/endpoint";
-import { useEditor, useEditorDispatch } from "../../context/Editor/EditorContext";
+import {
+  useEditor,
+  useEditorDispatch,
+} from "../../context/Editor/EditorContext";
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { useEndpoints } from "../../hooks/endpoints";
 import { useToast } from "../../hooks/toast";
