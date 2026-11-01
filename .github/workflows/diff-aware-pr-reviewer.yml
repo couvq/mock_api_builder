@@ -85,7 +85,7 @@ jobs:
 
             Rules:
             - Do NOT modify repository files beyond writing the single report file in reports/.
-            - If ${{ env.POST_COMMENT }} is "true", also post a PR comment: "📄 Review report generated and attached as workflow artifact 'claude-reports' (reports/pr-${{ env.PR_NUMBER }}-review.md)." Use: `gh pr comment ${{ env.PR_NUMBER }} --body "📄 Review report is attached as artifact 'claude-reports' (reports/pr-${{ env.PR_NUMBER }}-review.md)"`.
+            - If ${{ env.POST_COMMENT }} is "true", post the full review inline as a markdown PR comment using the report file as the body: `gh pr comment ${{ env.PR_NUMBER }} --body-file reports/pr-${{ env.PR_NUMBER }}-review.md`. Passing the file with --body-file renders the whole report as markdown on the PR (the report is still uploaded as the 'claude-reports' artifact as well).
             - Keep suggestions minimal and safe; do not assume project-specific build steps.
           claude_args: |
             --model claude-sonnet-5-5
