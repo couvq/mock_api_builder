@@ -5,7 +5,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 interface TanstackQueryProviderProps {
   children: ReactNode;
@@ -25,9 +25,8 @@ export const createQueryClient = () =>
     }),
   });
 
-const queryClient = createQueryClient();
-
 const TanstackQueryProvider = ({ children }: TanstackQueryProviderProps) => {
+  const [queryClient] = useState(createQueryClient);
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );

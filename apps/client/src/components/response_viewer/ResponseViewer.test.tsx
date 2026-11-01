@@ -15,10 +15,6 @@ import ResponseViewer from ".";
 
 const user = userEvent.setup();
 
-beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
 // Fake btn to trigger our mock request endpoint via our tests
 function Trigger() {
   const { mutate } = useMockRequest();

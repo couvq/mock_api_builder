@@ -1,3 +1,4 @@
+import { renderHook } from "@testing-library/react";
 import { useSnackbar } from "notistack";
 import { useToast } from ".";
 
@@ -16,16 +17,16 @@ describe("useToast", () => {
   });
 
   it("queues success messages with the success variant", () => {
-    const { success } = useToast();
-    success("This is a success message");
+    const { result } = renderHook(() => useToast());
+    result.current.success("This is a success message");
     expect(enqueueSnackbar).toHaveBeenCalledWith("This is a success message", {
       variant: "success",
     });
   });
 
   it("queues error messages with the error variant", () => {
-    const { error } = useToast();
-    error("This is an error message");
+    const { result } = renderHook(() => useToast());
+    result.current.error("This is an error message");
     expect(enqueueSnackbar).toHaveBeenCalledWith("This is an error message", {
       variant: "error",
     });

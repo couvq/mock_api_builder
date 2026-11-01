@@ -1,4 +1,4 @@
-import type { EndpointConfig } from "@mock-api-builder/schema/dist/dto/endpoint/config";
+import type { EndpointConfig } from "@mock-api-builder/schema";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 
