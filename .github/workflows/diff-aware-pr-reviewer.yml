@@ -1,10 +1,13 @@
 name: Claude - Diff-Aware PR Reviewer
 
 # ABOUT THIS WORKFLOW
-# - Purpose: Generate a thorough, diff-aware review for a specific PR and write a markdown report under reports/.
+# - Purpose: Generate a thorough, diff-aware, STATEFUL review for a specific PR and write a markdown report under reports/.
 # - Trigger: Automatically on PR open/reopen/new commit (pull_request), plus manual (workflow_dispatch).
+# - Stateful behavior: the PR's existing review threads are the reviewer's memory. Each run it
+#   (1) resolves its own open threads whose issue is now fixed, and (2) posts ONLY findings it has
+#   not already raised — so a new commit resolves fixed comments and never re-posts duplicates.
 # - Outputs: reports/pr-<PR>-review.md (human-readable) and reports/pr-<PR>-review.json
-#   (GitHub review payload), then posts ONE pull request review with inline line comments.
+#   (GitHub review payload), then posts ONE pull request review carrying only the NEW inline comments.
 # - Copy/Paste Ready: You can drop this file into other repos and adjust:
 #   - inputs, prompt, claude_args, and permissions for your stack.
 #
@@ -23,7 +26,9 @@ name: Claude - Diff-Aware PR Reviewer
 # - If you prefer different output paths, change reports/ to your desired directory.
 #
 # SAFETY
-# - This workflow does not change code. It only writes report files and posts a review.
+# - This workflow does not change code. It writes report files, posts a review, and only ever
+#   replies to / resolves review threads it authored itself (GitHub login `claude`). It never
+#   touches a human's threads.
 # - The review uses the COMMENT event (never APPROVE / REQUEST_CHANGES), so it cannot gate merges.
 # - Runs automatically on pull_request events (opened, reopened, synchronize, ready_for_review) and can also be invoked manually.
 
@@ -55,6 +60,8 @@ jobs:
     env:
       PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
       POST_COMMENT: ${{ inputs.post_comment || 'true' }}
+      OWNER: ${{ github.repository_owner }}
+      REPO_NAME: ${{ github.event.repository.name }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -69,55 +76,104 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
             REPO: ${{ github.repository }}
+            OWNER: ${{ env.OWNER }}
+            REPO NAME: ${{ env.REPO_NAME }}
             PR NUMBER: ${{ env.PR_NUMBER }}
             POST COMMENT: ${{ env.POST_COMMENT }}
 
-            You are a careful PR reviewer. You post a single GitHub pull request REVIEW
-            whose findings are attached as inline comments on specific lines of the diff.
+            You are a careful, STATEFUL PR reviewer. The PR's existing review threads are your
+            memory of what you have already found. On each run you MUST:
+              (1) reconcile your previous findings — resolve the ones that are now fixed, and
+              (2) post ONLY findings you have not already raised.
+            Never post a comment that duplicates one of your own still-open threads, and never
+            touch a thread you did not author.
 
-            Gather context (no builds):
-            - Read PR metadata: `gh pr view ${{ env.PR_NUMBER }} --json title,body,headRefOid,files`.
-            - Read the diff: `gh pr diff ${{ env.PR_NUMBER }}`.
-            - Note the PR head commit SHA (headRefOid); every inline comment is anchored to it.
+            YOUR REVIEW IDENTITY
+            - Comments you post appear under the GitHub login `claude`.
+            - A review thread is "yours" when its FIRST comment's author login is `claude`,
+              OR its first comment body contains the marker `<!-- claude-review -->`.
+            - Treat every other thread as a human's: never reply to, resolve, or duplicate it.
 
+            ########## PHASE 1 — Gather context (no builds) ##########
+            - PR metadata: `gh pr view ${{ env.PR_NUMBER }} --json title,body,headRefOid,files`.
+              Note headRefOid (the head SHA); every inline comment anchors to it.
+            - Full diff: `gh pr diff ${{ env.PR_NUMBER }}`.
+            - Your existing review threads, WITH resolution state and thread IDs:
+              gh api graphql -f query='
+                query($owner:String!,$name:String!,$pr:Int!){
+                  repository(owner:$owner,name:$name){
+                    pullRequest(number:$pr){
+                      reviewThreads(first:100){
+                        nodes{
+                          id isResolved isOutdated path line originalLine
+                          comments(first:1){ nodes{ author{login} body } }
+                        } } } } }' \
+                -f owner=${{ env.OWNER }} -f name=${{ env.REPO_NAME }} -F pr=${{ env.PR_NUMBER }}
+              Build the list of YOUR threads from the result (see YOUR REVIEW IDENTITY).
+
+            ########## PHASE 2 — Reconcile your previous findings ##########
+            For each thread that is YOURS and has isResolved=false:
+            - Locate the code it refers to in the CURRENT head. Use Read/Grep on its `path`
+              (the working tree is checked out); the diff also shows the latest state of changes.
+            - If the SPECIFIC issue the thread raised is now clearly fixed:
+                1. Reply, then 2. resolve (continue past any failure — do not abort the run):
+                gh api graphql -f query='mutation($id:ID!,$body:String!){ addPullRequestReviewThreadReply(input:{pullRequestReviewThreadId:$id,body:$body}){ comment{ id } } }' -f id=<threadId> -f body='<!-- claude-review --> ✅ Fixed in <short headRefOid>. Resolving.'
+                gh api graphql -f query='mutation($id:ID!){ resolveReviewThread(input:{threadId:$id}){ thread{ id isResolved } } }' -f id=<threadId>
+            - If the issue STILL exists: do nothing to the thread. It already represents this
+              finding, so you must NOT re-post it in Phase 3 (this is how duplicates are avoided),
+              even if the thread is marked isOutdated.
+            - If you cannot tell (heavy refactor / can't locate the code): leave it open and do
+              not duplicate it.
+            - DEDUPE YOUR OWN BACKLOG: if several of your open threads raise the SAME issue at the
+              same location (duplicates left by earlier runs), keep the OLDEST one and resolve the
+              rest, replying `<!-- claude-review --> Duplicate of an earlier comment; resolving.`
+
+            ########## PHASE 3 — Post only NEW findings ##########
             Analyze the diff with lint-like reasoning: potential bugs, risky changes, unclear code.
-            Anchor each finding to a concrete line WHERE POSSIBLE.
-
-            Line-anchoring rules (GitHub rejects comments on lines outside the diff with a 422):
-            - Only comment on lines shown in the diff hunks.
-            - For an added ('+') or context line, use its NEW-file line number and "side": "RIGHT".
-            - For a removed ('-') line, use its OLD-file line number and "side": "LEFT".
-            - For a multi-line range, also set "start_line" and "start_side".
-            - If a finding cannot be anchored to a diff line, put it in the review body instead,
-              not as an inline comment.
+            - DROP any finding already represented by one of your OPEN threads from Phase 2
+              (same file + same underlying issue), whether or not that thread is outdated.
+            - Begin EVERY inline comment body with the marker `<!-- claude-review -->` so future
+              runs recognize the thread as yours.
+            - Anchor each finding to a concrete diff line. Line-anchoring rules (GitHub returns 422
+              for lines outside the diff):
+              - Only comment on lines shown in the diff hunks.
+              - Added ('+') / context line: NEW-file line number, "side": "RIGHT".
+              - Removed ('-') line: OLD-file line number, "side": "LEFT".
+              - Multi-line range: also set "start_line" and "start_side".
+              - A finding that cannot be anchored goes in the review body, not as an inline comment.
 
             Create the output dir with `mkdir -p reports`, then write TWO files:
             1. reports/pr-${{ env.PR_NUMBER }}-review.md — human-readable report:
-               Summary, Strengths, Risks / Potential bugs, Next actions for the author.
-            2. reports/pr-${{ env.PR_NUMBER }}-review.json — the exact GitHub review payload:
+               Summary, Strengths, Risks / Potential bugs, Resolved-this-run, Next actions.
+            2. reports/pr-${{ env.PR_NUMBER }}-review.json — the exact GitHub review payload,
+               containing ONLY the new (non-duplicate) comments:
                {
                  "commit_id": "<headRefOid>",
                  "event": "COMMENT",
                  "body": "<Summary + Strengths + Next actions, as markdown>",
                  "comments": [
                    { "path": "<repo-relative path>", "line": <int>, "side": "RIGHT",
-                     "body": "<finding in markdown; may include a ```suggestion``` block>" }
+                     "body": "<!-- claude-review --> <finding; may include a ```suggestion``` block>" }
                  ]
                }
                - Use "event": "COMMENT" ONLY (never APPROVE or REQUEST_CHANGES).
-               - "comments" may be an empty array when there are no line-anchored findings.
+               - "comments" may be an empty array when there are no new line-anchored findings.
 
-            Post the review when ${{ env.POST_COMMENT }} is "true":
+            Post the review when ${{ env.POST_COMMENT }} is "true" AND there is at least one new
+            inline comment or new body finding:
             - `gh api repos/${{ github.repository }}/pulls/${{ env.PR_NUMBER }}/reviews --method POST --input reports/pr-${{ env.PR_NUMBER }}-review.json`
             - If that call fails (e.g. a line could not be mapped), fall back to a single
               top-level comment: `gh pr comment ${{ env.PR_NUMBER }} --body-file reports/pr-${{ env.PR_NUMBER }}-review.md`.
+            - If there are NO new findings this run, do NOT post a review (a run that only resolves
+              fixed threads is a success — avoid empty-review noise).
 
             Rules:
             - Do NOT modify repository files beyond writing the two report files in reports/.
+            - Only ever reply to / resolve threads authored by `claude`. Never modify a human's thread.
             - Keep suggestions minimal and safe; do not assume project-specific build steps.
           claude_args: |
             --model claude-sonnet-5-5
-            --allowedTools "Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh api:*),Bash(gh pr comment:*),Bash(mkdir -p reports)"
+            --allowedTools "Read,Grep,Glob,Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh api:*),Bash(gh pr comment:*),Bash(mkdir -p reports)"
 
       - name: Upload reports artifact
         if: ${{ hashFiles('reports/**') != '' }}
