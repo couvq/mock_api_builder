@@ -4,11 +4,14 @@ import { Link } from "react-router";
 
 const AddEndpointBtn = () => {
   return (
-    <Link to="/endpoint/new">
-      <Button variant="contained" startIcon={<AddIcon />}>
-        New endpoint
-      </Button>
-    </Link>
+    <Button
+      component={Link}
+      to="/endpoint/new"
+      startIcon={<AddIcon />}
+      variant="contained"
+    >
+      New endpoint
+    </Button>
   );
 };
 

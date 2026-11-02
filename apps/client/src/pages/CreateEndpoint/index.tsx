@@ -1,14 +1,13 @@
 import { Button, Card, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import { Link } from "react-router";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-const BackButton = () => {
-  return (
-    <Link to="/dashboard">
-      <Button>Go back</Button>
-    </Link>
-  );
-};
+const BackButton = () => (
+  <Button component={Link} to="/dashboard" startIcon={<ArrowBackIcon />}>
+    Go back
+  </Button>
+);
 
 const CreateEndpoint = () => {
   return (
