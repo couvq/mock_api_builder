@@ -1,5 +1,4 @@
 import {
-  FakerSchema,
   type EndpointConfig,
   type MockSchemaType,
 } from "@mock-api-builder/schema";
@@ -25,6 +24,10 @@ import {
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { useEndpoints } from "../../hooks/endpoints";
 import { useToast } from "../../hooks/toast";
+import {
+  DEFAULT_FAKER_TYPE,
+  FAKER_TYPE_SELECTION,
+} from "../../config/jsonEditor";
 
 export const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
 
@@ -134,19 +137,8 @@ const EndpointViewer = () => {
           <Typography>Response schema</Typography>
           <JsonEditor
             data={responseSchema}
-            defaultValue={FakerSchema.options[0]}
-            restrictTypeSelection={[
-              "object",
-              "array",
-              "string",
-              "number",
-              "boolean",
-              {
-                enum: "Faker Type",
-                values: FakerSchema.options,
-                matchPriority: 1,
-              },
-            ]}
+            defaultValue={DEFAULT_FAKER_TYPE}
+            restrictTypeSelection={FAKER_TYPE_SELECTION}
             onUpdate={(newSchema) =>
               updateDraft({
                 responseSchema: newSchema.newData as MockSchemaType,
