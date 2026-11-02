@@ -125,7 +125,6 @@ const Form = () => {
       path: formData.path,
       responseSchema,
     };
-
     // TODO: POST to the create-endpoint API once the route is confirmed.
     console.log(payload);
   };
