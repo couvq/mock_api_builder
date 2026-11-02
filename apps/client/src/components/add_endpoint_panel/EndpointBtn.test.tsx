@@ -1,6 +1,6 @@
 import type { EndpointConfig } from "@mock-api-builder/schema";
-import { render, screen } from "@testing-library/react";
-import EditorContextProvider from "../../context/Editor/EditorContext";
+import { screen } from "@testing-library/react";
+import renderWithProviders from "../../test/renderWithProviders";
 import EndpointBtn from "./EndpointBtn";
 
 describe("EndpointBtn component tests", () => {
@@ -12,11 +12,7 @@ describe("EndpointBtn component tests", () => {
   };
 
   it("should render the endpoint button", () => {
-    render(
-      <EditorContextProvider>
-        <EndpointBtn endpoint={endpointConfig} />
-      </EditorContextProvider>,
-    );
+    renderWithProviders(<EndpointBtn endpoint={endpointConfig} />);
 
     const label = `${endpointConfig.method} ${endpointConfig.path}`;
     expect(screen.getByRole("button", { name: label })).toBeInTheDocument();

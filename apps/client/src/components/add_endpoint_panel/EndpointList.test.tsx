@@ -1,21 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
-import type { ReactNode } from "react";
-import EditorContextProvider from "../../context/Editor/EditorContext";
+import { screen } from "@testing-library/react";
 import { sampleEndpoint, server } from "../../test/server";
+import renderWithProviders from "../../test/renderWithProviders";
 import EndpointList from "./EndpointList";
 import { http, HttpResponse } from "msw";
-
-function renderWithProviders(ui: ReactNode) {
-  const client = new QueryClient({
-    defaultOptions: { queries: { retry: false, gcTime: 0 } },
-  });
-  return render(
-    <QueryClientProvider client={client}>
-      <EditorContextProvider>{ui}</EditorContextProvider>
-    </QueryClientProvider>,
-  );
-}
 
 describe("EndpointList", () => {
   it("should display the correct list of endpoints", async () => {
