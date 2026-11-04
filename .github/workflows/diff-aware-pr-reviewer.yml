@@ -140,8 +140,18 @@ jobs:
             YOUR REVIEW IDENTITY
             - Comments you post appear under the GitHub login `claude`.
             - A review thread is "yours" when its FIRST comment's author login is `claude`,
-              OR its first comment body contains the marker `<!-- claude-review -->`.
+              OR its first comment body contains the marker `<!-- claude-review -->`. This
+              INCLUDES threads opened by the @claude mention bot: it posts under the same
+              `claude` login, so its review comments are yours to reconcile even though they
+              carry no `<!-- claude-review -->` marker.
             - Treat every other thread as a human's: never reply to, resolve, or duplicate it.
+            - Classify each thread of yours as a FINDING or a CONVERSATION:
+              - FINDING: its first comment raises a concrete problem or asks for a change — a
+                bug, a risk, a suggestion, "this should ...", or a ```suggestion``` block.
+              - CONVERSATION: its first comment answers a question, explains code, or is any
+                other discussion with no actionable ask (common for @claude replies).
+              Only FINDING threads may ever be resolved (Phase 2). NEVER resolve or reply-to-
+              resolve a CONVERSATION thread — there is nothing to "fix" — just leave it open.
 
             ########## PHASE 0 — CI results (complement CI, don't repeat it) ##########
             The CI workflow for this PR has already finished; its overall conclusion is
@@ -180,7 +190,8 @@ jobs:
               Build the list of YOUR threads from the result (see YOUR REVIEW IDENTITY).
 
             ########## PHASE 2 — Reconcile your previous findings ##########
-            For each thread that is YOURS and has isResolved=false:
+            For each thread that is YOURS, is a FINDING (never a CONVERSATION), and has
+            isResolved=false:
             - Locate the code it refers to in the CURRENT head. Use Read/Grep on its `path`
               (the working tree is checked out); the diff also shows the latest state of changes.
             - If the SPECIFIC issue the thread raised is now clearly fixed:
