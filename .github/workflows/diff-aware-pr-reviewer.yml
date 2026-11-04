@@ -1,40 +1,52 @@
 name: Claude - Diff-Aware PR Reviewer
 
 # ABOUT THIS WORKFLOW
-# - Purpose: Generate a thorough, diff-aware, STATEFUL review for a specific PR and write a markdown report under reports/.
-# - Trigger: Automatically on PR open/reopen/new commit (pull_request), plus manual (workflow_dispatch).
+# - Purpose: Generate a thorough, diff-aware, STATEFUL, CI-aware review for a specific PR and
+#   write a markdown report under reports/.
+# - Trigger: Automatically AFTER the CI workflow finishes for a PR (workflow_run), so the
+#   reviewer can read CI's results. Also manual (workflow_dispatch).
+# - CI-aware: because it runs after CI completes, the reviewer reads the CI conclusion and the
+#   logs of any failed job, complements CI instead of repeating it (no style/format/type nits),
+#   and anchors precise findings to the diff lines that made CI fail.
 # - Stateful behavior: the PR's existing review threads are the reviewer's memory. Each run it
 #   (1) resolves its own open threads whose issue is now fixed, and (2) posts ONLY findings it has
 #   not already raised — so a new commit resolves fixed comments and never re-posts duplicates.
 # - Outputs: reports/pr-<PR>-review.md (human-readable) and reports/pr-<PR>-review.json
 #   (GitHub review payload), then posts ONE pull request review carrying only the NEW inline comments.
 # - Copy/Paste Ready: You can drop this file into other repos and adjust:
-#   - inputs, prompt, claude_args, and permissions for your stack.
+#   - the CI workflow name under workflows:, inputs, prompt, claude_args, and permissions.
 #
 # REQUIRED SECRETS
 # - CLAUDE_CODE_OAUTH_TOKEN: A long-lived Claude Code OAuth token (see docs/claude-code-action.md).
 #
 # PERMISSIONS EXPLAINED
-# - contents: read, pull-requests: write, issues: read enable reading repo/PR metadata and posting PR comments when enabled.
+# - contents: read, pull-requests: write, issues: read enable reading repo/PR metadata and posting PR comments.
 # - id-token: write is required by the action runtime.
-# - actions: read lets Claude read CI results on PRs if you include that in additional_permissions.
+# - actions: read lets Claude read CI run results and failed-job logs via the gh run / checks APIs.
+#
+# WHY workflow_run
+# - workflow_run fires only when the triggering workflow (CI) completes, so CI results always exist.
+# - It runs in the DEFAULT-BRANCH context with the repo token (even for fork PRs). That is safe here
+#   because this job never executes PR code — it only reads files (Read/Grep), queries gh, and writes
+#   report files. Do NOT add build/test steps that run untrusted PR code to this workflow.
+# - Because workflow_run only uses the copy of this file on the default branch, changes to this
+#   workflow do nothing until merged to main, and must be exercised on a SEPARATE later PR.
 #
 # CUSTOMIZATION TIPS
-# - Adjust --allowedTools to restrict/enable commands. Keep the scope tight. Remove gh comment tool if you don't want comments.
+# - Adjust --allowedTools to restrict/enable commands. Keep the scope tight.
 # - Update the prompt sections (checks, formatting, tone) to match your review style.
 # - If you want sticky comments, change logic to maintain a single comment (see docs).
-# - If you prefer different output paths, change reports/ to your desired directory.
 #
 # SAFETY
 # - This workflow does not change code. It writes report files, posts a review, and only ever
 #   replies to / resolves review threads it authored itself (GitHub login `claude`). It never
 #   touches a human's threads.
 # - The review uses the COMMENT event (never APPROVE / REQUEST_CHANGES), so it cannot gate merges.
-# - Runs automatically on pull_request events (opened, reopened, synchronize, ready_for_review) and can also be invoked manually.
 
 on:
-  pull_request:
-    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -55,23 +67,56 @@ permissions:
 jobs:
   review:
     runs-on: ubuntu-latest
-    # Normalize the PR number and comment flag so the same job works for both
-    # pull_request events (which have no inputs) and manual workflow_dispatch.
+    # Only review CI runs that came from a PR (skip CI runs for pushes to main), and always
+    # allow manual dispatch.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.event == 'pull_request'
     env:
-      PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
-      POST_COMMENT: ${{ inputs.post_comment || 'true' }}
       OWNER: ${{ github.repository_owner }}
       REPO_NAME: ${{ github.event.repository.name }}
     steps:
-      - name: Checkout repository
+      # Resolve the PR number and head SHA up front. gh works over the API with the repo token,
+      # so this does not need a checkout. Handles both workflow_run and manual dispatch.
+      - name: Resolve PR number and head SHA
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            NUM="${{ inputs.pr_number }}"
+            SHA=$(gh pr view "$NUM" --repo "${{ github.repository }}" --json headRefOid --jq .headRefOid)
+          else
+            # Resolve the PR from the branch CI ran on (same-repo PRs).
+            NUM=$(gh pr list --repo "${{ github.repository }}" \
+              --head "${{ github.event.workflow_run.head_branch }}" \
+              --state open --json number --jq '.[0].number // empty')
+            SHA="${{ github.event.workflow_run.head_sha }}"
+          fi
+          if [ -z "$NUM" ]; then
+            echo "No open PR for this run — nothing to review."
+          fi
+          echo "number=$NUM" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout PR head
+        if: steps.pr.outputs.number != ''
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ steps.pr.outputs.head_sha }}
 
       - name: Diff-aware PR Review with Plan
+        if: steps.pr.outputs.number != ''
         uses: anthropics/claude-code-action@v1
         env:
           GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+          POST_COMMENT: ${{ inputs.post_comment || 'true' }}
+          CI_RUN_ID: ${{ github.event.workflow_run.id }}
+          CI_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
@@ -79,12 +124,16 @@ jobs:
             OWNER: ${{ env.OWNER }}
             REPO NAME: ${{ env.REPO_NAME }}
             PR NUMBER: ${{ env.PR_NUMBER }}
+            HEAD SHA: ${{ env.HEAD_SHA }}
             POST COMMENT: ${{ env.POST_COMMENT }}
+            CI RUN ID: ${{ env.CI_RUN_ID }}
+            CI CONCLUSION: ${{ env.CI_CONCLUSION }}
 
-            You are a careful, STATEFUL PR reviewer. The PR's existing review threads are your
-            memory of what you have already found. On each run you MUST:
-              (1) reconcile your previous findings — resolve the ones that are now fixed, and
-              (2) post ONLY findings you have not already raised.
+            You are a careful, STATEFUL, CI-aware PR reviewer. The PR's existing review threads are
+            your memory of what you have already found. On each run you MUST:
+              (1) read CI's results for this PR (it has already finished),
+              (2) reconcile your previous findings — resolve the ones that are now fixed, and
+              (3) post ONLY findings you have not already raised.
             Never post a comment that duplicates one of your own still-open threads, and never
             touch a thread you did not author.
 
@@ -94,9 +143,28 @@ jobs:
               OR its first comment body contains the marker `<!-- claude-review -->`.
             - Treat every other thread as a human's: never reply to, resolve, or duplicate it.
 
+            ########## PHASE 0 — CI results (complement CI, don't repeat it) ##########
+            The CI workflow for this PR has already finished; its overall conclusion is
+            "${{ env.CI_CONCLUSION }}" (CI run id ${{ env.CI_RUN_ID }}).
+            - If the conclusion is not "success", read what failed:
+                gh run view ${{ env.CI_RUN_ID }} --repo ${{ github.repository }} --log-failed
+              (use `gh run view ${{ env.CI_RUN_ID }} --repo ${{ github.repository }}` for the job summary).
+              On manual dispatch CI_RUN_ID may be empty — then use
+                `gh pr checks ${{ env.PR_NUMBER }} --repo ${{ github.repository }}` instead.
+            - CI already gates: prettier (format:check), eslint (lint), tsc (typecheck),
+              tests + coverage thresholds, and the build. Do NOT spend review findings on anything
+              CI mechanically catches — no style/formatting nits, no "this won't type-check", no
+              "add a semicolon". CI owns those categories.
+            - DO use the failing logs to anchor a precise, human-useful finding to the diff line
+              that caused the failure (the test that broke, the change that dropped coverage, the
+              root cause of a type error) — explain the WHY and the fix, not just "CI is red".
+            - When CI passed, note it in one line and focus entirely on what CI cannot see:
+              logic / edge-case bugs, missing test coverage for new branches, risky changes.
+
             ########## PHASE 1 — Gather context (no builds) ##########
             - PR metadata: `gh pr view ${{ env.PR_NUMBER }} --json title,body,headRefOid,files`.
-              Note headRefOid (the head SHA); every inline comment anchors to it.
+              Anchor every inline comment to HEAD SHA ${{ env.HEAD_SHA }} (the commit CI ran on and
+              the one checked out here).
             - Full diff: `gh pr diff ${{ env.PR_NUMBER }}`.
             - Your existing review threads, WITH resolution state and thread IDs:
               gh api graphql -f query='
@@ -117,7 +185,7 @@ jobs:
               (the working tree is checked out); the diff also shows the latest state of changes.
             - If the SPECIFIC issue the thread raised is now clearly fixed:
                 1. Reply, then 2. resolve (continue past any failure — do not abort the run):
-                gh api graphql -f query='mutation($id:ID!,$body:String!){ addPullRequestReviewThreadReply(input:{pullRequestReviewThreadId:$id,body:$body}){ comment{ id } } }' -f id=<threadId> -f body='<!-- claude-review --> ✅ Fixed in <short headRefOid>. Resolving.'
+                gh api graphql -f query='mutation($id:ID!,$body:String!){ addPullRequestReviewThreadReply(input:{pullRequestReviewThreadId:$id,body:$body}){ comment{ id } } }' -f id=<threadId> -f body='<!-- claude-review --> ✅ Fixed in <short HEAD SHA>. Resolving.'
                 gh api graphql -f query='mutation($id:ID!){ resolveReviewThread(input:{threadId:$id}){ thread{ id isResolved } } }' -f id=<threadId>
             - If the issue STILL exists: do nothing to the thread. It already represents this
               finding, so you must NOT re-post it in Phase 3 (this is how duplicates are avoided),
@@ -132,6 +200,9 @@ jobs:
             Analyze the diff with lint-like reasoning: potential bugs, risky changes, unclear code.
             - DROP any finding already represented by one of your OPEN threads from Phase 2
               (same file + same underlying issue), whether or not that thread is outdated.
+            - DROP any finding that merely restates a CI failure category (lint / format / type /
+              style / build): CI already reports those. Keep only the human-useful root-cause
+              explanation anchored to the offending line, if it adds something beyond the CI log.
             - Begin EVERY inline comment body with the marker `<!-- claude-review -->` so future
               runs recognize the thread as yours.
             - Anchor each finding to a concrete diff line. Line-anchoring rules (GitHub returns 422
@@ -144,13 +215,13 @@ jobs:
 
             Create the output dir with `mkdir -p reports`, then write TWO files:
             1. reports/pr-${{ env.PR_NUMBER }}-review.md — human-readable report:
-               Summary, Strengths, Risks / Potential bugs, Resolved-this-run, Next actions.
+               Summary, CI status, Strengths, Risks / Potential bugs, Resolved-this-run, Next actions.
             2. reports/pr-${{ env.PR_NUMBER }}-review.json — the exact GitHub review payload,
                containing ONLY the new (non-duplicate) comments:
                {
-                 "commit_id": "<headRefOid>",
+                 "commit_id": "${{ env.HEAD_SHA }}",
                  "event": "COMMENT",
-                 "body": "<Summary + Strengths + Next actions, as markdown>",
+                 "body": "<Summary + CI status + Strengths + Next actions, as markdown>",
                  "comments": [
                    { "path": "<repo-relative path>", "line": <int>, "side": "RIGHT",
                      "body": "<!-- claude-review --> <finding; may include a ```suggestion``` block>" }
@@ -173,7 +244,7 @@ jobs:
             - Keep suggestions minimal and safe; do not assume project-specific build steps.
           claude_args: |
             --model claude-sonnet-5-5
-            --allowedTools "Read,Grep,Glob,Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh api:*),Bash(gh pr comment:*),Bash(mkdir -p reports)"
+            --allowedTools "Read,Grep,Glob,Write,Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr checks:*),Bash(gh run view:*),Bash(gh api:*),Bash(gh pr comment:*),Bash(mkdir -p reports)"
 
       - name: Upload reports artifact
         if: ${{ hashFiles('reports/**') != '' }}
