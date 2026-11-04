@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import Form from ".";
 import renderWithProviders from "../../../test/renderWithProviders";
-import { userEvent } from "@testing-library/user-event/dist/cjs/setup/index.js";
+import { userEvent } from "@testing-library/user-event";
 
 const user = userEvent.setup();
 
