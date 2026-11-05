@@ -53,3 +53,15 @@ export const createEndpoint = async (
 
   return (await response.json()) as EndpointConfig;
 };
+
+export const deleteEndpoint = async (endpointId: string): Promise<void> => {
+  const response = await fetch(`${endpointBaseUrl}/${endpointId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `An error occurred while deleting endpoint: ${response.status} ${response.statusText}`,
+    );
+  }
+};

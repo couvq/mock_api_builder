@@ -1,4 +1,6 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
+  IconButton,
   List,
   ListItem,
   ListSubheader,
@@ -8,6 +10,9 @@ import {
 } from "@mui/material";
 import { useEndpoints } from "../../hooks/endpoints";
 import EndpointBtn from "./EndpointBtn";
+import { deleteEndpoint } from "../../api/endpoint";
+import { useToast } from "../../hooks/toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const LoadingSkeleton = () => (
   <Stack
@@ -23,9 +28,25 @@ const LoadingSkeleton = () => (
 
 const EndpointList = () => {
   const { isPending, isError, data, error } = useEndpoints();
+  const { error: toastError, success: toastSuccess } = useToast();
+  const queryClient = useQueryClient();
+  const deleteEndpointMutation = useMutation({
+    mutationFn: deleteEndpoint,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["endpoints"] });
+      toastSuccess("Endpoint deleted successfully.");
+    },
+    onError: () => {
+      toastError("Failed to delete endpoint.");
+    },
+  });
 
   if (isPending) return <LoadingSkeleton />;
   if (isError) return error.message;
+
+  const handleDelete = (endpointId: string) => {
+    deleteEndpointMutation.mutate(endpointId);
+  };
 
   return (
     <>
@@ -33,6 +54,13 @@ const EndpointList = () => {
         {data.map((endpoint) => (
           <ListItem key={endpoint.id}>
             <EndpointBtn endpoint={endpoint} />
+            <IconButton
+              aria-label={`Delete endpoint ${endpoint.id}`}
+              size="small"
+              onClick={() => handleDelete(endpoint.id)}
+            >
+              <DeleteIcon />
+            </IconButton>
           </ListItem>
         ))}
       </List>
