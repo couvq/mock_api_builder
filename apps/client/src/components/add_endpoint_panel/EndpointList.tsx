@@ -52,14 +52,33 @@ const EndpointList = () => {
     <>
       <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
         {data.map((endpoint) => (
-          <ListItem key={endpoint.id}>
+          <ListItem
+            key={endpoint.id}
+            sx={{
+              // Target the descendant button when this specific ListItem is hovered
+              "&:hover .hover-action-btn": {
+                opacity: 1,
+                visibility: "visible",
+              },
+            }}
+          >
             <EndpointBtn endpoint={endpoint} />
+
             <IconButton
-              aria-label={`Delete endpoint ${endpoint.id}`}
+              className="hover-action-btn"
+              aria-label="delete"
               size="small"
+              color="error"
+              sx={{
+                opacity: 0,
+                visibility: "hidden",
+                // Reserves consistent space so the text never jumps or moves when the button appears
+                marginLeft: "auto",
+                transition: "opacity 0.15s ease, visibility 0.15s ease",
+              }}
               onClick={() => handleDelete(endpoint.id)}
             >
-              <DeleteIcon />
+              <DeleteIcon fontSize="small" />
             </IconButton>
           </ListItem>
         ))}
