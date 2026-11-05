@@ -28,16 +28,16 @@ const LoadingSkeleton = () => (
 
 const EndpointList = () => {
   const { isPending, isError, data, error } = useEndpoints();
-  const { error: toastError, success: toastSuccess } = useToast();
+  const toast = useToast();
   const queryClient = useQueryClient();
   const deleteEndpointMutation = useMutation({
     mutationFn: deleteEndpoint,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["endpoints"] });
-      toastSuccess("Endpoint deleted successfully.");
+      toast.success("Endpoint deleted successfully.");
     },
     onError: () => {
-      toastError("Failed to delete endpoint.");
+      toast.error("Failed to delete endpoint.");
     },
   });
 
