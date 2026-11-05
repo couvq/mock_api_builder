@@ -55,10 +55,19 @@ const EndpointList = () => {
           <ListItem
             key={endpoint.id}
             sx={{
-              // Target the descendant button when this specific ListItem is hovered
-              "&:hover .hover-action-btn": {
+              // Reveal the descendant button on hover, or when any descendant
+              // (including the button itself) is focused, so keyboard users can
+              // tab to the row and reach the now-visible delete button.
+              "&:hover .hover-action-btn, &:focus-within .hover-action-btn": {
                 opacity: 1,
                 visibility: "visible",
+              },
+              // Touch devices have no hover, so keep the button always visible.
+              "@media (hover: none)": {
+                "& .hover-action-btn": {
+                  opacity: 1,
+                  visibility: "visible",
+                },
               },
             }}
           >
