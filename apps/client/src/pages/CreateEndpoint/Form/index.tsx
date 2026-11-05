@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import {
+  EndpointConfig,
   transpile,
   type MockSchemaType,
   type TranspiledSchema,
@@ -28,6 +29,8 @@ import {
   DEFAULT_FAKER_TYPE,
   FAKER_TYPE_SELECTION,
 } from "../../../config/jsonEditor";
+import { createEndpoint } from "../../../api/endpoint";
+import { useToast } from "../../../hooks/toast";
 
 // `EndpointConfig.method` only models these two, so the dropdown matches it.
 const HTTP_METHODS = ["GET", "POST"] as const;
@@ -37,9 +40,7 @@ const METHOD_OPTIONS = HTTP_METHODS.map((method) => ({
   label: method,
 }));
 
-const DEFAULT_RESPONSE_SCHEMA: MockSchemaType = {
-  data: {},
-};
+const DEFAULT_RESPONSE_SCHEMA: MockSchemaType = "";
 
 type SchemaViewMode = "tree" | "json";
 
@@ -61,6 +62,7 @@ const Form = () => {
   const [exampleResponse, setExampleResponse] = useState<TranspiledSchema>(() =>
     transpile(DEFAULT_RESPONSE_SCHEMA),
   );
+  const { error, success } = useToast();
 
   // Response schema is the source of truth; refresh the preview wherever it
   // changes (rather than in an effect) so edits and regeneration stay in sync.
@@ -99,15 +101,22 @@ const Form = () => {
     setExampleResponse(transpile(responseSchema));
   };
 
-  const handleCreate = (formData: { method: string; path: string }) => {
-    const payload = {
+  const handleCreate = async (formData: {
+    method: EndpointConfig["method"];
+    path: EndpointConfig["path"];
+  }) => {
+    const payload: Omit<EndpointConfig, "id"> = {
       method: formData.method,
       path: formData.path,
       responseSchema,
     };
 
-    // TODO: POST to the create-endpoint API once the route is confirmed.
-    alert(JSON.stringify(payload));
+    try {
+      const newEndpoint = await createEndpoint(payload);
+      success(`Endpoint ${newEndpoint.id} created successfully!`);
+    } catch {
+      error("Failed to create endpoint. Please try again.");
+    }
   };
 
   return (
@@ -205,7 +214,10 @@ const Form = () => {
                   },
                 }}
                 slotProps={{
-                  htmlInput: { style: { fontFamily: "monospace" } },
+                  htmlInput: {
+                    "aria-label": "responseSchemaEditor",
+                    style: { fontFamily: "monospace" },
+                  },
                 }}
               />
             )}
@@ -229,7 +241,7 @@ const Form = () => {
               Regenerate
             </Button>
           </Box>
-          <Box sx={editorFillSx}>
+          <Box sx={editorFillSx} role="region" aria-label="Example response">
             <JsonEditor data={exampleResponse} viewOnly rootName="root" />
           </Box>
         </Grid>

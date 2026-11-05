@@ -33,3 +33,23 @@ export const updateEndpoint = async (
 
   return (await response.json()) as EndpointConfig;
 };
+
+export const createEndpoint = async (
+  newEndpointConfiguration: Omit<EndpointConfig, "id">,
+): Promise<EndpointConfig> => {
+  const response = await fetch(endpointBaseUrl, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(newEndpointConfiguration),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `An error occurred while creating endpoint: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  return (await response.json()) as EndpointConfig;
+};
