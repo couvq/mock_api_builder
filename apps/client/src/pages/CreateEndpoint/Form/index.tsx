@@ -253,16 +253,9 @@ const Form = () => {
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
         }}
       >
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ fontFamily: "monospace" }}
-        >
-          POST /v1/api/endpoints
-        </Typography>
         <Stack direction="row" spacing={2}>
           <Button component={Link} to="/dashboard">
             Cancel
