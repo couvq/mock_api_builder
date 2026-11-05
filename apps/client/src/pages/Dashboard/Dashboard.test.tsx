@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import {
   sampleEndpoint,
@@ -9,23 +9,7 @@ import { http, HttpResponse } from "msw";
 import type { EndpointConfig } from "@mock-api-builder/schema";
 import { MOCK_API_BASE_URL } from "../../components/endpoint_viewer";
 import Dashboard from ".";
-import TanstackQueryProvider from "../../context/TanstackQueryProvider";
-import type { ReactElement } from "react";
-import ToastProvider from "../../context/ToastProvider";
-import EditorContextProvider from "../../context/Editor/EditorContext";
-import MockRequestProvider from "../../context/MockRequest/MockRequestProvider";
-
-const renderWithProviders = (ui: ReactElement) => {
-  return render(
-    <TanstackQueryProvider>
-      <ToastProvider>
-        <EditorContextProvider>
-          <MockRequestProvider>{ui}</MockRequestProvider>
-        </EditorContextProvider>
-      </ToastProvider>
-    </TanstackQueryProvider>,
-  );
-};
+import renderWithProviders from "../../test/renderWithProviders";
 
 const user = userEvent.setup();
 

@@ -1,16 +1,13 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
-import type { ReactNode } from "react";
-import MockRequestProvider, {
-  useMockRequest,
-} from "../../context/MockRequest/MockRequestProvider";
+import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import {
   sampleEndpoint,
   sampleMockApiResponse,
   server,
 } from "../../test/server";
+import renderWithProviders from "../../test/renderWithProviders";
 import ResponseViewer from ".";
 
 const user = userEvent.setup();
@@ -29,20 +26,6 @@ function Trigger() {
     >
       send
     </button>
-  );
-}
-
-function renderWithProviders(ui: ReactNode) {
-  const client = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false, gcTime: 0 },
-      mutations: { retry: false },
-    },
-  });
-  return render(
-    <QueryClientProvider client={client}>
-      <MockRequestProvider>{ui}</MockRequestProvider>
-    </QueryClientProvider>,
   );
 }
 

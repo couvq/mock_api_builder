@@ -24,6 +24,10 @@ export const server = setupServer(
     await delay(50);
     return HttpResponse.json(await request.json());
   }),
+  http.post("*/endpoint", async ({ request }) => {
+    await delay(50);
+    return HttpResponse.json(await request.json());
+  }),
   http.get("*/mock_api/*", async () => {
     await delay(50);
     return HttpResponse.json(sampleMockApiResponse);
