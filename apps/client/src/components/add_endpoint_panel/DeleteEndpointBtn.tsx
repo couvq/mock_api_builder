@@ -12,6 +12,7 @@ import { useToast } from "../../hooks/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteEndpoint } from "../../api/endpoint";
 import { useState } from "react";
+import { useEditorDispatch } from "../../context/Editor/EditorContext";
 
 interface DeleteEndpointBtnProps {
   endpointId: string;
@@ -28,11 +29,13 @@ const ConfirmDeletionModal = ({
   endpointId,
   onClose,
 }: ConfirmDeletionModalProps) => {
+  const dispatch = useEditorDispatch();
   const toast = useToast();
   const queryClient = useQueryClient();
   const deleteEndpointMutation = useMutation({
     mutationFn: deleteEndpoint,
     onSuccess: () => {
+      dispatch({ type: "DELETE_ENDPOINT", endpointId });
       queryClient.invalidateQueries({ queryKey: ["endpoints"] });
       toast.success("Endpoint deleted successfully.");
     },
@@ -41,9 +44,7 @@ const ConfirmDeletionModal = ({
     },
   });
 
-  const handleDelete = () => {
-    deleteEndpointMutation.mutate(endpointId);
-  };
+  const handleDelete = () => deleteEndpointMutation.mutate(endpointId);
 
   return (
     <Dialog

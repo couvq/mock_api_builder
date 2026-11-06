@@ -113,7 +113,9 @@ const Form = () => {
 
     try {
       const newEndpoint = await createEndpoint(payload);
-      success(`Endpoint ${newEndpoint.id} created successfully!`);
+      success(
+        `Endpoint ${newEndpoint.method} /${newEndpoint.path} created successfully!`,
+      );
     } catch {
       error("Failed to create endpoint. Please try again.");
     }

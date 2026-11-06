@@ -17,6 +17,15 @@ export const editorReducer = (
         draft: action.draft,
       };
 
+    case "DELETE_ENDPOINT":
+      if (state.activeEndpointId === action.endpointId) {
+        return {
+          activeEndpointId: undefined,
+          draft: undefined,
+        };
+      }
+      return state;
+
     default:
       throw new Error(`Unknown action: ${JSON.stringify(action)}`);
   }
