@@ -1,6 +1,4 @@
-import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  IconButton,
   List,
   ListItem,
   ListSubheader,
@@ -9,10 +7,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useEndpoints } from "../../hooks/endpoints";
+import DeleteEndpointBtn from "./DeleteEndpointBtn";
 import EndpointBtn from "./EndpointBtn";
-import { deleteEndpoint } from "../../api/endpoint";
-import { useToast } from "../../hooks/toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const LoadingSkeleton = () => (
   <Stack
@@ -28,25 +24,9 @@ const LoadingSkeleton = () => (
 
 const EndpointList = () => {
   const { isPending, isError, data, error } = useEndpoints();
-  const toast = useToast();
-  const queryClient = useQueryClient();
-  const deleteEndpointMutation = useMutation({
-    mutationFn: deleteEndpoint,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["endpoints"] });
-      toast.success("Endpoint deleted successfully.");
-    },
-    onError: () => {
-      toast.error("Failed to delete endpoint.");
-    },
-  });
 
   if (isPending) return <LoadingSkeleton />;
   if (isError) return error.message;
-
-  const handleDelete = (endpointId: string) => {
-    deleteEndpointMutation.mutate(endpointId);
-  };
 
   return (
     <>
@@ -72,23 +52,7 @@ const EndpointList = () => {
             }}
           >
             <EndpointBtn endpoint={endpoint} />
-
-            <IconButton
-              className="hover-action-btn"
-              aria-label="delete"
-              size="small"
-              color="error"
-              sx={{
-                opacity: 0,
-                visibility: "hidden",
-                // Reserves consistent space so the text never jumps or moves when the button appears
-                marginLeft: "auto",
-                transition: "opacity 0.15s ease, visibility 0.15s ease",
-              }}
-              onClick={() => handleDelete(endpoint.id)}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
+            <DeleteEndpointBtn endpointId={endpoint.id} />
           </ListItem>
         ))}
       </List>
