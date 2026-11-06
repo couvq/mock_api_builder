@@ -42,6 +42,9 @@ const ConfirmDeletionModal = ({
     onError: () => {
       toast.error("Failed to delete endpoint.");
     },
+    onSettled: () => {
+      onClose();
+    },
   });
 
   const handleDelete = () => deleteEndpointMutation.mutate(endpointId);
@@ -67,7 +70,12 @@ const ConfirmDeletionModal = ({
         <Button onClick={onClose} autoFocus>
           Cancel
         </Button>
-        <Button onClick={handleDelete} autoFocus>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleDelete}
+          loading={deleteEndpointMutation.isPending}
+        >
           Confirm
         </Button>
       </DialogActions>
