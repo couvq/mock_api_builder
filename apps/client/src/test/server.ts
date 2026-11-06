@@ -28,6 +28,13 @@ export const server = setupServer(
     await delay(50);
     return HttpResponse.json(await request.json());
   }),
+  http.delete("*/endpoint/:id", async () => {
+    await delay(50);
+    return HttpResponse.json(
+      { message: "Endpoint deleted successfully" },
+      { status: 200 },
+    );
+  }),
   http.get("*/mock_api/*", async () => {
     await delay(50);
     return HttpResponse.json(sampleMockApiResponse);
