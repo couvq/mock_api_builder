@@ -15,7 +15,8 @@ export type EditorState = {
 
 export type EditorAction =
   | { type: "ADD_ENDPOINT"; endpoint: EndpointConfig }
-  | { type: "UPDATE_DRAFT"; draft: EndpointConfig };
+  | { type: "UPDATE_DRAFT"; draft: EndpointConfig }
+  | { type: "DELETE_ENDPOINT"; endpointId: string };
 
 const initialState: EditorState = {
   activeEndpointId: undefined,

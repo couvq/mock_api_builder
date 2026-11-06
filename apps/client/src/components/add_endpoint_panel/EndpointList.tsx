@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEndpoints } from "../../hooks/endpoints";
+import DeleteEndpointBtn from "./DeleteEndpointBtn";
 import EndpointBtn from "./EndpointBtn";
 
 const LoadingSkeleton = () => (
@@ -31,8 +32,27 @@ const EndpointList = () => {
     <>
       <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
         {data.map((endpoint) => (
-          <ListItem key={endpoint.id}>
+          <ListItem
+            key={endpoint.id}
+            sx={{
+              // Reveal the descendant button on hover, or when any descendant
+              // (including the button itself) is focused, so keyboard users can
+              // tab to the row and reach the now-visible delete button.
+              "&:hover .hover-action-btn, &:focus-within .hover-action-btn": {
+                opacity: 1,
+                visibility: "visible",
+              },
+              // Touch devices have no hover, so keep the button always visible.
+              "@media (hover: none)": {
+                "& .hover-action-btn": {
+                  opacity: 1,
+                  visibility: "visible",
+                },
+              },
+            }}
+          >
             <EndpointBtn endpoint={endpoint} />
+            <DeleteEndpointBtn endpointId={endpoint.id} />
           </ListItem>
         ))}
       </List>
