@@ -11,7 +11,7 @@ const BackButton = () => (
 );
 
 const Headings = () => (
-  <Box sx={{ mb: 4 }}>
+  <Box sx={{ mb: 4, mt: 2 }}>
     <Typography variant="h4" component="h1" gutterBottom>
       New Endpoint
     </Typography>
