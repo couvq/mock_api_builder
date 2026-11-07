@@ -6,7 +6,7 @@ import { http, HttpResponse } from "msw";
 
 describe("EndpointList", () => {
   it("should display the correct list of endpoints", async () => {
-    renderWithProviders(<EndpointList />);
+    renderWithProviders(<EndpointList filter={""} />);
 
     const label = `${sampleEndpoint.method} ${sampleEndpoint.path}`;
     const endpointBtn = await screen.findByRole("button", {
@@ -16,7 +16,7 @@ describe("EndpointList", () => {
   });
 
   it("should display loading skeleton while fetching endpoints", async () => {
-    renderWithProviders(<EndpointList />);
+    renderWithProviders(<EndpointList filter={""} />);
 
     const loadingSkeleton = await screen.findByTestId(
       "endpoint-list-loading-skeleton",
@@ -33,7 +33,7 @@ describe("EndpointList", () => {
         async () => new HttpResponse(null, { status: statusCode, statusText }),
       ),
     );
-    renderWithProviders(<EndpointList />);
+    renderWithProviders(<EndpointList filter={""} />);
 
     const errorMessage = await screen.findByText(
       `Failed to fetch endpoints: ${statusCode} ${statusText}`,

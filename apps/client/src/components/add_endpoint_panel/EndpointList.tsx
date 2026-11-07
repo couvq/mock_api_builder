@@ -9,6 +9,7 @@ import {
 import { useEndpoints } from "../../hooks/endpoints";
 import DeleteEndpointBtn from "./DeleteEndpointBtn";
 import EndpointBtn from "./EndpointBtn";
+import type { EndpointConfig } from "@mock-api-builder/schema/dist/dto/endpoint/config";
 
 const LoadingSkeleton = () => (
   <Stack
@@ -22,8 +23,14 @@ const LoadingSkeleton = () => (
   </Stack>
 );
 
-const EndpointList = () => {
+const EndpointList = ({ filter }: { filter: string }) => {
   const { isPending, isError, data, error } = useEndpoints();
+  let filteredData: EndpointConfig[] = [];
+  if (data) {
+    filteredData = data.filter((endpoint) =>
+      endpoint.path.toLowerCase().includes(filter.toLowerCase()),
+    );
+  }
 
   if (isPending) return <LoadingSkeleton />;
   if (isError) return error.message;
@@ -31,7 +38,7 @@ const EndpointList = () => {
   return (
     <>
       <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
-        {data.map((endpoint) => (
+        {filteredData.map((endpoint) => (
           <ListItem
             key={endpoint.id}
             sx={{
@@ -56,7 +63,11 @@ const EndpointList = () => {
           </ListItem>
         ))}
       </List>
-      <Typography>{data.length} endpoints</Typography>
+      <Typography>
+        {filteredData.length === 1
+          ? "1 endpoint"
+          : `${filteredData.length} endpoints`}
+      </Typography>
     </>
   );
 };
