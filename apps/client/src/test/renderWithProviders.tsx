@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { MemoryRouter } from "react-router";
+import AppThemeProvider from "../context/AppThemeProvider";
 import EditorContextProvider from "../context/Editor/EditorContext";
 import MockRequestProvider from "../context/MockRequest/MockRequestProvider";
 import ToastProvider from "../context/ToastProvider";
@@ -22,15 +23,17 @@ const renderWithProviders = (ui: ReactElement) => {
   });
 
   return render(
-    <MemoryRouter>
-      <QueryClientProvider client={queryClient}>
-        <ToastProvider>
-          <EditorContextProvider>
-            <MockRequestProvider>{ui}</MockRequestProvider>
-          </EditorContextProvider>
-        </ToastProvider>
-      </QueryClientProvider>
-    </MemoryRouter>,
+    <AppThemeProvider>
+      <MemoryRouter>
+        <QueryClientProvider client={queryClient}>
+          <ToastProvider>
+            <EditorContextProvider>
+              <MockRequestProvider>{ui}</MockRequestProvider>
+            </EditorContextProvider>
+          </ToastProvider>
+        </QueryClientProvider>
+      </MemoryRouter>
+    </AppThemeProvider>,
   );
 };
 
