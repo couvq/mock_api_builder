@@ -23,6 +23,7 @@ import {
 } from "../../context/Editor/EditorContext";
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { useEndpoints } from "../../hooks/endpoints";
+import { useJsonEditorTheme } from "../../hooks/jsonEditorTheme";
 import { useToast } from "../../hooks/toast";
 import {
   DEFAULT_FAKER_TYPE,
@@ -45,6 +46,7 @@ const EndpointViewer = () => {
     },
   });
   const serveMockRequestMutation = useMockRequest();
+  const jsonEditorTheme = useJsonEditorTheme();
 
   if (!activeEndpointId || !draft) return "No endpoint selected.";
 
@@ -137,6 +139,7 @@ const EndpointViewer = () => {
           <Typography>Response schema</Typography>
           <JsonEditor
             data={responseSchema}
+            theme={jsonEditorTheme}
             defaultValue={DEFAULT_FAKER_TYPE}
             restrictTypeSelection={FAKER_TYPE_SELECTION}
             onUpdate={(newSchema) =>
