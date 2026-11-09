@@ -3,3 +3,21 @@
   margin: 0;
   padding: 0;
 }
+
+/*
+ * json-edit-react hardcodes the type selector's colors (white background +
+ * white gradient on .jer-select, black text on its inner <select>), so they
+ * ignore the editor's theme and look light in dark mode. Override them to be
+ * theme-agnostic: a transparent background shows the themed container surface,
+ * and inherited color picks up the themed text color. Scoping under
+ * .jer-editor-container raises specificity above the library's own rules.
+ * (The text/number inputs are handled by the container's `color-scheme`.)
+ */
+.jer-editor-container .jer-select {
+  background-color: transparent;
+  background-image: none;
+}
+
+.jer-editor-container .jer-select select {
+  color: inherit;
+}
