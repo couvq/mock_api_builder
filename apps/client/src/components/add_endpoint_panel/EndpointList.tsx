@@ -9,7 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { useEditorDispatch } from "../../context/Editor/EditorContext";
+import {
+  useEditor,
+  useEditorDispatch,
+} from "../../context/Editor/EditorContext";
 import { useEndpoints } from "../../hooks/endpoints";
 import DeleteEndpointBtn from "./DeleteEndpointBtn";
 
@@ -26,9 +29,10 @@ const LoadingSkeleton = () => (
 );
 
 const EndpointList = ({ filter }: { filter: string }) => {
+  const { activeEndpointId } = useEditor();
   const [selectedEndpointId, setSelectedEndpointId] = useState<
     string | undefined
-  >(undefined);
+  >(activeEndpointId);
   const { isPending, isError, data, error } = useEndpoints();
   const dispatch = useEditorDispatch();
   let filteredData: EndpointConfig[] = [];
