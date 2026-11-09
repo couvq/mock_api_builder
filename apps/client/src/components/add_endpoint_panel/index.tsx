@@ -10,11 +10,14 @@ const AddEndpointPanel = () => {
     <Container
       sx={{
         minWidth: "25vw",
-        height: "100vh",
+        height: "100%",
         padding: 2,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
       }}
     >
-      <Stack direction="column">
+      <Stack direction="column" sx={{ height: "100%", minHeight: 0 }}>
         <AddEndpointBtn />
         <br />
         <TextField

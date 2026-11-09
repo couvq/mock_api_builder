@@ -17,6 +17,10 @@ interface JsonEditorPalette {
   accent: string; // edit / add / copy icons
   success: string; // confirm icon
   error: string; // delete icon + error text
+  // Drives the CSS `color-scheme` on the editor container so native form
+  // controls (text/number inputs, the type <select> and its dropdown) render
+  // with matching backgrounds instead of the browser's light-only default.
+  scheme: "light" | "dark";
 }
 
 const MONO_FONT_FAMILY =
@@ -35,6 +39,7 @@ const lightPalette: JsonEditorPalette = {
   accent: "#1976d2",
   success: "#2e7d32",
   error: "#c62828",
+  scheme: "light",
 };
 
 const darkPalette: JsonEditorPalette = {
@@ -50,6 +55,7 @@ const darkPalette: JsonEditorPalette = {
   accent: "#64a8f0",
   success: "#7ccf83",
   error: "#f2817b",
+  scheme: "dark",
 };
 
 const buildJsonEditorTheme = (
@@ -58,6 +64,7 @@ const buildJsonEditorTheme = (
   container: {
     backgroundColor: palette.surface,
     color: palette.text,
+    colorScheme: palette.scheme,
     fontFamily: MONO_FONT_FAMILY,
     border: `1px solid ${palette.border}`,
     borderRadius: "8px",
@@ -69,6 +76,9 @@ const buildJsonEditorTheme = (
   number: palette.number,
   boolean: palette.boolean,
   null: { color: palette.meta, fontVariant: "small-caps", fontWeight: "bold" },
+  // json-edit-react only reads the color from `input` (it feeds the
+  // `--jer-input-color` CSS var); the control backgrounds come from the
+  // container's `color-scheme` plus the `.jer-select` overrides in index.css.
   input: [palette.text],
   inputHighlight: palette.highlight,
   error: { fontSize: "0.8em", color: palette.error, fontWeight: "bold" },

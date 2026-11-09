@@ -73,9 +73,17 @@ const EndpointViewer = () => {
   };
 
   return (
-    <Box data-testid="endpoint-viewer">
-      <Stack direction="column">
-        <Stack direction="row" spacing={4}>
+    <Box data-testid="endpoint-viewer" sx={{ height: "100%" }}>
+      <Stack direction="column" sx={{ height: "100%", minHeight: 0 }}>
+        <Stack
+          direction="row"
+          spacing={4}
+          sx={{
+            // Fixed header: the endpoint input + Save/Send buttons stay in
+            // place while only the response schema below scrolls.
+            flexShrink: 0,
+          }}
+        >
           <TextField
             fullWidth
             label="Endpoint"
@@ -135,7 +143,7 @@ const EndpointViewer = () => {
             )}
           </Stack>
         </Stack>
-        <Box>
+        <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
           <Typography>Response schema</Typography>
           <JsonEditor
             data={responseSchema}
