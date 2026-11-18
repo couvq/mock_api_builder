@@ -45,7 +45,7 @@ const ResponseViewer = () => {
 
   return (
     <Box data-testid="response-json-viewer">
-      <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+      <Stack direction="row" spacing={2} sx={{ alignItems: "center", mb: 1.5 }}>
         <Chip
           label={`${response.status} ${response.statusText}`}
           color="success"
