@@ -1,5 +1,9 @@
 import { http, HttpResponse } from "msw";
-import { serveMockRequest, type ServeMockRequestPayload } from ".";
+import {
+  MockRequestError,
+  serveMockRequest,
+  type ServeMockRequestPayload,
+} from ".";
 import { sampleMockApiResponse, server } from "../../test/server";
 
 const MOCK_API_REQUEST: ServeMockRequestPayload = {
@@ -10,7 +14,7 @@ const MOCK_API_REQUEST: ServeMockRequestPayload = {
 describe("mock api tests", () => {
   it("should perform a mock API request", async () => {
     const response = await serveMockRequest(MOCK_API_REQUEST);
-    expect(response).toEqual(sampleMockApiResponse);
+    expect(response.data).toEqual(sampleMockApiResponse);
   });
 
   it("should handle a failed mock API request", async () => {
@@ -22,8 +26,11 @@ describe("mock api tests", () => {
         async () => new HttpResponse(null, { status: statusCode, statusText }),
       ),
     );
-    await expect(serveMockRequest(MOCK_API_REQUEST)).rejects.toThrow(
-      `An error occurred calling mock endpoint: ${statusCode} ${statusText}`,
+    const error = await serveMockRequest(MOCK_API_REQUEST).catch(
+      (e: unknown) => e,
     );
+
+    expect(error).toBeInstanceOf(MockRequestError);
+    expect(error).toMatchObject({ status: statusCode, statusText });
   });
 });

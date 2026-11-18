@@ -91,9 +91,22 @@ describe("ResponseViewer", () => {
     await user.click(screen.getByRole("button", { name: /send/i }));
 
     expect(
-      await screen.findByText(
-        `An error occurred calling mock endpoint: ${statusCode} ${statusText}`,
-      ),
+      await screen.findByText(`${statusCode} ${statusText}`),
     ).toBeInTheDocument();
+  });
+
+  it("should display a generic failure when no response is received", async () => {
+    server.use(http.get("*/mock_api/*", () => HttpResponse.error()));
+
+    renderWithProviders(
+      <>
+        <Trigger />
+        <ResponseViewer />
+      </>,
+    );
+
+    await user.click(screen.getByRole("button", { name: /send/i }));
+
+    expect(await screen.findByText("Request failed")).toBeInTheDocument();
   });
 });
