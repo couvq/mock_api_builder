@@ -47,8 +47,7 @@ const ConfirmDeletionModal = ({
     },
   });
 
-  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // Prevent the click from propagating to the parent ListItemButton
+  const handleDelete = () => {
     deleteEndpointMutation.mutate(endpointId);
   };
 
@@ -56,6 +55,7 @@ const ConfirmDeletionModal = ({
     <Dialog
       open={isOpen}
       onClose={onClose}
+      onClick={(e) => e.stopPropagation()}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       role="alertdialog"
