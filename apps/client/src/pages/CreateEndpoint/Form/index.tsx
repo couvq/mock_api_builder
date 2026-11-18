@@ -30,6 +30,7 @@ import {
   FAKER_TYPE_SELECTION,
 } from "../../../config/jsonEditor";
 import { createEndpoint } from "../../../api/endpoint";
+import { useJsonEditorTheme } from "../../../hooks/jsonEditorTheme";
 import { useToast } from "../../../hooks/toast";
 
 // `EndpointConfig.method` only models these two, so the dropdown matches it.
@@ -63,6 +64,7 @@ const Form = () => {
     transpile(DEFAULT_RESPONSE_SCHEMA),
   );
   const { error, success } = useToast();
+  const jsonEditorTheme = useJsonEditorTheme();
 
   // Response schema is the source of truth; refresh the preview wherever it
   // changes (rather than in an effect) so edits and regeneration stay in sync.
@@ -192,6 +194,7 @@ const Form = () => {
             {viewMode === "tree" ? (
               <JsonEditor
                 data={responseSchema}
+                theme={jsonEditorTheme}
                 rootName="root"
                 defaultValue={DEFAULT_FAKER_TYPE}
                 restrictTypeSelection={FAKER_TYPE_SELECTION}
@@ -244,7 +247,12 @@ const Form = () => {
             </Button>
           </Box>
           <Box sx={editorFillSx} role="region" aria-label="Example response">
-            <JsonEditor data={exampleResponse} viewOnly rootName="root" />
+            <JsonEditor
+              data={exampleResponse}
+              theme={jsonEditorTheme}
+              viewOnly
+              rootName="root"
+            />
           </Box>
         </Grid>
       </Grid>

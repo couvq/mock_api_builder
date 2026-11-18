@@ -8,7 +8,7 @@ describe("EndpointList", () => {
   it("should display the correct list of endpoints", async () => {
     renderWithProviders(<EndpointList filter={""} />);
 
-    const label = `${sampleEndpoint.method} ${sampleEndpoint.path}`;
+    const label = `${sampleEndpoint.method} /${sampleEndpoint.path}`;
     const endpointBtn = await screen.findByRole("button", {
       name: label,
     });

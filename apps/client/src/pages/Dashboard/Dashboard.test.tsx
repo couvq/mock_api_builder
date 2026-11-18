@@ -31,7 +31,7 @@ describe("Dashboard", () => {
     renderWithProviders(<Dashboard />);
 
     // click the endpoint btn to enable editing in the endpoint viewer
-    const endpointBtnLabel = `${sampleEndpoint.method} ${sampleEndpoint.path}`;
+    const endpointBtnLabel = `${sampleEndpoint.method} /${sampleEndpoint.path}`;
     const endpointBtn = await screen.findByRole("button", {
       name: endpointBtnLabel,
     });
@@ -96,7 +96,7 @@ describe("Dashboard", () => {
     renderWithProviders(<Dashboard />);
 
     // click the endpoint btn to show the endpoint in the endpoint viewer
-    const endpointBtnLabel = `${sampleEndpoint.method} ${sampleEndpoint.path}`;
+    const endpointBtnLabel = `${sampleEndpoint.method} /${sampleEndpoint.path}`;
     const endpointBtn = await screen.findByRole("button", {
       name: endpointBtnLabel,
     });

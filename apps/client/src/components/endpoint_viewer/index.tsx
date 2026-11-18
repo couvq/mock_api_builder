@@ -23,6 +23,7 @@ import {
 } from "../../context/Editor/EditorContext";
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { useEndpoints } from "../../hooks/endpoints";
+import { useJsonEditorTheme } from "../../hooks/jsonEditorTheme";
 import { useToast } from "../../hooks/toast";
 import {
   DEFAULT_FAKER_TYPE,
@@ -45,6 +46,7 @@ const EndpointViewer = () => {
     },
   });
   const serveMockRequestMutation = useMockRequest();
+  const jsonEditorTheme = useJsonEditorTheme();
 
   if (!activeEndpointId || !draft) return "No endpoint selected.";
 
@@ -71,9 +73,17 @@ const EndpointViewer = () => {
   };
 
   return (
-    <Box data-testid="endpoint-viewer">
-      <Stack direction="column">
-        <Stack direction="row" spacing={4}>
+    <Box data-testid="endpoint-viewer" sx={{ height: "100%" }}>
+      <Stack direction="column" sx={{ height: "100%", minHeight: 0 }}>
+        <Stack
+          direction="row"
+          spacing={4}
+          sx={{
+            // Fixed header: the endpoint input + Save/Send buttons stay in
+            // place while only the response schema below scrolls.
+            flexShrink: 0,
+          }}
+        >
           <TextField
             fullWidth
             label="Endpoint"
@@ -133,10 +143,11 @@ const EndpointViewer = () => {
             )}
           </Stack>
         </Stack>
-        <Box>
+        <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
           <Typography>Response schema</Typography>
           <JsonEditor
             data={responseSchema}
+            theme={jsonEditorTheme}
             defaultValue={DEFAULT_FAKER_TYPE}
             restrictTypeSelection={FAKER_TYPE_SELECTION}
             onUpdate={(newSchema) =>

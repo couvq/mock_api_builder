@@ -1,15 +1,20 @@
+import type { EndpointConfig } from "@mock-api-builder/schema/dist/dto/endpoint/config";
 import {
   List,
-  ListItem,
+  ListItemButton,
+  ListItemText,
   ListSubheader,
   Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
+import {
+  useEditor,
+  useEditorDispatch,
+} from "../../context/Editor/EditorContext";
 import { useEndpoints } from "../../hooks/endpoints";
 import DeleteEndpointBtn from "./DeleteEndpointBtn";
-import EndpointBtn from "./EndpointBtn";
-import type { EndpointConfig } from "@mock-api-builder/schema/dist/dto/endpoint/config";
 
 const LoadingSkeleton = () => (
   <Stack
@@ -24,7 +29,12 @@ const LoadingSkeleton = () => (
 );
 
 const EndpointList = ({ filter }: { filter: string }) => {
+  const { activeEndpointId } = useEditor();
+  const [selectedEndpointId, setSelectedEndpointId] = useState<
+    string | undefined
+  >(activeEndpointId);
   const { isPending, isError, data, error } = useEndpoints();
+  const dispatch = useEditorDispatch();
   let filteredData: EndpointConfig[] = [];
   if (data) {
     filteredData = data.filter((endpoint) =>
@@ -32,14 +42,22 @@ const EndpointList = ({ filter }: { filter: string }) => {
     );
   }
 
+  const handleListItemClick = (endpoint: EndpointConfig) => {
+    setSelectedEndpointId(endpoint.id);
+    dispatch({ type: "ADD_ENDPOINT", endpoint });
+  };
+
   if (isPending) return <LoadingSkeleton />;
   if (isError) return error.message;
 
   return (
     <>
-      <List subheader={<ListSubheader>Mock endpoints</ListSubheader>}>
+      <List
+        subheader={<ListSubheader>Mock endpoints</ListSubheader>}
+        sx={{ flexGrow: 1, minHeight: 0, overflowY: "auto" }}
+      >
         {filteredData.map((endpoint) => (
-          <ListItem
+          <ListItemButton
             key={endpoint.id}
             sx={{
               // Reveal the descendant button on hover, or when any descendant
@@ -57,10 +75,19 @@ const EndpointList = ({ filter }: { filter: string }) => {
                 },
               },
             }}
+            selected={selectedEndpointId === endpoint.id}
+            onClick={() => handleListItemClick(endpoint)}
           >
-            <EndpointBtn endpoint={endpoint} />
+            <ListItemText
+              primary={
+                <>
+                  <Typography>{endpoint.method}</Typography>
+                  <Typography>/{endpoint.path}</Typography>
+                </>
+              }
+            />
             <DeleteEndpointBtn endpointId={endpoint.id} />
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
       <Typography>

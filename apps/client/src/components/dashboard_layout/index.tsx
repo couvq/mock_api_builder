@@ -14,7 +14,7 @@ const DashboardLayout = ({
 }: DashboardLayoutProps) => {
   return (
     <Box
-      sx={{ height: "100vh", width: "100vw", overflow: "hidden" }}
+      sx={{ height: "100%", width: "100%", overflow: "hidden" }}
       data-testid="dashboard"
     >
       <Stack direction="row" spacing={1} sx={{ height: "100%" }}>

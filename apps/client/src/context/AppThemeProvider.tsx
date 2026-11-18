@@ -13,7 +13,7 @@ const theme = createTheme({
 });
 
 const AppThemeProvider = ({ children }: AppThemeProviderProps) => (
-  <ThemeProvider theme={theme} defaultMode="system">
+  <ThemeProvider theme={theme} defaultMode="dark">
     <CssBaseline />
     {children}
   </ThemeProvider>

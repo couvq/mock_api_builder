@@ -11,7 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useToast } from "../../hooks/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteEndpoint } from "../../api/endpoint";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { useEditorDispatch } from "../../context/Editor/EditorContext";
 
 interface DeleteEndpointBtnProps {
@@ -47,7 +47,10 @@ const ConfirmDeletionModal = ({
     },
   });
 
-  const handleDelete = () => deleteEndpointMutation.mutate(endpointId);
+  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation(); // Prevent the click from propagating to the parent ListItemButton
+    deleteEndpointMutation.mutate(endpointId);
+  };
 
   return (
     <Dialog
@@ -58,7 +61,7 @@ const ConfirmDeletionModal = ({
       role="alertdialog"
     >
       <DialogTitle id="alert-dialog-title">
-        {"Confirm Endpoint Deletion"}
+        Confirm Endpoint Deletion
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
@@ -86,6 +89,11 @@ const ConfirmDeletionModal = ({
 const DeleteEndpointBtn = ({ endpointId }: DeleteEndpointBtnProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleDeleteClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // Prevent the click from propagating to the parent ListItemButton
+    setIsModalOpen(true);
+  };
+
   return (
     <>
       <IconButton
@@ -100,7 +108,7 @@ const DeleteEndpointBtn = ({ endpointId }: DeleteEndpointBtnProps) => {
           marginLeft: "auto",
           transition: "opacity 0.15s ease, visibility 0.15s ease",
         }}
-        onClick={() => setIsModalOpen(true)}
+        onClick={handleDeleteClick}
       >
         <DeleteIcon fontSize="small" />
       </IconButton>
