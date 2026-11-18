@@ -3,6 +3,7 @@ import { createContext, useContext, type ReactNode } from "react";
 import {
   serveMockRequest,
   type ServeMockRequestPayload,
+  type WithResponseStats,
 } from "../../api/mock_api";
 import type { TranspiledSchema } from "@mock-api-builder/schema";
 
@@ -11,7 +12,11 @@ interface MockRequestProviderProps {
 }
 
 const MockRequestContext = createContext<
-  | UseMutationResult<TranspiledSchema, Error, ServeMockRequestPayload>
+  | UseMutationResult<
+      WithResponseStats<TranspiledSchema>,
+      Error,
+      ServeMockRequestPayload
+    >
   | undefined
 >(undefined);
 
