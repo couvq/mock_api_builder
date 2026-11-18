@@ -14,7 +14,7 @@ const theme = createTheme({
 
 const AppThemeProvider = ({ children }: AppThemeProviderProps) => (
   <ThemeProvider theme={theme} defaultMode="dark">
-    <CssBaseline />
+    <CssBaseline enableColorScheme />
     {children}
   </ThemeProvider>
 );
