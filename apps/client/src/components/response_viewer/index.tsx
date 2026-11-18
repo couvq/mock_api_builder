@@ -18,7 +18,11 @@ const ResponseViewer = () => {
   if (isPending)
     return (
       <Box>
-        <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ alignItems: "center", mb: 1.5 }}
+        >
           <Chip label="Sending..." color="info" />
           <Typography>
             {variables.method} {`${MOCK_API_BASE_URL}${variables.path}`}
