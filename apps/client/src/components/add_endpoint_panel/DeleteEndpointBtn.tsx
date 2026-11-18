@@ -1,3 +1,4 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Button,
   Dialog,
@@ -7,12 +8,11 @@ import {
   DialogTitle,
   IconButton,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useToast } from "../../hooks/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteEndpoint } from "../../api/endpoint";
 import { useState, type MouseEvent } from "react";
+import { deleteEndpoint } from "../../api/endpoint";
 import { useEditorDispatch } from "../../context/Editor/EditorContext";
+import { useToast } from "../../hooks/toast";
 
 interface DeleteEndpointBtnProps {
   endpointId: string;

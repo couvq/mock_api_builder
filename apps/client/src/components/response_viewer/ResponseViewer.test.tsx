@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { act, fireEvent, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
@@ -36,18 +36,34 @@ describe("ResponseViewer", () => {
   });
 
   it("should display the loading spinner while the request is pending", async () => {
-    renderWithProviders(
-      <>
-        <Trigger />
-        <ResponseViewer />
-      </>,
-    );
+    // Freeze the clock so the suite's 50ms response delay can't resolve while
+    // we assert, pinning isPending=true regardless of CI timing. Two wrinkles
+    // the fake clock introduces:
+    //   - userEvent schedules its own timers and deadlocks against the frozen
+    //     clock, so we dispatch the click synchronously with fireEvent.
+    //   - React Query batches its state notifications on a 0ms timer that is
+    //     also frozen, so the pending render never arrives on its own. We
+    //     advance 1ms to fire that notification (but not the 50ms response),
+    //     inside act() so the resulting re-render flushes.
+    // Restoring real timers discards the still-pending response delay, so the
+    // request is abandoned mid-flight (as unmount would) and no fake clock
+    // leaks into the other tests.
+    vi.useFakeTimers();
+    try {
+      renderWithProviders(
+        <>
+          <Trigger />
+          <ResponseViewer />
+        </>,
+      );
 
-    await user.click(screen.getByRole("button", { name: /send/i }));
+      fireEvent.click(screen.getByRole("button", { name: /send/i }));
+      await act(() => vi.advanceTimersByTimeAsync(1));
 
-    expect(
-      await screen.findByTestId("response-viewer-loading"),
-    ).toBeInTheDocument();
+      expect(screen.getByTestId("response-viewer-loading")).toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("should display the json response on success", async () => {
@@ -91,9 +107,22 @@ describe("ResponseViewer", () => {
     await user.click(screen.getByRole("button", { name: /send/i }));
 
     expect(
-      await screen.findByText(
-        `An error occurred calling mock endpoint: ${statusCode} ${statusText}`,
-      ),
+      await screen.findByText(`${statusCode} ${statusText}`),
     ).toBeInTheDocument();
+  });
+
+  it("should display a generic failure when no response is received", async () => {
+    server.use(http.get("*/mock_api/*", () => HttpResponse.error()));
+
+    renderWithProviders(
+      <>
+        <Trigger />
+        <ResponseViewer />
+      </>,
+    );
+
+    await user.click(screen.getByRole("button", { name: /send/i }));
+
+    expect(await screen.findByText("Request failed")).toBeInTheDocument();
   });
 });
