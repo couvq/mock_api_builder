@@ -29,6 +29,7 @@ import {
   DEFAULT_FAKER_TYPE,
   FAKER_TYPE_SELECTION,
 } from "../../config/jsonEditor";
+import DelayInput from "../delay_input";
 
 export const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
 
@@ -64,13 +65,9 @@ const EndpointViewer = () => {
     dispatch({ type: "UPDATE_DRAFT", draft: { ...draft, ...changes } });
   };
 
-  const handleSave = () => {
-    updateEndpointMutation.mutate(draft);
-  };
+  const handleSave = () => updateEndpointMutation.mutate(draft);
 
-  const handleSend = () => {
-    serveMockRequestMutation.mutate({ method, path });
-  };
+  const handleSend = () => serveMockRequestMutation.mutate({ method, path });
 
   return (
     <Box data-testid="endpoint-viewer" sx={{ height: "100%" }}>
@@ -114,6 +111,7 @@ const EndpointViewer = () => {
           />
 
           <Stack direction="row" spacing={1}>
+            <DelayInput />
             <Button
               variant="outlined"
               onClick={handleSave}
