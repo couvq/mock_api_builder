@@ -13,7 +13,10 @@ export default function DelayInput({
   label = "Delay (ms)",
   size = "small",
   min = 0,
+  step = 50,
   ...props
 }: DelayInputProps) {
-  return <NumberField label={label} size={size} min={min} {...props} />;
+  return (
+    <NumberField label={label} size={size} min={min} step={step} {...props} />
+  );
 }

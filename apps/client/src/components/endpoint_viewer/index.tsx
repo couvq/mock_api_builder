@@ -61,9 +61,8 @@ const EndpointViewer = () => {
     );
   const isEditing = !matchesServerData;
 
-  const updateDraft = (changes: Partial<EndpointConfig>) => {
+  const updateDraft = (changes: Partial<EndpointConfig>) =>
     dispatch({ type: "UPDATE_DRAFT", draft: { ...draft, ...changes } });
-  };
 
   const handleSave = () => updateEndpointMutation.mutate(draft);
 
@@ -111,7 +110,10 @@ const EndpointViewer = () => {
           />
 
           <Stack direction="row" spacing={1}>
-            <DelayInput />
+            <DelayInput
+              value={draft.delay}
+              onValueChange={(value) => updateDraft({ delay: value ?? 0 })}
+            />
             <Button
               variant="outlined"
               onClick={handleSave}
