@@ -1,5 +1,6 @@
 import * as React from "react";
 import { NumberField as BaseNumberField } from "@base-ui/react/number-field";
+import type { SxProps, Theme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -25,12 +26,14 @@ export default function NumberField({
   error,
   helperText,
   size = "medium",
+  sx,
   ...other
 }: BaseNumberField.Root.Props & {
   label?: React.ReactNode;
   size?: "small" | "medium";
   error?: boolean;
   helperText?: React.ReactNode;
+  sx?: SxProps<Theme>;
 }) {
   let id = React.useId();
   if (idProp) {
@@ -47,6 +50,7 @@ export default function NumberField({
           required={state.required}
           error={error}
           variant="outlined"
+          sx={sx}
         >
           {props.children}
         </FormControl>

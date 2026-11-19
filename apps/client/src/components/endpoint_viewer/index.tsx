@@ -80,40 +80,45 @@ const EndpointViewer = () => {
             flexShrink: 0,
           }}
         >
-          <TextField
-            fullWidth
-            label="Endpoint"
-            value={path}
-            onChange={(e) => updateDraft({ path: e.target.value })}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <>
-                    <InputAdornment position="start">
-                      <Select
-                        value={method}
-                        onChange={(e) =>
-                          updateDraft({ method: e.target.value })
-                        }
-                        variant="standard"
-                        disableUnderline
-                      >
-                        <MenuItem value="GET">GET</MenuItem>
-                        <MenuItem value="POST">POST</MenuItem>
-                      </Select>
-                    </InputAdornment>
-                    {MOCK_API_BASE_URL}
-                  </>
-                ),
-              },
-            }}
-          />
+          <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
+            <TextField
+              fullWidth
+              label="Endpoint"
+              value={path}
+              onChange={(e) => updateDraft({ path: e.target.value })}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <>
+                      <InputAdornment position="start">
+                        <Select
+                          value={method}
+                          onChange={(e) =>
+                            updateDraft({ method: e.target.value })
+                          }
+                          variant="standard"
+                          disableUnderline
+                        >
+                          <MenuItem value="GET">GET</MenuItem>
+                          <MenuItem value="POST">POST</MenuItem>
+                        </Select>
+                      </InputAdornment>
+                      {MOCK_API_BASE_URL}
+                    </>
+                  ),
+                },
+              }}
+            />
 
-          <Stack direction="row" spacing={1}>
             <DelayInput
+              size="medium"
+              sx={{ width: 120, flexShrink: 0 }}
               value={draft.delay}
               onValueChange={(value) => updateDraft({ delay: value ?? 0 })}
             />
+          </Stack>
+
+          <Stack direction="row" spacing={1}>
             <Button
               variant="outlined"
               onClick={handleSave}
