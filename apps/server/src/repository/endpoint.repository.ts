@@ -9,7 +9,9 @@ export class EndpointRepository {
     return await db.select().from(endpointTable);
   }
 
-  async getEndpointById(id: string): Promise<EndpointConfig | undefined> {
+  async getEndpointById(
+    id: EndpointConfig['id'],
+  ): Promise<EndpointConfig | undefined> {
     const res = await db
       .select()
       .from(endpointTable)
@@ -61,7 +63,7 @@ export class EndpointRepository {
    */
   async getEndpointByMethodAndPath(
     method: EndpointConfig['method'],
-    path: string,
+    path: EndpointConfig['path'],
   ): Promise<EndpointConfig | undefined> {
     const res = await db
       .select()
@@ -77,7 +79,7 @@ export class EndpointRepository {
    */
   async hasEndpoint(
     method: EndpointConfig['method'],
-    path: string,
+    path: EndpointConfig['path'],
   ): Promise<boolean> {
     const res = await db
       .select()

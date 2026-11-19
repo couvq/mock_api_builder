@@ -19,6 +19,7 @@ describe("Dashboard", () => {
       ...sampleEndpoint,
       method: "POST",
       path: "best_friend",
+      delay: 250,
       responseSchema: { best_friends: [] },
     } satisfies EndpointConfig;
 
@@ -55,6 +56,11 @@ describe("Dashboard", () => {
     // edit path
     await user.clear(endpointPathInput);
     await user.type(endpointPathInput, editedEndpoint.path);
+    // edit delay (commit the number field via blur so the draft updates)
+    const delayInput = screen.getByLabelText(/delay/i);
+    await user.clear(delayInput);
+    await user.type(delayInput, `${editedEndpoint.delay}`);
+    await user.tab();
     // edit response schema
     await user.dblClick(screen.getByText(initialKey));
     const keyInput = screen.getByDisplayValue(initialKey);

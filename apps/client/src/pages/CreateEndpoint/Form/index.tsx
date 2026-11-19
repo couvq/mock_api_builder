@@ -25,6 +25,7 @@ import {
 } from "react-hook-form-mui";
 import { Link } from "react-router";
 import { MOCK_API_BASE_URL } from "../../../components/endpoint_viewer";
+import DelayInput from "../../../components/delay_input";
 import {
   DEFAULT_FAKER_TYPE,
   FAKER_TYPE_SELECTION,
@@ -41,7 +42,7 @@ const METHOD_OPTIONS = HTTP_METHODS.map((method) => ({
   label: method,
 }));
 
-const DEFAULT_RESPONSE_SCHEMA: MockSchemaType = "";
+const DEFAULT_RESPONSE_SCHEMA: MockSchemaType = {};
 
 type SchemaViewMode = "tree" | "json";
 
@@ -57,8 +58,11 @@ const Form = () => {
   const [responseSchema, setResponseSchema] = useState<MockSchemaType>(
     DEFAULT_RESPONSE_SCHEMA,
   );
+  const [delay, setDelay] = useState(0);
   const [viewMode, setViewMode] = useState<SchemaViewMode>("tree");
-  const [jsonText, setJsonText] = useState("");
+  const [jsonText, setJsonText] = useState(
+    JSON.stringify(DEFAULT_RESPONSE_SCHEMA),
+  );
   const [jsonError, setJsonError] = useState<string | null>(null);
   const [exampleResponse, setExampleResponse] = useState<TranspiledSchema>(() =>
     transpile(DEFAULT_RESPONSE_SCHEMA),
@@ -110,6 +114,7 @@ const Form = () => {
     const payload: Omit<EndpointConfig, "id"> = {
       method: formData.method,
       path: formData.path,
+      delay,
       responseSchema,
     };
 
@@ -138,7 +143,7 @@ const Form = () => {
             fullWidth
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 10 }}>
+        <Grid size={{ xs: 12, sm: 8 }}>
           <TextFieldElement
             name="path"
             label="Path"
@@ -160,6 +165,15 @@ const Form = () => {
                 ),
               },
             }}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 2 }}>
+          <DelayInput
+            required
+            size="medium"
+            sx={{ width: "100%" }}
+            value={delay}
+            onValueChange={(value) => setDelay(value ?? 0)}
           />
         </Grid>
       </Grid>

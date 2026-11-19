@@ -6,6 +6,10 @@ import {
   TranspiledSchema,
 } from '@mock-api-builder/schema';
 
+const delay = (timeMs: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, timeMs));
+};
+
 @Injectable()
 export class MockApiService {
   private readonly logger = new Logger(MockApiService.name);
@@ -29,6 +33,8 @@ export class MockApiService {
         `Endpoint does not exist for method: ${method} and path: ${path}`,
       );
     }
+
+    await delay(matchingEndpoint.delay);
 
     const { responseSchema } = matchingEndpoint;
     return transpile(responseSchema);

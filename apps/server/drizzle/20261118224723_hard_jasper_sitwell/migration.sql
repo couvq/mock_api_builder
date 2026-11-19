@@ -1,0 +1,1 @@
+ALTER TABLE `endpoints` ADD `delay` integer DEFAULT 0 NOT NULL;

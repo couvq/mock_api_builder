@@ -7,6 +7,7 @@ import { db, endpointTable } from '../clients/endpointDbClient.js';
 import {
   BadRequestException,
   ConflictException,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import {
@@ -44,6 +45,7 @@ describe('EndpointController', () => {
       const testEndpoint: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        delay: 0,
         responseSchema: {},
       };
       const createdEndpoint =
@@ -83,6 +85,7 @@ describe('EndpointController', () => {
       const testEndpoint: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        delay: 0,
         responseSchema: {},
       };
 
@@ -91,6 +94,69 @@ describe('EndpointController', () => {
       expect(endpointController.addEndpoint(testEndpoint)).rejects.toThrow(
         ConflictException,
       );
+    });
+
+    it('should throw internal server error exception if repository returns no endpoint', async () => {
+      // Mock the repository so the create "succeeds" past the conflict check
+      // but the insert read-back returns nothing, forcing the service's
+      // InternalServerErrorException branch.
+      const mockEndpointRepository = {
+        hasEndpoint: vi.fn().mockResolvedValue(false),
+        addEndpoint: vi.fn().mockResolvedValue(undefined),
+      };
+
+      const app: TestingModule = await Test.createTestingModule({
+        controllers: [EndpointController],
+        providers: [EndpointService, EndpointRepository],
+      })
+        .overrideProvider(EndpointRepository)
+        .useValue(mockEndpointRepository)
+        .compile();
+
+      const controller = app.get<EndpointController>(EndpointController);
+
+      const testEndpoint: CreateEndpointRequest = {
+        method: 'GET',
+        path: 'test',
+        delay: 0,
+        responseSchema: {},
+      };
+
+      await expect(controller.addEndpoint(testEndpoint)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+    });
+
+    it('should throw internal server error exception if repository returns no endpoint on update', async () => {
+      // Mock the repository so the update passes the existence check but the
+      // update read-back returns nothing, forcing the service's
+      // InternalServerErrorException branch.
+      const mockEndpointRepository = {
+        hasEndpointWithId: vi.fn().mockResolvedValue(true),
+        updateEndpoint: vi.fn().mockResolvedValue(undefined),
+      };
+
+      const app: TestingModule = await Test.createTestingModule({
+        controllers: [EndpointController],
+        providers: [EndpointService, EndpointRepository],
+      })
+        .overrideProvider(EndpointRepository)
+        .useValue(mockEndpointRepository)
+        .compile();
+
+      const controller = app.get<EndpointController>(EndpointController);
+
+      const testUpdateEndpoint: UpdateEndpointRequest = {
+        id: 'test',
+        method: 'GET',
+        path: 'test',
+        delay: 0,
+        responseSchema: {},
+      };
+
+      await expect(
+        controller.updateEndpoint(testUpdateEndpoint),
+      ).rejects.toThrow(InternalServerErrorException);
     });
 
     it('should throw bad request exception if trying to pass invalid schema to update endpoint', async () => {
@@ -111,6 +177,7 @@ describe('EndpointController', () => {
           id: 'test',
           method: 'GET',
           path: 'test',
+          delay: 0,
           responseSchema: {},
         }),
       ).rejects.toThrow(NotFoundException);
@@ -121,6 +188,7 @@ describe('EndpointController', () => {
       const createEndpointRequest: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        delay: 0,
         responseSchema: {},
       };
 
@@ -135,6 +203,7 @@ describe('EndpointController', () => {
         id: createdEndpoint?.id,
         method: 'GET',
         path: 'updated_path',
+        delay: 0,
         responseSchema: {},
       };
       const updatedEndpoint = await endpointController.updateEndpoint(
@@ -164,6 +233,7 @@ describe('EndpointController', () => {
       method: 'GET',
       path: 'test',
       responseSchema: {},
+      delay: 0,
     });
     expect(await endpointController.getAllEndpoints()).toHaveLength(1);
 

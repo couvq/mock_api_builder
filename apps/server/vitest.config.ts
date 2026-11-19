@@ -13,10 +13,10 @@ export default defineConfig({
       provider: 'v8',
       // Pinned at the suite's current coverage so it can't regress.
       thresholds: {
-        statements: 91,
-        branches: 83,
-        functions: 90,
-        lines: 91,
+        statements: 98,
+        branches: 86,
+        functions: 96,
+        lines: 98,
       },
     },
   },

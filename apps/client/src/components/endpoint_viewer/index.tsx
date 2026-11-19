@@ -29,6 +29,7 @@ import {
   DEFAULT_FAKER_TYPE,
   FAKER_TYPE_SELECTION,
 } from "../../config/jsonEditor";
+import DelayInput from "../delay_input";
 
 export const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
 
@@ -60,17 +61,12 @@ const EndpointViewer = () => {
     );
   const isEditing = !matchesServerData;
 
-  const updateDraft = (changes: Partial<EndpointConfig>) => {
+  const updateDraft = (changes: Partial<EndpointConfig>) =>
     dispatch({ type: "UPDATE_DRAFT", draft: { ...draft, ...changes } });
-  };
 
-  const handleSave = () => {
-    updateEndpointMutation.mutate(draft);
-  };
+  const handleSave = () => updateEndpointMutation.mutate(draft);
 
-  const handleSend = () => {
-    serveMockRequestMutation.mutate({ method, path });
-  };
+  const handleSend = () => serveMockRequestMutation.mutate({ method, path });
 
   return (
     <Box data-testid="endpoint-viewer" sx={{ height: "100%" }}>
@@ -84,34 +80,43 @@ const EndpointViewer = () => {
             flexShrink: 0,
           }}
         >
-          <TextField
-            fullWidth
-            label="Endpoint"
-            value={path}
-            onChange={(e) => updateDraft({ path: e.target.value })}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <>
-                    <InputAdornment position="start">
-                      <Select
-                        value={method}
-                        onChange={(e) =>
-                          updateDraft({ method: e.target.value })
-                        }
-                        variant="standard"
-                        disableUnderline
-                      >
-                        <MenuItem value="GET">GET</MenuItem>
-                        <MenuItem value="POST">POST</MenuItem>
-                      </Select>
-                    </InputAdornment>
-                    {MOCK_API_BASE_URL}
-                  </>
-                ),
-              },
-            }}
-          />
+          <Stack direction="row" spacing={1} sx={{ flex: 1 }}>
+            <TextField
+              fullWidth
+              label="Endpoint"
+              value={path}
+              onChange={(e) => updateDraft({ path: e.target.value })}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <>
+                      <InputAdornment position="start">
+                        <Select
+                          value={method}
+                          onChange={(e) =>
+                            updateDraft({ method: e.target.value })
+                          }
+                          variant="standard"
+                          disableUnderline
+                        >
+                          <MenuItem value="GET">GET</MenuItem>
+                          <MenuItem value="POST">POST</MenuItem>
+                        </Select>
+                      </InputAdornment>
+                      {MOCK_API_BASE_URL}
+                    </>
+                  ),
+                },
+              }}
+            />
+
+            <DelayInput
+              size="medium"
+              sx={{ width: 120, flexShrink: 0 }}
+              value={draft.delay}
+              onValueChange={(value) => updateDraft({ delay: value ?? 0 })}
+            />
+          </Stack>
 
           <Stack direction="row" spacing={1}>
             <Button

@@ -14,6 +14,7 @@ describe("editorReducer", () => {
         id: "1",
         method: "GET",
         path: "friends",
+        delay: 0,
         responseSchema: {},
       },
     };
@@ -23,6 +24,7 @@ describe("editorReducer", () => {
         id: "1",
         method: "GET",
         path: "friends",
+        delay: 0,
         responseSchema: {},
       },
     };
@@ -38,6 +40,7 @@ describe("editorReducer", () => {
         id: "1",
         method: "GET",
         path: "friends",
+        delay: 0,
         responseSchema: {},
       },
     };
@@ -47,6 +50,7 @@ describe("editorReducer", () => {
         id: "1",
         method: "GET",
         path: "friends",
+        delay: 0,
         responseSchema: {
           friends: [],
         },
@@ -58,6 +62,7 @@ describe("editorReducer", () => {
         id: "1",
         method: "GET",
         path: "friends",
+        delay: 0,
         responseSchema: {
           friends: [],
         },
@@ -76,6 +81,7 @@ describe("editorReducer", () => {
           id: "1",
           method: "GET",
           path: "friends",
+          delay: 0,
           responseSchema: {},
         },
       };
@@ -101,6 +107,7 @@ describe("editorReducer", () => {
           id: "1",
           method: "GET",
           path: "friends",
+          delay: 0,
           responseSchema: {},
         },
       };
@@ -116,6 +123,7 @@ describe("editorReducer", () => {
           id: "1",
           method: "GET",
           path: "friends",
+          delay: 0,
           responseSchema: {},
         },
       };

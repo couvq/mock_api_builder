@@ -6,6 +6,7 @@ export const sampleEndpoint: EndpointConfig = {
   id: "123",
   method: "GET",
   path: "friend",
+  delay: 0,
   responseSchema: {
     friends: [],
   },
