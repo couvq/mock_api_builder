@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { MockSchema } from "../../mock_schema.js";
 
-const MIN_DELAY = 0;
-const MAX_DELAY = 10000;
-const DEFAULT_DELAY = 0;
+export const MIN_DELAY = 0;
+export const MAX_DELAY = 10000;
+export const DEFAULT_DELAY = 0;
 
 export const EndpointConfig = z.object({
   id: z.string(),

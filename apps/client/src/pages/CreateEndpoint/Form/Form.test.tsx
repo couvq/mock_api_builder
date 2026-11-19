@@ -19,6 +19,29 @@ describe("Form", () => {
     ).toBeInTheDocument();
   });
 
+  it("submits the configured delay", async () => {
+    let captured: { delay: number } | undefined;
+    server.use(
+      http.post("*/endpoint", async ({ request }) => {
+        captured = (await request.json()) as { delay: number };
+        return HttpResponse.json(captured);
+      }),
+    );
+    renderWithProviders(<Form />);
+
+    await user.type(screen.getByLabelText(/path/i), "friend");
+    // Clearing empties the field (value becomes null, falls back to 0);
+    // one increment then steps it by 50.
+    await user.clear(screen.getByLabelText(/delay/i));
+    await user.click(screen.getByRole("button", { name: /increase/i }));
+    await user.click(screen.getByRole("button", { name: /Create endpoint/i }));
+
+    expect(
+      await screen.findByText(/Endpoint .* created successfully!/i),
+    ).toBeInTheDocument();
+    expect(captured?.delay).toBe(50);
+  });
+
   it("should show an error message if failed to create endpoint", async () => {
     server.use(
       http.post(
