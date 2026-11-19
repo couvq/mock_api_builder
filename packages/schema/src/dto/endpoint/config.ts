@@ -5,6 +5,7 @@ export const EndpointConfig = z.object({
   id: z.string(),
   method: z.enum(["GET", "POST"]),
   path: z.string(),
+  delay: z.number().default(0),
   responseSchema: MockSchema,
 });
 

@@ -44,6 +44,7 @@ describe('EndpointController', () => {
       const testEndpoint: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        delay: 0,
         responseSchema: {},
       };
       const createdEndpoint =
@@ -83,6 +84,7 @@ describe('EndpointController', () => {
       const testEndpoint: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        delay: 0,
         responseSchema: {},
       };
 
@@ -111,6 +113,7 @@ describe('EndpointController', () => {
           id: 'test',
           method: 'GET',
           path: 'test',
+          delay: 0,
           responseSchema: {},
         }),
       ).rejects.toThrow(NotFoundException);
@@ -121,6 +124,7 @@ describe('EndpointController', () => {
       const createEndpointRequest: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        delay: 0,
         responseSchema: {},
       };
 
@@ -135,6 +139,7 @@ describe('EndpointController', () => {
         id: createdEndpoint?.id,
         method: 'GET',
         path: 'updated_path',
+        delay: 0,
         responseSchema: {},
       };
       const updatedEndpoint = await endpointController.updateEndpoint(
@@ -164,6 +169,7 @@ describe('EndpointController', () => {
       method: 'GET',
       path: 'test',
       responseSchema: {},
+      delay: 0,
     });
     expect(await endpointController.getAllEndpoints()).toHaveLength(1);
 

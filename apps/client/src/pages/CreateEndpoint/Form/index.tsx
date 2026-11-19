@@ -110,6 +110,7 @@ const Form = () => {
     const payload: Omit<EndpointConfig, "id"> = {
       method: formData.method,
       path: formData.path,
+      delay: 0,
       responseSchema,
     };
 
