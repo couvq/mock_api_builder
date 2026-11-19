@@ -10,18 +10,7 @@ import InputLabel from "@mui/material/InputLabel";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-/**
- *
- * This component is a placeholder for FormControl to correctly set the shrink label state on SSR.
- */
-function SSRInitialFilled(_: BaseNumberField.Root.Props) {
-  console.log(_);
-  return null;
-}
-SSRInitialFilled.muiName = "Input";
-
 export default function NumberField({
-  id: idProp,
   label,
   error,
   helperText,
@@ -35,10 +24,7 @@ export default function NumberField({
   helperText?: React.ReactNode;
   sx?: SxProps<Theme>;
 }) {
-  let id = React.useId();
-  if (idProp) {
-    id = idProp;
-  }
+  const id = React.useId();
   return (
     <BaseNumberField.Root
       {...other}
@@ -56,7 +42,6 @@ export default function NumberField({
         </FormControl>
       )}
     >
-      <SSRInitialFilled {...other} />
       <InputLabel htmlFor={id}>{label}</InputLabel>
       <BaseNumberField.Input
         id={id}

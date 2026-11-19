@@ -169,6 +169,7 @@ const Form = () => {
         </Grid>
         <Grid size={{ xs: 12, sm: 2 }}>
           <DelayInput
+            required
             size="medium"
             sx={{ width: "100%" }}
             value={delay}
