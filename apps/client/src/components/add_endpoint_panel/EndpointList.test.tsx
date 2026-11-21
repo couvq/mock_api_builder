@@ -1,8 +1,11 @@
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event/dist/cjs/setup/index.js";
 import { sampleEndpoint, server } from "../../test/server";
 import renderWithProviders from "../../test/renderWithProviders";
 import EndpointList from "./EndpointList";
 import { http, HttpResponse } from "msw";
+
+const user = userEvent.setup();
 
 describe("EndpointList", () => {
   it("should display the correct list of endpoints", async () => {
@@ -39,5 +42,30 @@ describe("EndpointList", () => {
       `Failed to fetch endpoints: ${statusCode} ${statusText}`,
     );
     expect(errorMessage).toBeInTheDocument();
+  });
+
+  it("should open the delete confirmation modal when the delete button is clicked", async () => {
+    renderWithProviders(<EndpointList filter={""} />);
+
+    const deleteButton = await screen.findByLabelText("delete");
+    await user.click(deleteButton);
+
+    expect(await screen.findByRole("alertdialog")).toBeInTheDocument();
+  });
+
+  it("should close the delete confirmation modal when cancel is clicked", async () => {
+    renderWithProviders(<EndpointList filter={""} />);
+
+    const deleteButton = await screen.findByLabelText("delete");
+    await user.click(deleteButton);
+
+    const confirmationModal = await screen.findByRole("alertdialog");
+    expect(confirmationModal).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Cancel" }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument(),
+    );
   });
 });

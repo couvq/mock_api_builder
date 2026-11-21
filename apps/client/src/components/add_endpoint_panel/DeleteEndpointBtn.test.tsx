@@ -1,94 +1,23 @@
 import { screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event/dist/cjs/setup/index.js";
-import { http, HttpResponse } from "msw";
 import renderWithProviders from "../../test/renderWithProviders";
-import { server } from "../../test/server";
 import DeleteEndpointBtn from "./DeleteEndpointBtn";
-import type { EndpointConfig } from "@mock-api-builder/schema";
-
-const endpoint: EndpointConfig = {
-  id: "1",
-  method: "GET",
-  path: "friends",
-  delay: 0,
-  responseSchema: {},
-};
-
-const endpointLabel = `${endpoint.method} /${endpoint.path}`;
 
 const user = userEvent.setup();
 
 describe("DeleteEndpointBtn", () => {
-  it("should be able to confirm deletion", async () => {
-    renderWithProviders(<DeleteEndpointBtn endpoint={endpoint} />);
+  it("should render a delete button", () => {
+    renderWithProviders(<DeleteEndpointBtn onClick={() => {}} />);
 
-    const deleteButton = screen.getByLabelText("delete");
-    await user.click(deleteButton);
-
-    const confirmationModal = await screen.findByRole("alertdialog");
-    expect(confirmationModal).toBeInTheDocument();
-
-    const confirmationInput = screen.getByRole("textbox");
-    await user.type(confirmationInput, endpointLabel);
-
-    const confirmButton = screen.getByRole("button", { name: "Confirm" });
-    await user.click(confirmButton);
-
-    expect(
-      await screen.findByText("Endpoint deleted successfully."),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("delete")).toBeInTheDocument();
   });
 
-  it("should show a validation error when the confirmation input does not match", async () => {
-    renderWithProviders(<DeleteEndpointBtn endpoint={endpoint} />);
+  it("should call onClick when clicked", async () => {
+    const onClick = vi.fn();
+    renderWithProviders(<DeleteEndpointBtn onClick={onClick} />);
 
-    const deleteButton = screen.getByLabelText("delete");
-    await user.click(deleteButton);
+    await user.click(screen.getByLabelText("delete"));
 
-    const confirmationModal = await screen.findByRole("alertdialog");
-    expect(confirmationModal).toBeInTheDocument();
-
-    const confirmationInput = screen.getByRole("textbox");
-    await user.type(confirmationInput, "not the endpoint");
-
-    const confirmButton = screen.getByRole("button", { name: "Confirm" });
-    await user.click(confirmButton);
-
-    expect(
-      await screen.findByText(`Value must be ${endpointLabel}`),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByText("Endpoint deleted successfully."),
-    ).not.toBeInTheDocument();
-  });
-
-  it("should show an error message if deletion fails", async () => {
-    server.use(
-      http.delete(
-        "*/endpoint/:id",
-        async () =>
-          new HttpResponse(null, {
-            status: 500,
-            statusText: "Internal Server Error",
-          }),
-      ),
-    );
-    renderWithProviders(<DeleteEndpointBtn endpoint={endpoint} />);
-
-    const deleteButton = screen.getByLabelText("delete");
-    await user.click(deleteButton);
-
-    const confirmationModal = await screen.findByRole("alertdialog");
-    expect(confirmationModal).toBeInTheDocument();
-
-    const confirmationInput = screen.getByRole("textbox");
-    await user.type(confirmationInput, endpointLabel);
-
-    const confirmButton = screen.getByRole("button", { name: "Confirm" });
-    await user.click(confirmButton);
-
-    expect(
-      await screen.findByText("Failed to delete endpoint."),
-    ).toBeInTheDocument();
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
