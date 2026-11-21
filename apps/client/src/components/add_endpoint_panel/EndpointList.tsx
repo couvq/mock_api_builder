@@ -92,12 +92,23 @@ const EndpointList = ({ filter }: { filter: string }) => {
             <ListItemButton
               selected={activeEndpointId === endpoint.id}
               onClick={() => handleListItemClick(endpoint)}
+              // Reserve room on the right for the (absolutely positioned)
+              // delete button so a long path doesn't slide underneath it.
+              sx={{ pr: 6 }}
             >
               <ListItemText
                 primary={
                   <>
                     <Typography>{endpoint.method}</Typography>
-                    <Typography>/{endpoint.path}</Typography>
+                    {/* Keep the path on one line and let it scroll
+                        horizontally within the row. overflow-x also gives it a
+                        min-content width of 0, so a long path can't force the
+                        sidebar wider. */}
+                    <Typography
+                      sx={{ whiteSpace: "nowrap", overflowX: "auto" }}
+                    >
+                      /{endpoint.path}
+                    </Typography>
                   </>
                 }
               />

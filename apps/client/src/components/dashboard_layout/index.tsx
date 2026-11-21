@@ -18,7 +18,9 @@ const DashboardLayout = ({
       data-testid="dashboard"
     >
       <Stack direction="row" spacing={1} sx={{ height: "100%" }}>
-        <Paper>{sidePanel}</Paper>
+        <Paper sx={{ width: "25vw", flexShrink: 0, overflow: "hidden" }}>
+          {sidePanel}
+        </Paper>
         <Stack
           direction="column"
           spacing={1}
