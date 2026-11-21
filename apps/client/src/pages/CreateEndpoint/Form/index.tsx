@@ -1,5 +1,6 @@
 import { Box, Button, Divider, Stack } from "@mui/material";
 import { EndpointConfig, type MockSchemaType } from "@mock-api-builder/schema";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FormContainer } from "react-hook-form-mui";
 import { Link } from "react-router";
@@ -16,6 +17,7 @@ const Form = () => {
   );
   const [delay, setDelay] = useState(0);
   const { error, success } = useToast();
+  const queryClient = useQueryClient();
 
   const handleCreate = async (formData: {
     method: EndpointConfig["method"];
@@ -30,6 +32,9 @@ const Form = () => {
 
     try {
       const newEndpoint = await createEndpoint(payload);
+      // Refresh the dashboard's endpoint list so the new endpoint shows up
+      // without relying on a refetch-on-remount.
+      queryClient.invalidateQueries({ queryKey: ["endpoints"] });
       success(
         `Endpoint ${newEndpoint.method} /${newEndpoint.path} created successfully!`,
       );
