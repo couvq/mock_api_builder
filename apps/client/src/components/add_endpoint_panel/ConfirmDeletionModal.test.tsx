@@ -79,4 +79,17 @@ describe("ConfirmDeletionModal", () => {
       await screen.findByText("Failed to delete endpoint."),
     ).toBeInTheDocument();
   });
+
+  it("should copy the endpoint label to the clipboard", async () => {
+    renderWithProviders(
+      <ConfirmDeletionModal isOpen endpoint={endpoint} onClose={() => {}} />,
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "copy endpoint name" }),
+    );
+
+    expect(await navigator.clipboard.readText()).toBe(endpointLabel);
+    expect(await screen.findByText("Copied to clipboard.")).toBeInTheDocument();
+  });
 });

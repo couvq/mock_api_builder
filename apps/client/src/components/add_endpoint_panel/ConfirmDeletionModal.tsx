@@ -1,11 +1,15 @@
 import type { EndpointConfig } from "@mock-api-builder/schema";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -49,6 +53,11 @@ const ConfirmDeletionModal = ({
 
   const endpointLabel = `${endpoint.method} /${endpoint.path}`;
 
+  const handleCopy = () => {
+    void navigator.clipboard.writeText(endpointLabel);
+    toast.success("Copied to clipboard.");
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -63,9 +72,48 @@ const ConfirmDeletionModal = ({
       <FormContainer onSuccess={handleDelete}>
         <DialogContent id="alert-dialog-description">
           <Stack direction="column" spacing={2}>
-            <Typography>
+            <Typography component="div">
               Are you sure you want to delete this endpoint? This action cannot
-              be undone. Type "{endpointLabel}" to confirm.
+              be undone. Type{" "}
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 0.5,
+                  verticalAlign: "middle",
+                }}
+              >
+                <Box
+                  component="code"
+                  sx={{
+                    fontFamily: "monospace",
+                    bgcolor: "action.hover",
+                    px: 0.75,
+                    py: 0.25,
+                    borderRadius: 1,
+                    // Stay inline-sized: cap at a few words and scroll a long
+                    // label horizontally instead of stretching the modal.
+                    minWidth: 0,
+                    maxWidth: "16ch",
+                    overflowX: "auto",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {endpointLabel}
+                </Box>
+                <Tooltip title="Copy">
+                  <IconButton
+                    type="button"
+                    size="small"
+                    aria-label="copy endpoint name"
+                    onClick={handleCopy}
+                  >
+                    <ContentCopyIcon fontSize="inherit" />
+                  </IconButton>
+                </Tooltip>
+              </Box>{" "}
+              to confirm.
             </Typography>
             <TextFieldElement
               name="confirmation"
