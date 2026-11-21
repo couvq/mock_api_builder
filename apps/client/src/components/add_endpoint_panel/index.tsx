@@ -9,7 +9,8 @@ const AddEndpointPanel = () => {
   return (
     <Container
       sx={{
-        minWidth: "25vw",
+        width: "100%",
+        minWidth: 0,
         height: "100%",
         padding: 2,
         display: "flex",

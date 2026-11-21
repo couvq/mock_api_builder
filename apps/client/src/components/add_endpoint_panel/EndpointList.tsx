@@ -1,6 +1,7 @@
 import type { EndpointConfig } from "@mock-api-builder/schema/dist/dto/endpoint/config";
 import {
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   ListSubheader,
@@ -14,6 +15,7 @@ import {
   useEditorDispatch,
 } from "../../context/Editor/EditorContext";
 import { useEndpoints } from "../../hooks/endpoints";
+import ConfirmDeletionModal from "./ConfirmDeletionModal";
 import DeleteEndpointBtn from "./DeleteEndpointBtn";
 
 const LoadingSkeleton = () => (
@@ -30,11 +32,13 @@ const LoadingSkeleton = () => (
 
 const EndpointList = ({ filter }: { filter: string }) => {
   const { activeEndpointId } = useEditor();
-  const [selectedEndpointId, setSelectedEndpointId] = useState<
-    string | undefined
-  >(activeEndpointId);
   const { isPending, isError, data, error } = useEndpoints();
   const dispatch = useEditorDispatch();
+  // The delete confirmation modal is rendered once, outside the list rows, so
+  // its events never bubble through the React tree into a ListItemButton.
+  const [pendingDeleteEndpoint, setPendingDeleteEndpoint] =
+    useState<EndpointConfig | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   let filteredData: EndpointConfig[] = [];
   if (data) {
     filteredData = data.filter((endpoint) =>
@@ -42,10 +46,15 @@ const EndpointList = ({ filter }: { filter: string }) => {
     );
   }
 
-  const handleListItemClick = (endpoint: EndpointConfig) => {
-    setSelectedEndpointId(endpoint.id);
+  const handleListItemClick = (endpoint: EndpointConfig) =>
     dispatch({ type: "ADD_ENDPOINT", endpoint });
+
+  const openDeleteModal = (endpoint: EndpointConfig) => {
+    setPendingDeleteEndpoint(endpoint);
+    setIsDeleteModalOpen(true);
   };
+
+  const closeDeleteModal = () => setIsDeleteModalOpen(false);
 
   if (isPending) return <LoadingSkeleton />;
   if (isError) return error.message;
@@ -57,12 +66,16 @@ const EndpointList = ({ filter }: { filter: string }) => {
         sx={{ flexGrow: 1, minHeight: 0, overflowY: "auto" }}
       >
         {filteredData.map((endpoint) => (
-          <ListItemButton
+          <ListItem
             key={endpoint.id}
+            disablePadding
+            secondaryAction={
+              <DeleteEndpointBtn onClick={() => openDeleteModal(endpoint)} />
+            }
             sx={{
-              // Reveal the descendant button on hover, or when any descendant
-              // (including the button itself) is focused, so keyboard users can
-              // tab to the row and reach the now-visible delete button.
+              // Reveal the delete button on hover, or when any descendant (the
+              // row button or the delete button) is focused, so keyboard users
+              // can tab to the row and reach the now-visible delete button.
               "&:hover .hover-action-btn, &:focus-within .hover-action-btn": {
                 opacity: 1,
                 visibility: "visible",
@@ -75,19 +88,32 @@ const EndpointList = ({ filter }: { filter: string }) => {
                 },
               },
             }}
-            selected={selectedEndpointId === endpoint.id}
-            onClick={() => handleListItemClick(endpoint)}
           >
-            <ListItemText
-              primary={
-                <>
-                  <Typography>{endpoint.method}</Typography>
-                  <Typography>/{endpoint.path}</Typography>
-                </>
-              }
-            />
-            <DeleteEndpointBtn endpointId={endpoint.id} />
-          </ListItemButton>
+            <ListItemButton
+              selected={activeEndpointId === endpoint.id}
+              onClick={() => handleListItemClick(endpoint)}
+              // Reserve room on the right for the (absolutely positioned)
+              // delete button so a long path doesn't slide underneath it.
+              sx={{ pr: 6 }}
+            >
+              <ListItemText
+                primary={
+                  <>
+                    <Typography>{endpoint.method}</Typography>
+                    {/* Keep the path on one line and let it scroll
+                        horizontally within the row. overflow-x also gives it a
+                        min-content width of 0, so a long path can't force the
+                        sidebar wider. */}
+                    <Typography
+                      sx={{ whiteSpace: "nowrap", overflowX: "auto" }}
+                    >
+                      /{endpoint.path}
+                    </Typography>
+                  </>
+                }
+              />
+            </ListItemButton>
+          </ListItem>
         ))}
       </List>
       <Typography>
@@ -95,6 +121,13 @@ const EndpointList = ({ filter }: { filter: string }) => {
           ? "1 endpoint"
           : `${filteredData.length} endpoints`}
       </Typography>
+      {pendingDeleteEndpoint && (
+        <ConfirmDeletionModal
+          isOpen={isDeleteModalOpen}
+          endpoint={pendingDeleteEndpoint}
+          onClose={closeDeleteModal}
+        />
+      )}
     </>
   );
 };
