@@ -7,6 +7,11 @@ import EditorContextProvider from "../context/Editor/EditorContext";
 import MockRequestProvider from "../context/MockRequest/MockRequestProvider";
 import ToastProvider from "../context/ToastProvider";
 
+interface RenderOptions {
+  /** Initial history entries for the router (e.g. to seed query params). */
+  initialEntries?: string[];
+}
+
 /**
  * Renders `ui` wrapped in the full app provider stack for tests.
  *
@@ -14,7 +19,10 @@ import ToastProvider from "../context/ToastProvider";
  * tuned for deterministic tests: retries off so error states surface
  * immediately, and `gcTime: 0` so nothing lingers between renders.
  */
-const renderWithProviders = (ui: ReactElement) => {
+const renderWithProviders = (
+  ui: ReactElement,
+  { initialEntries }: RenderOptions = {},
+) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: { retry: false, gcTime: 0 },
@@ -24,7 +32,7 @@ const renderWithProviders = (ui: ReactElement) => {
 
   return render(
     <AppThemeProvider>
-      <MemoryRouter>
+      <MemoryRouter initialEntries={initialEntries}>
         <QueryClientProvider client={queryClient}>
           <ToastProvider>
             <EditorContextProvider>
