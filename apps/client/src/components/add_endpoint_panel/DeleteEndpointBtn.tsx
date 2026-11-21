@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, type MouseEvent } from "react";
+import { useState, type BaseSyntheticEvent, type MouseEvent } from "react";
 import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { deleteEndpoint } from "../../api/endpoint";
 import { useEditorDispatch } from "../../context/Editor/EditorContext";
@@ -48,13 +48,16 @@ const ConfirmDeletionModal = ({
     },
   });
 
-  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // Prevent the click from propagating to the parent ListItemButton
+  const handleDelete = (e?: BaseSyntheticEvent) => {
+    e?.stopPropagation(); // Prevent the click from propagating to the parent ListItemButton
     deleteEndpointMutation.mutate(endpoint.id);
   };
 
+  const endpointLabel = `${endpoint.method} /${endpoint.path}`;
+
   return (
     <Dialog
+      onClick={(e) => e.stopPropagation()}
       open={isOpen}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
@@ -64,31 +67,38 @@ const ConfirmDeletionModal = ({
       <DialogTitle id="alert-dialog-title">
         Confirm Endpoint Deletion
       </DialogTitle>
-      <DialogContent>
-        <DialogContent>
-          <DialogContent id="alert-dialog-description">
-            Are you sure you want to delete this endpoint? This action cannot be
-            undone. Type "{endpoint.method} /{endpoint.path}" to confirm.
-            <FormContainer onSuccess={(data) => console.log(data)}>
-              <TextFieldElement name="confirmation" required />
-            </FormContainer>
-          </DialogContent>
+      <FormContainer onSuccess={(_data, e) => handleDelete(e)}>
+        <DialogContent id="alert-dialog-description">
+          Are you sure you want to delete this endpoint? This action cannot be
+          undone. Type "{endpointLabel}" to confirm.
+          <TextFieldElement
+            name="confirmation"
+            placeholder={endpointLabel}
+            required
+            rules={{
+              validate: (value: string) => {
+                if (value !== endpointLabel) {
+                  return `Value must be ${endpointLabel}`;
+                }
+                return true;
+              },
+            }}
+          />
         </DialogContent>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} autoFocus>
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          variant="contained"
-          color="error"
-          onClick={handleDelete}
-          loading={deleteEndpointMutation.isPending}
-        >
-          Confirm
-        </Button>
-      </DialogActions>
+        <DialogActions>
+          <Button onClick={onClose} autoFocus>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="error"
+            loading={deleteEndpointMutation.isPending}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </FormContainer>
     </Dialog>
   );
 };
