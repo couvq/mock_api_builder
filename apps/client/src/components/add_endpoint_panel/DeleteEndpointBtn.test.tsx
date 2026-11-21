@@ -4,12 +4,21 @@ import { http, HttpResponse } from "msw";
 import renderWithProviders from "../../test/renderWithProviders";
 import { server } from "../../test/server";
 import DeleteEndpointBtn from "./DeleteEndpointBtn";
+import type { EndpointConfig } from "@mock-api-builder/schema";
+
+const endpoint: EndpointConfig = {
+  id: "1",
+  method: "GET",
+  path: "friends",
+  delay: 0,
+  responseSchema: {},
+};
 
 const user = userEvent.setup();
 
 describe("DeleteEndpointBtn", () => {
   it("should be able to confirm deletion", async () => {
-    renderWithProviders(<DeleteEndpointBtn endpointId="1" />);
+    renderWithProviders(<DeleteEndpointBtn endpoint={endpoint} />);
 
     const deleteButton = screen.getByLabelText("delete");
     await user.click(deleteButton);
@@ -36,7 +45,7 @@ describe("DeleteEndpointBtn", () => {
           }),
       ),
     );
-    renderWithProviders(<DeleteEndpointBtn endpointId="1" />);
+    renderWithProviders(<DeleteEndpointBtn endpoint={endpoint} />);
 
     const deleteButton = screen.getByLabelText("delete");
     await user.click(deleteButton);

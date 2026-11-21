@@ -1,32 +1,33 @@
+import type { EndpointConfig } from "@mock-api-builder/schema";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   IconButton,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type MouseEvent } from "react";
+import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { deleteEndpoint } from "../../api/endpoint";
 import { useEditorDispatch } from "../../context/Editor/EditorContext";
 import { useToast } from "../../hooks/toast";
 
 interface DeleteEndpointBtnProps {
-  endpointId: string;
+  endpoint: EndpointConfig;
 }
 
 interface ConfirmDeletionModalProps {
   isOpen: boolean;
-  endpointId: string;
+  endpoint: EndpointConfig;
   onClose: () => void;
 }
 
 const ConfirmDeletionModal = ({
   isOpen,
-  endpointId,
+  endpoint,
   onClose,
 }: ConfirmDeletionModalProps) => {
   const dispatch = useEditorDispatch();
@@ -35,7 +36,7 @@ const ConfirmDeletionModal = ({
   const deleteEndpointMutation = useMutation({
     mutationFn: deleteEndpoint,
     onSuccess: () => {
-      dispatch({ type: "DELETE_ENDPOINT", endpointId });
+      dispatch({ type: "DELETE_ENDPOINT", endpointId: endpoint.id });
       queryClient.invalidateQueries({ queryKey: ["endpoints"] });
       toast.success("Endpoint deleted successfully.");
     },
@@ -49,7 +50,7 @@ const ConfirmDeletionModal = ({
 
   const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); // Prevent the click from propagating to the parent ListItemButton
-    deleteEndpointMutation.mutate(endpointId);
+    deleteEndpointMutation.mutate(endpoint.id);
   };
 
   return (
@@ -64,16 +65,22 @@ const ConfirmDeletionModal = ({
         Confirm Endpoint Deletion
       </DialogTitle>
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Are you sure you want to delete this endpoint? This action cannot be
-          undone.
-        </DialogContentText>
+        <DialogContent>
+          <DialogContent id="alert-dialog-description">
+            Are you sure you want to delete this endpoint? This action cannot be
+            undone. Type "{endpoint.method} /{endpoint.path}" to confirm.
+            <FormContainer onSuccess={(data) => console.log(data)}>
+              <TextFieldElement name="confirmation" required />
+            </FormContainer>
+          </DialogContent>
+        </DialogContent>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} autoFocus>
           Cancel
         </Button>
         <Button
+          type="submit"
           variant="contained"
           color="error"
           onClick={handleDelete}
@@ -86,7 +93,7 @@ const ConfirmDeletionModal = ({
   );
 };
 
-const DeleteEndpointBtn = ({ endpointId }: DeleteEndpointBtnProps) => {
+const DeleteEndpointBtn = ({ endpoint }: DeleteEndpointBtnProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -114,7 +121,7 @@ const DeleteEndpointBtn = ({ endpointId }: DeleteEndpointBtnProps) => {
       </IconButton>
       <ConfirmDeletionModal
         isOpen={isModalOpen}
-        endpointId={endpointId}
+        endpoint={endpoint}
         onClose={() => setIsModalOpen(false)}
       />
     </>
