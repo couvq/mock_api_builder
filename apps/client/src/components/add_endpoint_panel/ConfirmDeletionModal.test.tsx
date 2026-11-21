@@ -92,4 +92,21 @@ describe("ConfirmDeletionModal", () => {
     expect(await navigator.clipboard.readText()).toBe(endpointLabel);
     expect(await screen.findByText("Copied to clipboard.")).toBeInTheDocument();
   });
+
+  it("should show an error if copying to the clipboard fails", async () => {
+    vi.spyOn(navigator.clipboard, "writeText").mockRejectedValueOnce(
+      new Error("denied"),
+    );
+    renderWithProviders(
+      <ConfirmDeletionModal isOpen endpoint={endpoint} onClose={() => {}} />,
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "copy endpoint name" }),
+    );
+
+    expect(
+      await screen.findByText("Failed to copy to clipboard."),
+    ).toBeInTheDocument();
+  });
 });

@@ -54,8 +54,10 @@ const ConfirmDeletionModal = ({
   const endpointLabel = `${endpoint.method} /${endpoint.path}`;
 
   const handleCopy = () => {
-    void navigator.clipboard.writeText(endpointLabel);
-    toast.success("Copied to clipboard.");
+    navigator.clipboard
+      .writeText(endpointLabel)
+      .then(() => toast.success("Copied to clipboard."))
+      .catch(() => toast.error("Failed to copy to clipboard."));
   };
 
   return (
