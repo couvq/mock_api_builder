@@ -60,11 +60,14 @@ const ConfirmDeletionModal = ({
   return (
     <Dialog
       // The Dialog portals to document.body, but React events still bubble
-      // through the React tree to the parent ListItemButton. Stop click here so
-      // the row isn't selected, and stop pointer-down so its ripple doesn't fire.
+      // through the React tree to the parent ListItemButton. Stop them here so
+      // interacting with the modal doesn't drive the row underneath: click (row
+      // selection), pointer-down (ripple), and focus (focus-visible highlight,
+      // e.g. focusing the input or the Confirm button).
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
       onTouchStart={(e) => e.stopPropagation()}
+      onFocus={(e) => e.stopPropagation()}
       open={isOpen}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
