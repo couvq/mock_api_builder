@@ -8,7 +8,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import {
   useEditor,
   useEditorDispatch,
@@ -30,9 +29,6 @@ const LoadingSkeleton = () => (
 
 const EndpointList = ({ filter }: { filter: string }) => {
   const { activeEndpointId } = useEditor();
-  const [selectedEndpointId, setSelectedEndpointId] = useState<
-    string | undefined
-  >(activeEndpointId);
   const { isPending, isError, data, error } = useEndpoints();
   const dispatch = useEditorDispatch();
   let filteredData: EndpointConfig[] = [];
@@ -42,10 +38,8 @@ const EndpointList = ({ filter }: { filter: string }) => {
     );
   }
 
-  const handleListItemClick = (endpoint: EndpointConfig) => {
-    setSelectedEndpointId(endpoint.id);
+  const handleListItemClick = (endpoint: EndpointConfig) =>
     dispatch({ type: "ADD_ENDPOINT", endpoint });
-  };
 
   if (isPending) return <LoadingSkeleton />;
   if (isError) return error.message;
@@ -75,7 +69,7 @@ const EndpointList = ({ filter }: { filter: string }) => {
                 },
               },
             }}
-            selected={selectedEndpointId === endpoint.id}
+            selected={activeEndpointId === endpoint.id}
             onClick={() => handleListItemClick(endpoint)}
           >
             <ListItemText
@@ -86,7 +80,7 @@ const EndpointList = ({ filter }: { filter: string }) => {
                 </>
               }
             />
-            <DeleteEndpointBtn endpointId={endpoint.id} />
+            <DeleteEndpointBtn endpoint={endpoint} />
           </ListItemButton>
         ))}
       </List>

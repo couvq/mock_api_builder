@@ -1,32 +1,35 @@
+import type { EndpointConfig } from "@mock-api-builder/schema";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   IconButton,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, type MouseEvent } from "react";
+import { useState, type BaseSyntheticEvent, type MouseEvent } from "react";
+import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 import { deleteEndpoint } from "../../api/endpoint";
 import { useEditorDispatch } from "../../context/Editor/EditorContext";
 import { useToast } from "../../hooks/toast";
 
 interface DeleteEndpointBtnProps {
-  endpointId: string;
+  endpoint: EndpointConfig;
 }
 
 interface ConfirmDeletionModalProps {
   isOpen: boolean;
-  endpointId: string;
+  endpoint: EndpointConfig;
   onClose: () => void;
 }
 
 const ConfirmDeletionModal = ({
   isOpen,
-  endpointId,
+  endpoint,
   onClose,
 }: ConfirmDeletionModalProps) => {
   const dispatch = useEditorDispatch();
@@ -35,7 +38,7 @@ const ConfirmDeletionModal = ({
   const deleteEndpointMutation = useMutation({
     mutationFn: deleteEndpoint,
     onSuccess: () => {
-      dispatch({ type: "DELETE_ENDPOINT", endpointId });
+      dispatch({ type: "DELETE_ENDPOINT", endpointId: endpoint.id });
       queryClient.invalidateQueries({ queryKey: ["endpoints"] });
       toast.success("Endpoint deleted successfully.");
     },
@@ -47,13 +50,24 @@ const ConfirmDeletionModal = ({
     },
   });
 
-  const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation(); // Prevent the click from propagating to the parent ListItemButton
-    deleteEndpointMutation.mutate(endpointId);
+  const handleDelete = (e?: BaseSyntheticEvent) => {
+    e?.stopPropagation(); // Prevent the click from propagating to the parent ListItemButton
+    deleteEndpointMutation.mutate(endpoint.id);
   };
+
+  const endpointLabel = `${endpoint.method} /${endpoint.path}`;
 
   return (
     <Dialog
+      // The Dialog portals to document.body, but React events still bubble
+      // through the React tree to the parent ListItemButton. Stop them here so
+      // interacting with the modal doesn't drive the row underneath: click (row
+      // selection), pointer-down (ripple), and focus (focus-visible highlight,
+      // e.g. focusing the input or the Confirm button).
+      onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
+      onFocus={(e) => e.stopPropagation()}
       open={isOpen}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
@@ -63,30 +77,47 @@ const ConfirmDeletionModal = ({
       <DialogTitle id="alert-dialog-title">
         Confirm Endpoint Deletion
       </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Are you sure you want to delete this endpoint? This action cannot be
-          undone.
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} autoFocus>
-          Cancel
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={handleDelete}
-          loading={deleteEndpointMutation.isPending}
-        >
-          Confirm
-        </Button>
-      </DialogActions>
+      <FormContainer onSuccess={(_data, e) => handleDelete(e)}>
+        <DialogContent id="alert-dialog-description">
+          <Stack direction="column" spacing={2}>
+            <Typography>
+              Are you sure you want to delete this endpoint? This action cannot
+              be undone. Type "{endpointLabel}" to confirm.
+            </Typography>
+            <TextFieldElement
+              name="confirmation"
+              placeholder={endpointLabel}
+              required
+              rules={{
+                validate: (value: string) => {
+                  if (value !== endpointLabel) {
+                    return `Value must be ${endpointLabel}`;
+                  }
+                  return true;
+                },
+              }}
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} autoFocus>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="error"
+            loading={deleteEndpointMutation.isPending}
+          >
+            Confirm
+          </Button>
+        </DialogActions>
+      </FormContainer>
     </Dialog>
   );
 };
 
-const DeleteEndpointBtn = ({ endpointId }: DeleteEndpointBtnProps) => {
+const DeleteEndpointBtn = ({ endpoint }: DeleteEndpointBtnProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDeleteClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -114,7 +145,7 @@ const DeleteEndpointBtn = ({ endpointId }: DeleteEndpointBtnProps) => {
       </IconButton>
       <ConfirmDeletionModal
         isOpen={isModalOpen}
-        endpointId={endpointId}
+        endpoint={endpoint}
         onClose={() => setIsModalOpen(false)}
       />
     </>
