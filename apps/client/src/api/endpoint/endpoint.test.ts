@@ -1,5 +1,10 @@
 import { http, HttpResponse } from "msw";
-import { deleteEndpoint, getAllEndpoints, updateEndpoint } from ".";
+import {
+  deleteEndpoint,
+  getAllEndpoints,
+  getEndpointById,
+  updateEndpoint,
+} from ".";
 import { sampleEndpoint, server } from "../../test/server";
 
 describe("endpoint api tests", () => {
@@ -21,6 +26,28 @@ describe("endpoint api tests", () => {
       );
       await expect(getAllEndpoints()).rejects.toThrow(
         `Failed to fetch endpoints: ${statusCode} ${statusText}`,
+      );
+    });
+  });
+
+  describe("getEndpointById", () => {
+    it("should return the matching endpoint config upon a successful 200 response", async () => {
+      const result = await getEndpointById(sampleEndpoint.id);
+      expect(result).toEqual(sampleEndpoint);
+    });
+
+    it("should throw an error if the response is not ok", async () => {
+      const statusCode = 404;
+      const statusText = "Not Found";
+      server.use(
+        http.get(
+          "*/endpoint/:id",
+          async () =>
+            new HttpResponse(null, { status: statusCode, statusText }),
+        ),
+      );
+      await expect(getEndpointById(sampleEndpoint.id)).rejects.toThrow(
+        `Failed to fetch endpoint: ${statusCode} ${statusText}`,
       );
     });
   });

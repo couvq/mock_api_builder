@@ -21,6 +21,10 @@ export const server = setupServer(
     await delay(50);
     return HttpResponse.json([sampleEndpoint]);
   }),
+  http.get("*/endpoint/:id", async () => {
+    await delay(50);
+    return HttpResponse.json(sampleEndpoint);
+  }),
   http.put("*/endpoint", async ({ request }) => {
     await delay(50);
     return HttpResponse.json(await request.json());

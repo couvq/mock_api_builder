@@ -14,6 +14,20 @@ export const getAllEndpoints = async (): Promise<EndpointConfig[]> => {
   return (await response.json()) as EndpointConfig[];
 };
 
+export const getEndpointById = async (
+  endpointId: string,
+): Promise<EndpointConfig> => {
+  const response = await fetch(`${endpointBaseUrl}/${endpointId}`);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch endpoint: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  return (await response.json()) as EndpointConfig;
+};
+
 export const updateEndpoint = async (
   newEndpointConfiguration: EndpointConfig,
 ): Promise<EndpointConfig> => {
