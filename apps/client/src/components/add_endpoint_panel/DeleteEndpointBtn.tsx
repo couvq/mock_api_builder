@@ -7,6 +7,8 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Stack,
+  Typography,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type BaseSyntheticEvent, type MouseEvent } from "react";
@@ -57,7 +59,12 @@ const ConfirmDeletionModal = ({
 
   return (
     <Dialog
+      // The Dialog portals to document.body, but React events still bubble
+      // through the React tree to the parent ListItemButton. Stop click here so
+      // the row isn't selected, and stop pointer-down so its ripple doesn't fire.
       onClick={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      onTouchStart={(e) => e.stopPropagation()}
       open={isOpen}
       onClose={onClose}
       aria-labelledby="alert-dialog-title"
@@ -69,21 +76,25 @@ const ConfirmDeletionModal = ({
       </DialogTitle>
       <FormContainer onSuccess={(_data, e) => handleDelete(e)}>
         <DialogContent id="alert-dialog-description">
-          Are you sure you want to delete this endpoint? This action cannot be
-          undone. Type "{endpointLabel}" to confirm.
-          <TextFieldElement
-            name="confirmation"
-            placeholder={endpointLabel}
-            required
-            rules={{
-              validate: (value: string) => {
-                if (value !== endpointLabel) {
-                  return `Value must be ${endpointLabel}`;
-                }
-                return true;
-              },
-            }}
-          />
+          <Stack direction="column" spacing={2}>
+            <Typography>
+              Are you sure you want to delete this endpoint? This action cannot
+              be undone. Type "{endpointLabel}" to confirm.
+            </Typography>
+            <TextFieldElement
+              name="confirmation"
+              placeholder={endpointLabel}
+              required
+              rules={{
+                validate: (value: string) => {
+                  if (value !== endpointLabel) {
+                    return `Value must be ${endpointLabel}`;
+                  }
+                  return true;
+                },
+              }}
+            />
+          </Stack>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} autoFocus>
