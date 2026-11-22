@@ -14,7 +14,6 @@ export type TranspiledSchema =
   | Airport
   | number
   | boolean
-  | Date
   | TranspiledSchema[]
   | { [key: string]: TranspiledSchema };
 

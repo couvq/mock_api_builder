@@ -7,7 +7,7 @@ type MockAirplane = { name: string; iataTypeCode: string };
 
 const MOCK_FAKER_VALUES: Record<
   FakerType,
-  string | MockAirline | MockAirplane | number[] | boolean | Date
+  string | MockAirline | MockAirplane | number[] | boolean
 > = {
   "faker.string.uuid": "test-uuid",
   "faker.internet.email": "test@example.com",
@@ -82,13 +82,13 @@ const MOCK_FAKER_VALUES: Record<
   "faker.database.mongodbObjectId": "e175cac316a79afdd0ad3afb",
   "faker.database.type": "timestamp",
   "faker.datatype.boolean": true,
-  "faker.date.anytime": new Date("2022-07-31T01:33:29.567Z"),
-  "faker.date.birthdate": new Date("1977-07-10T01:37:30.719Z"),
-  "faker.date.future": new Date("2022-11-19T05:52:49.100Z"),
+  "faker.date.anytime": "2022-07-31T01:33:29.567Z",
+  "faker.date.birthdate": "1977-07-10T01:37:30.719Z",
+  "faker.date.future": "2022-11-19T05:52:49.100Z",
   "faker.date.month": "October",
-  "faker.date.past": new Date("2021-12-03T05:40:44.408Z"),
-  "faker.date.recent": new Date("2022-02-04T02:09:35.077Z"),
-  "faker.date.soon": new Date("2022-02-05T09:55:39.216Z"),
+  "faker.date.past": "2021-12-03T05:40:44.408Z",
+  "faker.date.recent": "2022-02-04T02:09:35.077Z",
+  "faker.date.soon": "2022-02-05T09:55:39.216Z",
   "faker.date.timeZone": "Pacific/Guam",
   "faker.date.weekday": "Monday",
 };
@@ -198,13 +198,17 @@ vi.mock("@faker-js/faker", () => {
         boolean: () => MOCK_FAKER_VALUES["faker.datatype.boolean"],
       },
       date: {
-        anytime: () => MOCK_FAKER_VALUES["faker.date.anytime"],
-        birthdate: () => MOCK_FAKER_VALUES["faker.date.birthdate"],
-        future: () => MOCK_FAKER_VALUES["faker.date.future"],
+        anytime: () =>
+          new Date(MOCK_FAKER_VALUES["faker.date.anytime"] as string),
+        birthdate: () =>
+          new Date(MOCK_FAKER_VALUES["faker.date.birthdate"] as string),
+        future: () =>
+          new Date(MOCK_FAKER_VALUES["faker.date.future"] as string),
         month: () => MOCK_FAKER_VALUES["faker.date.month"],
-        past: () => MOCK_FAKER_VALUES["faker.date.past"],
-        recent: () => MOCK_FAKER_VALUES["faker.date.recent"],
-        soon: () => MOCK_FAKER_VALUES["faker.date.soon"],
+        past: () => new Date(MOCK_FAKER_VALUES["faker.date.past"] as string),
+        recent: () =>
+          new Date(MOCK_FAKER_VALUES["faker.date.recent"] as string),
+        soon: () => new Date(MOCK_FAKER_VALUES["faker.date.soon"] as string),
         timeZone: () => MOCK_FAKER_VALUES["faker.date.timeZone"],
         weekday: () => MOCK_FAKER_VALUES["faker.date.weekday"],
       },
@@ -446,25 +450,25 @@ describe("transpiler", () => {
         MOCK_FAKER_VALUES["faker.datatype.boolean"],
       );
       // date
-      expect(transpile("faker.date.anytime")).toEqual(
+      expect(transpile("faker.date.anytime")).toBe(
         MOCK_FAKER_VALUES["faker.date.anytime"],
       );
-      expect(transpile("faker.date.birthdate")).toEqual(
+      expect(transpile("faker.date.birthdate")).toBe(
         MOCK_FAKER_VALUES["faker.date.birthdate"],
       );
-      expect(transpile("faker.date.future")).toEqual(
+      expect(transpile("faker.date.future")).toBe(
         MOCK_FAKER_VALUES["faker.date.future"],
       );
       expect(transpile("faker.date.month")).toBe(
         MOCK_FAKER_VALUES["faker.date.month"],
       );
-      expect(transpile("faker.date.past")).toEqual(
+      expect(transpile("faker.date.past")).toBe(
         MOCK_FAKER_VALUES["faker.date.past"],
       );
-      expect(transpile("faker.date.recent")).toEqual(
+      expect(transpile("faker.date.recent")).toBe(
         MOCK_FAKER_VALUES["faker.date.recent"],
       );
-      expect(transpile("faker.date.soon")).toEqual(
+      expect(transpile("faker.date.soon")).toBe(
         MOCK_FAKER_VALUES["faker.date.soon"],
       );
       expect(transpile("faker.date.timeZone")).toBe(
