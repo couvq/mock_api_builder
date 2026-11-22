@@ -2,12 +2,28 @@ import { describe, expect, it, vi } from "vitest";
 import { transpile } from "./transpiler.js";
 import { FakerType } from "./index.js";
 
-const MOCK_FAKER_VALUES: Record<FakerType, string> = {
+type MockAirline = { name: string; iataCode: string };
+type MockAirplane = { name: string; iataTypeCode: string };
+
+const MOCK_FAKER_VALUES: Record<
+  FakerType,
+  string | MockAirline | MockAirplane
+> = {
   "faker.string.uuid": "test-uuid",
   "faker.internet.email": "test@example.com",
   "faker.person.firstName": "John",
   "faker.person.lastName": "Doe",
   "faker.person.fullName": "John Doe",
+  "faker.airline.aircraftType": "narrowbody",
+  "faker.airline": { name: "American Airlines", iataCode: "AA" },
+  "faker.airline.airplane": { name: "Airbus A321", iataTypeCode: "321" },
+  "faker.airline.airport": {
+    name: "Dallas Fort Worth International Airport",
+    iataCode: "DFW",
+  },
+  "faker.airline.flightNumber": "1234",
+  "faker.airline.recordLocator": "ABC123",
+  "faker.airline.seat": "12A",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -23,6 +39,15 @@ vi.mock("@faker-js/faker", () => {
         firstName: () => MOCK_FAKER_VALUES["faker.person.firstName"],
         lastName: () => MOCK_FAKER_VALUES["faker.person.lastName"],
         fullName: () => MOCK_FAKER_VALUES["faker.person.fullName"],
+      },
+      airline: {
+        aircraftType: () => MOCK_FAKER_VALUES["faker.airline.aircraftType"],
+        airline: () => MOCK_FAKER_VALUES["faker.airline"],
+        airplane: () => MOCK_FAKER_VALUES["faker.airline.airplane"],
+        airport: () => MOCK_FAKER_VALUES["faker.airline.airport"],
+        flightNumber: () => MOCK_FAKER_VALUES["faker.airline.flightNumber"],
+        recordLocator: () => MOCK_FAKER_VALUES["faker.airline.recordLocator"],
+        seat: () => MOCK_FAKER_VALUES["faker.airline.seat"],
       },
     },
   };
@@ -60,6 +85,28 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.person.fullName")).toBe(
         MOCK_FAKER_VALUES["faker.person.fullName"],
+      );
+      // airline
+      expect(transpile("faker.airline.aircraftType")).toBe(
+        MOCK_FAKER_VALUES["faker.airline.aircraftType"],
+      );
+      expect(transpile("faker.airline")).toEqual(
+        MOCK_FAKER_VALUES["faker.airline"],
+      );
+      expect(transpile("faker.airline.airplane")).toEqual(
+        MOCK_FAKER_VALUES["faker.airline.airplane"],
+      );
+      expect(transpile("faker.airline.airport")).toEqual(
+        MOCK_FAKER_VALUES["faker.airline.airport"],
+      );
+      expect(transpile("faker.airline.flightNumber")).toBe(
+        MOCK_FAKER_VALUES["faker.airline.flightNumber"],
+      );
+      expect(transpile("faker.airline.recordLocator")).toBe(
+        MOCK_FAKER_VALUES["faker.airline.recordLocator"],
+      );
+      expect(transpile("faker.airline.seat")).toBe(
+        MOCK_FAKER_VALUES["faker.airline.seat"],
       );
     });
 

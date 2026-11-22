@@ -6,6 +6,14 @@ export const FakerSchema = z.enum([
   "faker.person.firstName",
   "faker.person.lastName",
   "faker.person.fullName",
+  // airline
+  "faker.airline.aircraftType",
+  "faker.airline",
+  "faker.airline.airplane",
+  "faker.airline.airport",
+  "faker.airline.flightNumber",
+  "faker.airline.recordLocator",
+  "faker.airline.seat",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
