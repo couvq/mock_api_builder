@@ -264,6 +264,15 @@ const MOCK_FAKER_VALUES: Record<
   "fake.system.mimeType": "video/vnd.vivo",
   "fake.system.networkInterface": "enp0s3",
   "fake.system.semver": "1.15.2",
+  "fake.vehicle.bicycle": "Adventure Road Bicycle",
+  "fake.vehicle.color": "red",
+  "fake.vehicle.fuel": "Electric",
+  "fake.vehicle.manufacturer": "Ford",
+  "fake.vehicle.model": "Explorer",
+  "fake.vehicle.type": "Coupe",
+  "fake.vehicle.vehicle": "BMW Explorer",
+  "fake.vehicle.vin": "YV1MH682762184654",
+  "fake.vehicle.vrm": "MF56UPA",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -560,6 +569,17 @@ vi.mock("@faker-js/faker", () => {
         networkInterface: () =>
           MOCK_FAKER_VALUES["fake.system.networkInterface"],
         semver: () => MOCK_FAKER_VALUES["fake.system.semver"],
+      },
+      vehicle: {
+        bicycle: () => MOCK_FAKER_VALUES["fake.vehicle.bicycle"],
+        color: () => MOCK_FAKER_VALUES["fake.vehicle.color"],
+        fuel: () => MOCK_FAKER_VALUES["fake.vehicle.fuel"],
+        manufacturer: () => MOCK_FAKER_VALUES["fake.vehicle.manufacturer"],
+        model: () => MOCK_FAKER_VALUES["fake.vehicle.model"],
+        type: () => MOCK_FAKER_VALUES["fake.vehicle.type"],
+        vehicle: () => MOCK_FAKER_VALUES["fake.vehicle.vehicle"],
+        vin: () => MOCK_FAKER_VALUES["fake.vehicle.vin"],
+        vrm: () => MOCK_FAKER_VALUES["fake.vehicle.vrm"],
       },
     },
   };
@@ -1262,6 +1282,34 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.system.semver")).toBe(
         MOCK_FAKER_VALUES["fake.system.semver"],
+      );
+      // vehicle
+      expect(transpile("fake.vehicle.bicycle")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.bicycle"],
+      );
+      expect(transpile("fake.vehicle.color")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.color"],
+      );
+      expect(transpile("fake.vehicle.fuel")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.fuel"],
+      );
+      expect(transpile("fake.vehicle.manufacturer")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.manufacturer"],
+      );
+      expect(transpile("fake.vehicle.model")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.model"],
+      );
+      expect(transpile("fake.vehicle.type")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.type"],
+      );
+      expect(transpile("fake.vehicle.vehicle")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.vehicle"],
+      );
+      expect(transpile("fake.vehicle.vin")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.vin"],
+      );
+      expect(transpile("fake.vehicle.vrm")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.vrm"],
       );
     });
 

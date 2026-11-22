@@ -269,4 +269,14 @@ export const fakerGenerators: Record<
   "fake.system.mimeType": () => faker.system.mimeType(),
   "fake.system.networkInterface": () => faker.system.networkInterface(),
   "fake.system.semver": () => faker.system.semver(),
+  //vehicle
+  "fake.vehicle.bicycle": () => faker.vehicle.bicycle(),
+  "fake.vehicle.color": () => faker.vehicle.color(),
+  "fake.vehicle.fuel": () => faker.vehicle.fuel(),
+  "fake.vehicle.manufacturer": () => faker.vehicle.manufacturer(),
+  "fake.vehicle.model": () => faker.vehicle.model(),
+  "fake.vehicle.type": () => faker.vehicle.type(),
+  "fake.vehicle.vehicle": () => faker.vehicle.vehicle(),
+  "fake.vehicle.vin": () => faker.vehicle.vin(),
+  "fake.vehicle.vrm": () => faker.vehicle.vrm(),
 };

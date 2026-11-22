@@ -244,6 +244,16 @@ export const FakerSchema = z.enum([
   "fake.system.mimeType",
   "fake.system.networkInterface",
   "fake.system.semver",
+  // vehicle
+  "fake.vehicle.bicycle",
+  "fake.vehicle.color",
+  "fake.vehicle.fuel",
+  "fake.vehicle.manufacturer",
+  "fake.vehicle.model",
+  "fake.vehicle.type",
+  "fake.vehicle.vehicle",
+  "fake.vehicle.vin",
+  "fake.vehicle.vrm",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
