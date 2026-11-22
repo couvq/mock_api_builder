@@ -17,10 +17,6 @@ const MOCK_FAKER_VALUES: Record<
   | MockLanguage
 > = {
   "fake.string.uuid": "test-uuid",
-  "fake.internet.email": "test@example.com",
-  "fake.person.firstName": "John",
-  "fake.person.lastName": "Doe",
-  "fake.person.fullName": "John Doe",
   "fake.airline.aircraftType": "narrowbody",
   "fake.airline": { name: "American Airlines", iataCode: "AA" },
   "fake.airline.airplane": { name: "Airbus A321", iataTypeCode: "321" },
@@ -153,6 +149,7 @@ const MOCK_FAKER_VALUES: Record<
   "fake.internet.domainName": "slow-timer.info",
   "fake.internet.domainSuffix": "com",
   "fake.internet.domainWord": "close-reality",
+  "fake.internet.email": "test@example.com",
   "fake.internet.emoji": "🥰",
   "fake.internet.exampleEmail": "Helmer.Graham23@example.com",
   "fake.internet.httpMethod": "PATCH",
@@ -215,6 +212,20 @@ const MOCK_FAKER_VALUES: Record<
   "fake.number.hex": "b",
   "fake.number.octal": "5",
   "fake.number.romanNumeral": "CMXCIII",
+  "fake.person.bio": "oatmeal advocate, veteran 🐠",
+  "fake.person.firstName": "John",
+  "fake.person.fullName": "John Doe",
+  "fake.person.gender": "Trans*Man",
+  "fake.person.jobArea": "Brand",
+  "fake.person.jobDescriptor": "Customer",
+  "fake.person.jobTitle": "Global Accounts Engineer",
+  "fake.person.jobType": "Assistant",
+  "fake.person.lastName": "Doe",
+  "fake.person.middleName": "James",
+  "fake.person.prefix": "Miss",
+  "fake.person.sex": "female",
+  "fake.person.suffix": "DDS",
+  "fake.person.zodiacSign": "Pisces",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -224,11 +235,11 @@ vi.mock("@faker-js/faker", () => {
         uuid: () => MOCK_FAKER_VALUES["fake.string.uuid"],
       },
       internet: {
-        email: () => MOCK_FAKER_VALUES["fake.internet.email"],
         displayName: () => MOCK_FAKER_VALUES["fake.internet.displayName"],
         domainName: () => MOCK_FAKER_VALUES["fake.internet.domainName"],
         domainSuffix: () => MOCK_FAKER_VALUES["fake.internet.domainSuffix"],
         domainWord: () => MOCK_FAKER_VALUES["fake.internet.domainWord"],
+        email: () => MOCK_FAKER_VALUES["fake.internet.email"],
         emoji: () => MOCK_FAKER_VALUES["fake.internet.emoji"],
         exampleEmail: () => MOCK_FAKER_VALUES["fake.internet.exampleEmail"],
         httpMethod: () => MOCK_FAKER_VALUES["fake.internet.httpMethod"],
@@ -247,9 +258,20 @@ vi.mock("@faker-js/faker", () => {
         username: () => MOCK_FAKER_VALUES["fake.internet.username"],
       },
       person: {
+        bio: () => MOCK_FAKER_VALUES["fake.person.bio"],
         firstName: () => MOCK_FAKER_VALUES["fake.person.firstName"],
-        lastName: () => MOCK_FAKER_VALUES["fake.person.lastName"],
         fullName: () => MOCK_FAKER_VALUES["fake.person.fullName"],
+        gender: () => MOCK_FAKER_VALUES["fake.person.gender"],
+        jobArea: () => MOCK_FAKER_VALUES["fake.person.jobArea"],
+        jobDescriptor: () => MOCK_FAKER_VALUES["fake.person.jobDescriptor"],
+        jobTitle: () => MOCK_FAKER_VALUES["fake.person.jobTitle"],
+        jobType: () => MOCK_FAKER_VALUES["fake.person.jobType"],
+        lastName: () => MOCK_FAKER_VALUES["fake.person.lastName"],
+        middleName: () => MOCK_FAKER_VALUES["fake.person.middleName"],
+        prefix: () => MOCK_FAKER_VALUES["fake.person.prefix"],
+        sex: () => MOCK_FAKER_VALUES["fake.person.sex"],
+        suffix: () => MOCK_FAKER_VALUES["fake.person.suffix"],
+        zodiacSign: () => MOCK_FAKER_VALUES["fake.person.zodiacSign"],
       },
       airline: {
         aircraftType: () => MOCK_FAKER_VALUES["fake.airline.aircraftType"],
@@ -491,18 +513,6 @@ describe("transpiler", () => {
     it("transpiles a faker type at the root into its generated value", () => {
       expect(transpile("fake.string.uuid")).toBe(
         MOCK_FAKER_VALUES["fake.string.uuid"],
-      );
-      expect(transpile("fake.internet.email")).toBe(
-        MOCK_FAKER_VALUES["fake.internet.email"],
-      );
-      expect(transpile("fake.person.firstName")).toBe(
-        MOCK_FAKER_VALUES["fake.person.firstName"],
-      );
-      expect(transpile("fake.person.lastName")).toBe(
-        MOCK_FAKER_VALUES["fake.person.lastName"],
-      );
-      expect(transpile("fake.person.fullName")).toBe(
-        MOCK_FAKER_VALUES["fake.person.fullName"],
       );
       // airline
       expect(transpile("fake.airline.aircraftType")).toBe(
@@ -885,6 +895,9 @@ describe("transpiler", () => {
       expect(transpile("fake.internet.domainWord")).toBe(
         MOCK_FAKER_VALUES["fake.internet.domainWord"],
       );
+      expect(transpile("fake.internet.email")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.email"],
+      );
       expect(transpile("fake.internet.emoji")).toBe(
         MOCK_FAKER_VALUES["fake.internet.emoji"],
       );
@@ -1053,6 +1066,49 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.number.romanNumeral")).toBe(
         MOCK_FAKER_VALUES["fake.number.romanNumeral"],
+      );
+      // person
+      expect(transpile("fake.person.bio")).toBe(
+        MOCK_FAKER_VALUES["fake.person.bio"],
+      );
+      expect(transpile("fake.person.firstName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.firstName"],
+      );
+      expect(transpile("fake.person.fullName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.fullName"],
+      );
+      expect(transpile("fake.person.gender")).toBe(
+        MOCK_FAKER_VALUES["fake.person.gender"],
+      );
+      expect(transpile("fake.person.jobArea")).toBe(
+        MOCK_FAKER_VALUES["fake.person.jobArea"],
+      );
+      expect(transpile("fake.person.jobDescriptor")).toBe(
+        MOCK_FAKER_VALUES["fake.person.jobDescriptor"],
+      );
+      expect(transpile("fake.person.jobTitle")).toBe(
+        MOCK_FAKER_VALUES["fake.person.jobTitle"],
+      );
+      expect(transpile("fake.person.jobType")).toBe(
+        MOCK_FAKER_VALUES["fake.person.jobType"],
+      );
+      expect(transpile("fake.person.lastName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.lastName"],
+      );
+      expect(transpile("fake.person.middleName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.middleName"],
+      );
+      expect(transpile("fake.person.prefix")).toBe(
+        MOCK_FAKER_VALUES["fake.person.prefix"],
+      );
+      expect(transpile("fake.person.sex")).toBe(
+        MOCK_FAKER_VALUES["fake.person.sex"],
+      );
+      expect(transpile("fake.person.suffix")).toBe(
+        MOCK_FAKER_VALUES["fake.person.suffix"],
+      );
+      expect(transpile("fake.person.zodiacSign")).toBe(
+        MOCK_FAKER_VALUES["fake.person.zodiacSign"],
       );
     });
 

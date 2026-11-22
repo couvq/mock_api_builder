@@ -1,11 +1,8 @@
 import { z } from "zod";
 
 export const FakerSchema = z.enum([
+  // string
   "fake.string.uuid",
-  "fake.internet.email",
-  "fake.person.firstName",
-  "fake.person.lastName",
-  "fake.person.fullName",
   // airline
   "fake.airline.aircraftType",
   "fake.airline",
@@ -138,11 +135,12 @@ export const FakerSchema = z.enum([
   "fake.image.personPortrait",
   "fake.image.url",
   "fake.image.urlPicsumPhotos",
-  // internet (email already defined above)
+  // internet
   "fake.internet.displayName",
   "fake.internet.domainName",
   "fake.internet.domainSuffix",
   "fake.internet.domainWord",
+  "fake.internet.email",
   "fake.internet.emoji",
   "fake.internet.exampleEmail",
   "fake.internet.httpMethod",
@@ -202,6 +200,21 @@ export const FakerSchema = z.enum([
   "fake.number.hex",
   "fake.number.octal",
   "fake.number.romanNumeral",
+  // person (sexType omitted: documented as a parameter helper, not display data)
+  "fake.person.bio",
+  "fake.person.firstName",
+  "fake.person.fullName",
+  "fake.person.gender",
+  "fake.person.jobArea",
+  "fake.person.jobDescriptor",
+  "fake.person.jobTitle",
+  "fake.person.jobType",
+  "fake.person.lastName",
+  "fake.person.middleName",
+  "fake.person.prefix",
+  "fake.person.sex",
+  "fake.person.suffix",
+  "fake.person.zodiacSign",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

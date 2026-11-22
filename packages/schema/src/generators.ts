@@ -18,11 +18,8 @@ export const fakerGenerators: Record<
     | number
     | Language
 > = {
+  //string
   "fake.string.uuid": () => faker.string.uuid(),
-  "fake.internet.email": () => faker.internet.email(),
-  "fake.person.firstName": () => faker.person.firstName(),
-  "fake.person.lastName": () => faker.person.lastName(),
-  "fake.person.fullName": () => faker.person.fullName(),
   //airline
   "fake.airline.aircraftType": () => faker.airline.aircraftType(),
   "fake.airline": () => faker.airline.airline(),
@@ -158,11 +155,12 @@ export const fakerGenerators: Record<
   "fake.image.personPortrait": () => faker.image.personPortrait(),
   "fake.image.url": () => faker.image.url(),
   "fake.image.urlPicsumPhotos": () => faker.image.urlPicsumPhotos(),
-  //internet (email already defined above)
+  //internet
   "fake.internet.displayName": () => faker.internet.displayName(),
   "fake.internet.domainName": () => faker.internet.domainName(),
   "fake.internet.domainSuffix": () => faker.internet.domainSuffix(),
   "fake.internet.domainWord": () => faker.internet.domainWord(),
+  "fake.internet.email": () => faker.internet.email(),
   "fake.internet.emoji": () => faker.internet.emoji(),
   "fake.internet.exampleEmail": () => faker.internet.exampleEmail(),
   "fake.internet.httpMethod": () => faker.internet.httpMethod(),
@@ -223,4 +221,19 @@ export const fakerGenerators: Record<
   "fake.number.hex": () => faker.number.hex(),
   "fake.number.octal": () => faker.number.octal(),
   "fake.number.romanNumeral": () => faker.number.romanNumeral(),
+  //person (sexType omitted: documented as a parameter helper, not display data)
+  "fake.person.bio": () => faker.person.bio(),
+  "fake.person.firstName": () => faker.person.firstName(),
+  "fake.person.fullName": () => faker.person.fullName(),
+  "fake.person.gender": () => faker.person.gender(),
+  "fake.person.jobArea": () => faker.person.jobArea(),
+  "fake.person.jobDescriptor": () => faker.person.jobDescriptor(),
+  "fake.person.jobTitle": () => faker.person.jobTitle(),
+  "fake.person.jobType": () => faker.person.jobType(),
+  "fake.person.lastName": () => faker.person.lastName(),
+  "fake.person.middleName": () => faker.person.middleName(),
+  "fake.person.prefix": () => faker.person.prefix(),
+  "fake.person.sex": () => faker.person.sex(),
+  "fake.person.suffix": () => faker.person.suffix(),
+  "fake.person.zodiacSign": () => faker.person.zodiacSign(),
 };
