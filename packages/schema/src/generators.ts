@@ -7,7 +7,7 @@ export type Airport = ReturnType<typeof faker.airline.airport>;
 
 export const fakerGenerators: Record<
   FakerType,
-  () => string | Airline | Airplane | Airport
+  () => string | Airline | Airplane | Airport | number[]
 > = {
   "faker.string.uuid": () => faker.string.uuid(),
   "faker.internet.email": () => faker.internet.email(),
@@ -46,4 +46,16 @@ export const fakerGenerators: Record<
   "faker.book.publisher": () => faker.book.publisher(),
   "faker.book.series": () => faker.book.series(),
   "faker.book.title": () => faker.book.title(),
+  //color
+  "faker.color.cmyk": () => faker.color.cmyk(),
+  "faker.color.colorByCSSColorSpace": () => faker.color.colorByCSSColorSpace(),
+  "faker.color.cssSupportedFunction": () => faker.color.cssSupportedFunction(),
+  "faker.color.cssSupportedSpace": () => faker.color.cssSupportedSpace(),
+  "faker.color.hsl": () => faker.color.hsl(),
+  "faker.color.human": () => faker.color.human(),
+  "faker.color.hwb": () => faker.color.hwb(),
+  "faker.color.lab": () => faker.color.lab(),
+  "faker.color.lch": () => faker.color.lch(),
+  "faker.color.rgb": () => faker.color.rgb(),
+  "faker.color.space": () => faker.color.space(),
 };

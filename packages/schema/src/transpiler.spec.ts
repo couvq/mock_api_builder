@@ -7,7 +7,7 @@ type MockAirplane = { name: string; iataTypeCode: string };
 
 const MOCK_FAKER_VALUES: Record<
   FakerType,
-  string | MockAirline | MockAirplane
+  string | MockAirline | MockAirplane | number[]
 > = {
   "faker.string.uuid": "test-uuid",
   "faker.internet.email": "test@example.com",
@@ -46,6 +46,17 @@ const MOCK_FAKER_VALUES: Record<
   "faker.book.publisher": "Addison-Wesley",
   "faker.book.series": "Harry Potter",
   "faker.book.title": "Romeo and Juliet",
+  "faker.color.cmyk": [0.31, 0.52, 0.32, 0.43],
+  "faker.color.colorByCSSColorSpace": [0.93, 1, 0.82],
+  "faker.color.cssSupportedFunction": "rgb",
+  "faker.color.cssSupportedSpace": "display-p3",
+  "faker.color.hsl": [201, 0.23, 0.32],
+  "faker.color.human": "red",
+  "faker.color.hwb": [201, 0.21, 0.31],
+  "faker.color.lab": [0.832133, -80.3245, 100.1234],
+  "faker.color.lch": [0.522345, 72.2, 56.2],
+  "faker.color.rgb": "#0d7f26",
+  "faker.color.space": "sRGB",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -96,6 +107,22 @@ vi.mock("@faker-js/faker", () => {
         publisher: () => MOCK_FAKER_VALUES["faker.book.publisher"],
         series: () => MOCK_FAKER_VALUES["faker.book.series"],
         title: () => MOCK_FAKER_VALUES["faker.book.title"],
+      },
+      color: {
+        cmyk: () => MOCK_FAKER_VALUES["faker.color.cmyk"],
+        colorByCSSColorSpace: () =>
+          MOCK_FAKER_VALUES["faker.color.colorByCSSColorSpace"],
+        cssSupportedFunction: () =>
+          MOCK_FAKER_VALUES["faker.color.cssSupportedFunction"],
+        cssSupportedSpace: () =>
+          MOCK_FAKER_VALUES["faker.color.cssSupportedSpace"],
+        hsl: () => MOCK_FAKER_VALUES["faker.color.hsl"],
+        human: () => MOCK_FAKER_VALUES["faker.color.human"],
+        hwb: () => MOCK_FAKER_VALUES["faker.color.hwb"],
+        lab: () => MOCK_FAKER_VALUES["faker.color.lab"],
+        lch: () => MOCK_FAKER_VALUES["faker.color.lch"],
+        rgb: () => MOCK_FAKER_VALUES["faker.color.rgb"],
+        space: () => MOCK_FAKER_VALUES["faker.color.space"],
       },
     },
   };
@@ -223,6 +250,40 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.book.title")).toBe(
         MOCK_FAKER_VALUES["faker.book.title"],
+      );
+      // color
+      expect(transpile("faker.color.cmyk")).toEqual(
+        MOCK_FAKER_VALUES["faker.color.cmyk"],
+      );
+      expect(transpile("faker.color.colorByCSSColorSpace")).toEqual(
+        MOCK_FAKER_VALUES["faker.color.colorByCSSColorSpace"],
+      );
+      expect(transpile("faker.color.cssSupportedFunction")).toBe(
+        MOCK_FAKER_VALUES["faker.color.cssSupportedFunction"],
+      );
+      expect(transpile("faker.color.cssSupportedSpace")).toBe(
+        MOCK_FAKER_VALUES["faker.color.cssSupportedSpace"],
+      );
+      expect(transpile("faker.color.hsl")).toEqual(
+        MOCK_FAKER_VALUES["faker.color.hsl"],
+      );
+      expect(transpile("faker.color.human")).toBe(
+        MOCK_FAKER_VALUES["faker.color.human"],
+      );
+      expect(transpile("faker.color.hwb")).toEqual(
+        MOCK_FAKER_VALUES["faker.color.hwb"],
+      );
+      expect(transpile("faker.color.lab")).toEqual(
+        MOCK_FAKER_VALUES["faker.color.lab"],
+      );
+      expect(transpile("faker.color.lch")).toEqual(
+        MOCK_FAKER_VALUES["faker.color.lch"],
+      );
+      expect(transpile("faker.color.rgb")).toBe(
+        MOCK_FAKER_VALUES["faker.color.rgb"],
+      );
+      expect(transpile("faker.color.space")).toBe(
+        MOCK_FAKER_VALUES["faker.color.space"],
       );
     });
 

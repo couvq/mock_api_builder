@@ -38,6 +38,18 @@ export const FakerSchema = z.enum([
   "faker.book.publisher",
   "faker.book.series",
   "faker.book.title",
+  // color
+  "faker.color.cmyk",
+  "faker.color.colorByCSSColorSpace",
+  "faker.color.cssSupportedFunction",
+  "faker.color.cssSupportedSpace",
+  "faker.color.hsl",
+  "faker.color.human",
+  "faker.color.hwb",
+  "faker.color.lab",
+  "faker.color.lch",
+  "faker.color.rgb",
+  "faker.color.space",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
