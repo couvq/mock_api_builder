@@ -7,7 +7,7 @@ type MockAirplane = { name: string; iataTypeCode: string };
 
 const MOCK_FAKER_VALUES: Record<
   FakerType,
-  string | MockAirline | MockAirplane | number[] | boolean
+  string | MockAirline | MockAirplane | number[] | boolean | number
 > = {
   "fake.string.uuid": "test-uuid",
   "fake.internet.email": "test@example.com",
@@ -142,6 +142,28 @@ const MOCK_FAKER_VALUES: Record<
     "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/57.jpg",
   "fake.image.url": "https://picsum.photos/seed/NWbJM2B/640/480",
   "fake.image.urlPicsumPhotos": "https://picsum.photos/seed/NWbJM2B/640/480",
+  "fake.internet.displayName": "Nettie_Zboncak40",
+  "fake.internet.domainName": "slow-timer.info",
+  "fake.internet.domainSuffix": "com",
+  "fake.internet.domainWord": "close-reality",
+  "fake.internet.emoji": "🥰",
+  "fake.internet.exampleEmail": "Helmer.Graham23@example.com",
+  "fake.internet.httpMethod": "PATCH",
+  "fake.internet.httpStatusCode": 200,
+  "fake.internet.ip": "245.108.222.0",
+  "fake.internet.ipv4": "245.108.222.0",
+  "fake.internet.ipv6": "269f:1230:73e3:318d:842b:daab:326d:897b",
+  "fake.internet.jwt":
+    "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTYifQ.c2lnbmF0dXJl",
+  "fake.internet.jwtAlgorithm": "HS256",
+  "fake.internet.mac": "32:8e:2e:09:c6:05",
+  "fake.internet.password": "89G1wJuBLbGziIs",
+  "fake.internet.port": 9414,
+  "fake.internet.protocol": "http",
+  "fake.internet.url": "https://remarkable-hackwork.info",
+  "fake.internet.userAgent":
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15",
+  "fake.internet.username": "Nettie_Zboncak40",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -152,6 +174,26 @@ vi.mock("@faker-js/faker", () => {
       },
       internet: {
         email: () => MOCK_FAKER_VALUES["fake.internet.email"],
+        displayName: () => MOCK_FAKER_VALUES["fake.internet.displayName"],
+        domainName: () => MOCK_FAKER_VALUES["fake.internet.domainName"],
+        domainSuffix: () => MOCK_FAKER_VALUES["fake.internet.domainSuffix"],
+        domainWord: () => MOCK_FAKER_VALUES["fake.internet.domainWord"],
+        emoji: () => MOCK_FAKER_VALUES["fake.internet.emoji"],
+        exampleEmail: () => MOCK_FAKER_VALUES["fake.internet.exampleEmail"],
+        httpMethod: () => MOCK_FAKER_VALUES["fake.internet.httpMethod"],
+        httpStatusCode: () => MOCK_FAKER_VALUES["fake.internet.httpStatusCode"],
+        ip: () => MOCK_FAKER_VALUES["fake.internet.ip"],
+        ipv4: () => MOCK_FAKER_VALUES["fake.internet.ipv4"],
+        ipv6: () => MOCK_FAKER_VALUES["fake.internet.ipv6"],
+        jwt: () => MOCK_FAKER_VALUES["fake.internet.jwt"],
+        jwtAlgorithm: () => MOCK_FAKER_VALUES["fake.internet.jwtAlgorithm"],
+        mac: () => MOCK_FAKER_VALUES["fake.internet.mac"],
+        password: () => MOCK_FAKER_VALUES["fake.internet.password"],
+        port: () => MOCK_FAKER_VALUES["fake.internet.port"],
+        protocol: () => MOCK_FAKER_VALUES["fake.internet.protocol"],
+        url: () => MOCK_FAKER_VALUES["fake.internet.url"],
+        userAgent: () => MOCK_FAKER_VALUES["fake.internet.userAgent"],
+        username: () => MOCK_FAKER_VALUES["fake.internet.username"],
       },
       person: {
         firstName: () => MOCK_FAKER_VALUES["fake.person.firstName"],
@@ -727,6 +769,67 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.image.urlPicsumPhotos")).toBe(
         MOCK_FAKER_VALUES["fake.image.urlPicsumPhotos"],
+      );
+      // internet (email covered above)
+      expect(transpile("fake.internet.displayName")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.displayName"],
+      );
+      expect(transpile("fake.internet.domainName")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.domainName"],
+      );
+      expect(transpile("fake.internet.domainSuffix")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.domainSuffix"],
+      );
+      expect(transpile("fake.internet.domainWord")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.domainWord"],
+      );
+      expect(transpile("fake.internet.emoji")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.emoji"],
+      );
+      expect(transpile("fake.internet.exampleEmail")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.exampleEmail"],
+      );
+      expect(transpile("fake.internet.httpMethod")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.httpMethod"],
+      );
+      expect(transpile("fake.internet.httpStatusCode")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.httpStatusCode"],
+      );
+      expect(transpile("fake.internet.ip")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.ip"],
+      );
+      expect(transpile("fake.internet.ipv4")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.ipv4"],
+      );
+      expect(transpile("fake.internet.ipv6")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.ipv6"],
+      );
+      expect(transpile("fake.internet.jwt")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.jwt"],
+      );
+      expect(transpile("fake.internet.jwtAlgorithm")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.jwtAlgorithm"],
+      );
+      expect(transpile("fake.internet.mac")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.mac"],
+      );
+      expect(transpile("fake.internet.password")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.password"],
+      );
+      expect(transpile("fake.internet.port")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.port"],
+      );
+      expect(transpile("fake.internet.protocol")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.protocol"],
+      );
+      expect(transpile("fake.internet.url")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.url"],
+      );
+      expect(transpile("fake.internet.userAgent")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.userAgent"],
+      );
+      expect(transpile("fake.internet.username")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.username"],
       );
     });
 

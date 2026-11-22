@@ -7,7 +7,7 @@ export type Airport = ReturnType<typeof faker.airline.airport>;
 
 export const fakerGenerators: Record<
   FakerType,
-  () => string | Airline | Airplane | Airport | number[] | boolean
+  () => string | Airline | Airplane | Airport | number[] | boolean | number
 > = {
   "fake.string.uuid": () => faker.string.uuid(),
   "fake.internet.email": () => faker.internet.email(),
@@ -149,4 +149,25 @@ export const fakerGenerators: Record<
   "fake.image.personPortrait": () => faker.image.personPortrait(),
   "fake.image.url": () => faker.image.url(),
   "fake.image.urlPicsumPhotos": () => faker.image.urlPicsumPhotos(),
+  //internet (email already defined above)
+  "fake.internet.displayName": () => faker.internet.displayName(),
+  "fake.internet.domainName": () => faker.internet.domainName(),
+  "fake.internet.domainSuffix": () => faker.internet.domainSuffix(),
+  "fake.internet.domainWord": () => faker.internet.domainWord(),
+  "fake.internet.emoji": () => faker.internet.emoji(),
+  "fake.internet.exampleEmail": () => faker.internet.exampleEmail(),
+  "fake.internet.httpMethod": () => faker.internet.httpMethod(),
+  "fake.internet.httpStatusCode": () => faker.internet.httpStatusCode(),
+  "fake.internet.ip": () => faker.internet.ip(),
+  "fake.internet.ipv4": () => faker.internet.ipv4(),
+  "fake.internet.ipv6": () => faker.internet.ipv6(),
+  "fake.internet.jwt": () => faker.internet.jwt(),
+  "fake.internet.jwtAlgorithm": () => faker.internet.jwtAlgorithm(),
+  "fake.internet.mac": () => faker.internet.mac(),
+  "fake.internet.password": () => faker.internet.password(),
+  "fake.internet.port": () => faker.internet.port(),
+  "fake.internet.protocol": () => faker.internet.protocol(),
+  "fake.internet.url": () => faker.internet.url(),
+  "fake.internet.userAgent": () => faker.internet.userAgent(),
+  "fake.internet.username": () => faker.internet.username(),
 };

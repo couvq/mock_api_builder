@@ -138,6 +138,27 @@ export const FakerSchema = z.enum([
   "fake.image.personPortrait",
   "fake.image.url",
   "fake.image.urlPicsumPhotos",
+  // internet (email already defined above)
+  "fake.internet.displayName",
+  "fake.internet.domainName",
+  "fake.internet.domainSuffix",
+  "fake.internet.domainWord",
+  "fake.internet.emoji",
+  "fake.internet.exampleEmail",
+  "fake.internet.httpMethod",
+  "fake.internet.httpStatusCode",
+  "fake.internet.ip",
+  "fake.internet.ipv4",
+  "fake.internet.ipv6",
+  "fake.internet.jwt",
+  "fake.internet.jwtAlgorithm",
+  "fake.internet.mac",
+  "fake.internet.password",
+  "fake.internet.port",
+  "fake.internet.protocol",
+  "fake.internet.url",
+  "fake.internet.userAgent",
+  "fake.internet.username",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
