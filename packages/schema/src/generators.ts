@@ -129,4 +129,10 @@ export const fakerGenerators: Record<
   "fake.food.meat": () => faker.food.meat(),
   "fake.food.spice": () => faker.food.spice(),
   "fake.food.vegetable": () => faker.food.vegetable(),
+  //git
+  "fake.git.branch": () => faker.git.branch(),
+  "fake.git.commitDate": () => faker.git.commitDate(),
+  "fake.git.commitEntry": () => faker.git.commitEntry(),
+  "fake.git.commitMessage": () => faker.git.commitMessage(),
+  "fake.git.commitSha": () => faker.git.commitSha(),
 };

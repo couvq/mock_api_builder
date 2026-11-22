@@ -118,6 +118,12 @@ export const FakerSchema = z.enum([
   "fake.food.meat",
   "fake.food.spice",
   "fake.food.vegetable",
+  // git
+  "fake.git.branch",
+  "fake.git.commitDate",
+  "fake.git.commitEntry",
+  "fake.git.commitMessage",
+  "fake.git.commitSha",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

@@ -121,6 +121,12 @@ const MOCK_FAKER_VALUES: Record<
   "fake.food.meat": "venison",
   "fake.food.spice": "chilli",
   "fake.food.vegetable": "broccoli",
+  "fake.git.branch": "feed-parse",
+  "fake.git.commitDate": "Mon Nov 7 14:40:58 2022 +0600",
+  "fake.git.commitEntry":
+    "commit fe8c38a965d13d9794eb36918cb24cebe49a45c2\nAuthor: Marion Becker <Marion_Becker49@gmail.com>\nDate: Mon Nov 7 05:38:37 2022 -0600\n\n    generate open-source system",
+  "fake.git.commitMessage": "reboot cross-platform driver",
+  "fake.git.commitSha": "2c6e3880fd94ddb7ef72d34e683cdc0c47bec6e6",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -278,6 +284,13 @@ vi.mock("@faker-js/faker", () => {
         meat: () => MOCK_FAKER_VALUES["fake.food.meat"],
         spice: () => MOCK_FAKER_VALUES["fake.food.spice"],
         vegetable: () => MOCK_FAKER_VALUES["fake.food.vegetable"],
+      },
+      git: {
+        branch: () => MOCK_FAKER_VALUES["fake.git.branch"],
+        commitDate: () => MOCK_FAKER_VALUES["fake.git.commitDate"],
+        commitEntry: () => MOCK_FAKER_VALUES["fake.git.commitEntry"],
+        commitMessage: () => MOCK_FAKER_VALUES["fake.git.commitMessage"],
+        commitSha: () => MOCK_FAKER_VALUES["fake.git.commitSha"],
       },
     },
   };
@@ -629,6 +642,22 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.food.vegetable")).toBe(
         MOCK_FAKER_VALUES["fake.food.vegetable"],
+      );
+      // git
+      expect(transpile("fake.git.branch")).toBe(
+        MOCK_FAKER_VALUES["fake.git.branch"],
+      );
+      expect(transpile("fake.git.commitDate")).toBe(
+        MOCK_FAKER_VALUES["fake.git.commitDate"],
+      );
+      expect(transpile("fake.git.commitEntry")).toBe(
+        MOCK_FAKER_VALUES["fake.git.commitEntry"],
+      );
+      expect(transpile("fake.git.commitMessage")).toBe(
+        MOCK_FAKER_VALUES["fake.git.commitMessage"],
+      );
+      expect(transpile("fake.git.commitSha")).toBe(
+        MOCK_FAKER_VALUES["fake.git.commitSha"],
       );
     });
 
