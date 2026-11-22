@@ -180,6 +180,16 @@ export const FakerSchema = z.enum([
   "fake.location.streetAddress",
   "fake.location.timeZone",
   "fake.location.zipCode",
+  // lorem
+  "fake.lorem.lines",
+  "fake.lorem.paragraph",
+  "fake.lorem.paragraphs",
+  "fake.lorem.sentence",
+  "fake.lorem.sentences",
+  "fake.lorem.slug",
+  "fake.lorem.text",
+  "fake.lorem.word",
+  "fake.lorem.words",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

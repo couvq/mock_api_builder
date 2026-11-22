@@ -201,4 +201,14 @@ export const fakerGenerators: Record<
   "fake.location.streetAddress": () => faker.location.streetAddress(),
   "fake.location.timeZone": () => faker.location.timeZone(),
   "fake.location.zipCode": () => faker.location.zipCode(),
+  //lorem
+  "fake.lorem.lines": () => faker.lorem.lines(),
+  "fake.lorem.paragraph": () => faker.lorem.paragraph(),
+  "fake.lorem.paragraphs": () => faker.lorem.paragraphs(),
+  "fake.lorem.sentence": () => faker.lorem.sentence(),
+  "fake.lorem.sentences": () => faker.lorem.sentences(),
+  "fake.lorem.slug": () => faker.lorem.slug(),
+  "fake.lorem.text": () => faker.lorem.text(),
+  "fake.lorem.word": () => faker.lorem.word(),
+  "fake.lorem.words": () => faker.lorem.words(),
 };

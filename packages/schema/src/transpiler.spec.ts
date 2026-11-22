@@ -192,6 +192,19 @@ const MOCK_FAKER_VALUES: Record<
   "fake.location.streetAddress": "0917 OConner Estates",
   "fake.location.timeZone": "Pacific/Guam",
   "fake.location.zipCode": "17839",
+  "fake.lorem.lines": "Rerum quia aliquam pariatur explicabo sint minima eos.",
+  "fake.lorem.paragraph":
+    "Non architecto nam unde sint. Ex tenetur dolor facere optio.",
+  "fake.lorem.paragraphs":
+    "Beatae voluptatem dicta et assumenda fugit eaque quidem consequatur.",
+  "fake.lorem.sentence":
+    "Voluptatum cupiditate suscipit autem eveniet aut dolorem aut officiis.",
+  "fake.lorem.sentences":
+    "Iste molestiae incidunt aliquam possimus reprehenderit eum corrupti.",
+  "fake.lorem.slug": "dolores-illo-est",
+  "fake.lorem.text": "Doloribus autem non quis vero quia.",
+  "fake.lorem.word": "temporibus",
+  "fake.lorem.words": "qui praesentium pariatur",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -418,6 +431,17 @@ vi.mock("@faker-js/faker", () => {
         streetAddress: () => MOCK_FAKER_VALUES["fake.location.streetAddress"],
         timeZone: () => MOCK_FAKER_VALUES["fake.location.timeZone"],
         zipCode: () => MOCK_FAKER_VALUES["fake.location.zipCode"],
+      },
+      lorem: {
+        lines: () => MOCK_FAKER_VALUES["fake.lorem.lines"],
+        paragraph: () => MOCK_FAKER_VALUES["fake.lorem.paragraph"],
+        paragraphs: () => MOCK_FAKER_VALUES["fake.lorem.paragraphs"],
+        sentence: () => MOCK_FAKER_VALUES["fake.lorem.sentence"],
+        sentences: () => MOCK_FAKER_VALUES["fake.lorem.sentences"],
+        slug: () => MOCK_FAKER_VALUES["fake.lorem.slug"],
+        text: () => MOCK_FAKER_VALUES["fake.lorem.text"],
+        word: () => MOCK_FAKER_VALUES["fake.lorem.word"],
+        words: () => MOCK_FAKER_VALUES["fake.lorem.words"],
       },
     },
   };
@@ -945,6 +969,34 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.location.zipCode")).toBe(
         MOCK_FAKER_VALUES["fake.location.zipCode"],
+      );
+      // lorem
+      expect(transpile("fake.lorem.lines")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.lines"],
+      );
+      expect(transpile("fake.lorem.paragraph")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.paragraph"],
+      );
+      expect(transpile("fake.lorem.paragraphs")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.paragraphs"],
+      );
+      expect(transpile("fake.lorem.sentence")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.sentence"],
+      );
+      expect(transpile("fake.lorem.sentences")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.sentences"],
+      );
+      expect(transpile("fake.lorem.slug")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.slug"],
+      );
+      expect(transpile("fake.lorem.text")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.text"],
+      );
+      expect(transpile("fake.lorem.word")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.word"],
+      );
+      expect(transpile("fake.lorem.words")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.words"],
       );
     });
 
