@@ -17,6 +17,7 @@ import {
 import { useEndpoints } from "../../hooks/endpoints";
 import ConfirmDeletionModal from "./ConfirmDeletionModal";
 import DeleteEndpointBtn from "./DeleteEndpointBtn";
+import EditEndpointBtn from "./EditEndpointBtn";
 
 const LoadingSkeleton = () => (
   <Stack
@@ -70,7 +71,10 @@ const EndpointList = ({ filter }: { filter: string }) => {
             key={endpoint.id}
             disablePadding
             secondaryAction={
-              <DeleteEndpointBtn onClick={() => openDeleteModal(endpoint)} />
+              <Stack direction="row" spacing={0.5}>
+                <EditEndpointBtn endpointId={endpoint.id} />
+                <DeleteEndpointBtn onClick={() => openDeleteModal(endpoint)} />
+              </Stack>
             }
             sx={{
               // Reveal the delete button on hover, or when any descendant (the
@@ -93,8 +97,8 @@ const EndpointList = ({ filter }: { filter: string }) => {
               selected={activeEndpointId === endpoint.id}
               onClick={() => handleListItemClick(endpoint)}
               // Reserve room on the right for the (absolutely positioned)
-              // delete button so a long path doesn't slide underneath it.
-              sx={{ pr: 6 }}
+              // edit + delete buttons so a long path doesn't slide underneath.
+              sx={{ pr: 11 }}
             >
               <ListItemText
                 primary={

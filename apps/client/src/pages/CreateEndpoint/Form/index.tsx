@@ -1,111 +1,23 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  InputAdornment,
-  Stack,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
-import {
-  EndpointConfig,
-  transpile,
-  type MockSchemaType,
-  type TranspiledSchema,
-} from "@mock-api-builder/schema";
-import { JsonEditor } from "json-edit-react";
+import { Box, Button, Divider, Stack } from "@mui/material";
+import { EndpointConfig, type MockSchemaType } from "@mock-api-builder/schema";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  FormContainer,
-  SelectElement,
-  TextFieldElement,
-} from "react-hook-form-mui";
+import { FormContainer } from "react-hook-form-mui";
 import { Link } from "react-router";
-import { MOCK_API_BASE_URL } from "../../../components/endpoint_viewer";
-import DelayInput from "../../../components/delay_input";
-import {
-  DEFAULT_FAKER_TYPE,
-  FAKER_TYPE_SELECTION,
-} from "../../../config/jsonEditor";
+import EndpointFields from "../../../components/endpoint_fields";
+import ResponseSchemaEditor from "../../../components/response_schema_editor";
 import { createEndpoint } from "../../../api/endpoint";
-import { useJsonEditorTheme } from "../../../hooks/jsonEditorTheme";
 import { useToast } from "../../../hooks/toast";
 
-// `EndpointConfig.method` only models these two, so the dropdown matches it.
-const HTTP_METHODS = ["GET", "POST"] as const;
-
-const METHOD_OPTIONS = HTTP_METHODS.map((method) => ({
-  id: method,
-  label: method,
-}));
-
 const DEFAULT_RESPONSE_SCHEMA: MockSchemaType = {};
-
-type SchemaViewMode = "tree" | "json";
-
-// Fills the json-edit-react card to its column height so the Response schema
-// and Example response panels stay the same height.
-const editorFillSx = {
-  flexGrow: 1,
-  minHeight: 0,
-  "& .jer-editor-container": { height: "100%" },
-};
 
 const Form = () => {
   const [responseSchema, setResponseSchema] = useState<MockSchemaType>(
     DEFAULT_RESPONSE_SCHEMA,
   );
   const [delay, setDelay] = useState(0);
-  const [viewMode, setViewMode] = useState<SchemaViewMode>("tree");
-  const [jsonText, setJsonText] = useState(
-    JSON.stringify(DEFAULT_RESPONSE_SCHEMA),
-  );
-  const [jsonError, setJsonError] = useState<string | null>(null);
-  const [exampleResponse, setExampleResponse] = useState<TranspiledSchema>(() =>
-    transpile(DEFAULT_RESPONSE_SCHEMA),
-  );
-  const { error, success } = useToast();
-  const jsonEditorTheme = useJsonEditorTheme();
-
-  // Response schema is the source of truth; refresh the preview wherever it
-  // changes (rather than in an effect) so edits and regeneration stay in sync.
-  const applyResponseSchema = (next: MockSchemaType) => {
-    setResponseSchema(next);
-    setExampleResponse(transpile(next));
-  };
-
-  const handleViewModeChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    nextMode: SchemaViewMode | null,
-  ) => {
-    // `exclusive` yields null when the active button is clicked; keep one on.
-    if (!nextMode) return;
-    if (nextMode === "json") {
-      setJsonText(JSON.stringify(responseSchema, null, 2));
-      setJsonError(null);
-    }
-    setViewMode(nextMode);
-  };
-
-  const handleJsonTextChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const text = event.target.value;
-    setJsonText(text);
-    try {
-      applyResponseSchema(JSON.parse(text) as MockSchemaType);
-      setJsonError(null);
-    } catch {
-      setJsonError("Invalid JSON");
-    }
-  };
-
-  const handleRegenerate = () => {
-    setExampleResponse(transpile(responseSchema));
-  };
+  const toast = useToast();
+  const queryClient = useQueryClient();
 
   const handleCreate = async (formData: {
     method: EndpointConfig["method"];
@@ -120,11 +32,14 @@ const Form = () => {
 
     try {
       const newEndpoint = await createEndpoint(payload);
-      success(
+      // Refresh the dashboard's endpoint list so the new endpoint shows up
+      // without relying on a refetch-on-remount.
+      queryClient.invalidateQueries({ queryKey: ["endpoints"] });
+      toast.success(
         `Endpoint ${newEndpoint.method} /${newEndpoint.path} created successfully!`,
       );
     } catch {
-      error("Failed to create endpoint. Please try again.");
+      toast.error("Failed to create endpoint. Please try again.");
     }
   };
 
@@ -133,143 +48,12 @@ const Form = () => {
       defaultValues={{ method: "GET", path: "" }}
       onSuccess={handleCreate}
     >
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12, sm: 2 }}>
-          <SelectElement
-            name="method"
-            label="Method"
-            options={METHOD_OPTIONS}
-            required
-            fullWidth
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 8 }}>
-          <TextFieldElement
-            name="path"
-            label="Path"
-            required
-            fullWidth
-            sx={{ "& input": { fontFamily: "monospace" } }}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{ fontFamily: "monospace" }}
-                    >
-                      {MOCK_API_BASE_URL}
-                    </Typography>
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 2 }}>
-          <DelayInput
-            required
-            size="medium"
-            sx={{ width: "100%" }}
-            value={delay}
-            onValueChange={(value) => setDelay(value ?? 0)}
-          />
-        </Grid>
-      </Grid>
+      <EndpointFields delay={delay} onDelayChange={setDelay} />
 
-      <Grid container spacing={4} sx={{ mt: 2 }}>
-        <Grid
-          size={{ xs: 12, md: 6 }}
-          sx={{ display: "flex", flexDirection: "column" }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              mb: 1,
-            }}
-          >
-            <Typography>Response schema</Typography>
-            <ToggleButtonGroup
-              size="small"
-              exclusive
-              value={viewMode}
-              onChange={handleViewModeChange}
-              aria-label="Response schema view"
-            >
-              <ToggleButton value="tree">Tree</ToggleButton>
-              <ToggleButton value="json">Edit JSON</ToggleButton>
-            </ToggleButtonGroup>
-          </Box>
-
-          <Box sx={editorFillSx}>
-            {viewMode === "tree" ? (
-              <JsonEditor
-                data={responseSchema}
-                theme={jsonEditorTheme}
-                rootName="root"
-                defaultValue={DEFAULT_FAKER_TYPE}
-                restrictTypeSelection={FAKER_TYPE_SELECTION}
-                onUpdate={(update) =>
-                  applyResponseSchema(update.newData as MockSchemaType)
-                }
-              />
-            ) : (
-              <TextField
-                fullWidth
-                multiline
-                minRows={10}
-                value={jsonText}
-                onChange={handleJsonTextChange}
-                error={Boolean(jsonError)}
-                helperText={jsonError ?? " "}
-                sx={{
-                  height: "100%",
-                  "& .MuiInputBase-root": {
-                    height: "100%",
-                    alignItems: "flex-start",
-                  },
-                }}
-                slotProps={{
-                  htmlInput: {
-                    "aria-label": "responseSchemaEditor",
-                    style: { fontFamily: "monospace" },
-                  },
-                }}
-              />
-            )}
-          </Box>
-        </Grid>
-
-        <Grid
-          size={{ xs: 12, md: 6 }}
-          sx={{ display: "flex", flexDirection: "column" }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              mb: 1,
-            }}
-          >
-            <Typography>Example response</Typography>
-            <Button size="small" onClick={handleRegenerate}>
-              Regenerate
-            </Button>
-          </Box>
-          <Box sx={editorFillSx} role="region" aria-label="Example response">
-            <JsonEditor
-              data={exampleResponse}
-              theme={jsonEditorTheme}
-              viewOnly
-              rootName="root"
-            />
-          </Box>
-        </Grid>
-      </Grid>
+      <ResponseSchemaEditor
+        value={responseSchema}
+        onChange={setResponseSchema}
+      />
 
       <Divider sx={{ my: 3 }} />
 
