@@ -9,256 +9,254 @@ const MOCK_FAKER_VALUES: Record<
   FakerType,
   string | MockAirline | MockAirplane | number[] | boolean
 > = {
-  "faker.string.uuid": "test-uuid",
-  "faker.internet.email": "test@example.com",
-  "faker.person.firstName": "John",
-  "faker.person.lastName": "Doe",
-  "faker.person.fullName": "John Doe",
-  "faker.airline.aircraftType": "narrowbody",
-  "faker.airline": { name: "American Airlines", iataCode: "AA" },
-  "faker.airline.airplane": { name: "Airbus A321", iataTypeCode: "321" },
-  "faker.airline.airport": {
+  "fake.string.uuid": "test-uuid",
+  "fake.internet.email": "test@example.com",
+  "fake.person.firstName": "John",
+  "fake.person.lastName": "Doe",
+  "fake.person.fullName": "John Doe",
+  "fake.airline.aircraftType": "narrowbody",
+  "fake.airline": { name: "American Airlines", iataCode: "AA" },
+  "fake.airline.airplane": { name: "Airbus A321", iataTypeCode: "321" },
+  "fake.airline.airport": {
     name: "Dallas Fort Worth International Airport",
     iataCode: "DFW",
   },
-  "faker.airline.flightNumber": "1234",
-  "faker.airline.recordLocator": "ABC123",
-  "faker.airline.seat": "12A",
-  "faker.animal.bear": "Asian black bear",
-  "faker.animal.bird": "Buller's Shearwater",
-  "faker.animal.cat": "Singapura",
-  "faker.animal.cetacean": "Spinner Dolphin",
-  "faker.animal.cow": "Brava",
-  "faker.animal.crocodilia": "Philippine Crocodile",
-  "faker.animal.dog": "Irish Water Spaniel",
-  "faker.animal.fish": "Mandarin fish",
-  "faker.animal.horse": "Swedish Warmblood",
-  "faker.animal.insect": "Pyramid ant",
-  "faker.animal.lion": "Northeast Congo Lion",
-  "faker.animal.petName": "Coco",
-  "faker.animal.rabbit": "Florida White",
-  "faker.animal.rodent": "Cuscomys ashanika",
-  "faker.animal.snake": "Eyelash viper",
-  "faker.animal.type": "crocodile",
-  "faker.book.author": "William Shakespeare",
-  "faker.book.format": "Hardcover",
-  "faker.book.genre": "Fantasy",
-  "faker.book.publisher": "Addison-Wesley",
-  "faker.book.series": "Harry Potter",
-  "faker.book.title": "Romeo and Juliet",
-  "faker.color.cmyk": [0.31, 0.52, 0.32, 0.43],
-  "faker.color.colorByCSSColorSpace": [0.93, 1, 0.82],
-  "faker.color.cssSupportedFunction": "rgb",
-  "faker.color.cssSupportedSpace": "display-p3",
-  "faker.color.hsl": [201, 0.23, 0.32],
-  "faker.color.human": "red",
-  "faker.color.hwb": [201, 0.21, 0.31],
-  "faker.color.lab": [0.832133, -80.3245, 100.1234],
-  "faker.color.lch": [0.522345, 72.2, 56.2],
-  "faker.color.rgb": "#0d7f26",
-  "faker.color.space": "sRGB",
-  "faker.commerce.department": "Garden",
-  "faker.commerce.isbn": "978-0-692-82459-7",
-  "faker.commerce.price": "828.07",
-  "faker.commerce.product": "Computer",
-  "faker.commerce.productAdjective": "Handcrafted",
-  "faker.commerce.productDescription":
+  "fake.airline.flightNumber": "1234",
+  "fake.airline.recordLocator": "ABC123",
+  "fake.airline.seat": "12A",
+  "fake.animal.bear": "Asian black bear",
+  "fake.animal.bird": "Buller's Shearwater",
+  "fake.animal.cat": "Singapura",
+  "fake.animal.cetacean": "Spinner Dolphin",
+  "fake.animal.cow": "Brava",
+  "fake.animal.crocodilia": "Philippine Crocodile",
+  "fake.animal.dog": "Irish Water Spaniel",
+  "fake.animal.fish": "Mandarin fish",
+  "fake.animal.horse": "Swedish Warmblood",
+  "fake.animal.insect": "Pyramid ant",
+  "fake.animal.lion": "Northeast Congo Lion",
+  "fake.animal.petName": "Coco",
+  "fake.animal.rabbit": "Florida White",
+  "fake.animal.rodent": "Cuscomys ashanika",
+  "fake.animal.snake": "Eyelash viper",
+  "fake.animal.type": "crocodile",
+  "fake.book.author": "William Shakespeare",
+  "fake.book.format": "Hardcover",
+  "fake.book.genre": "Fantasy",
+  "fake.book.publisher": "Addison-Wesley",
+  "fake.book.series": "Harry Potter",
+  "fake.book.title": "Romeo and Juliet",
+  "fake.color.cmyk": [0.31, 0.52, 0.32, 0.43],
+  "fake.color.colorByCSSColorSpace": [0.93, 1, 0.82],
+  "fake.color.cssSupportedFunction": "rgb",
+  "fake.color.cssSupportedSpace": "display-p3",
+  "fake.color.hsl": [201, 0.23, 0.32],
+  "fake.color.human": "red",
+  "fake.color.hwb": [201, 0.21, 0.31],
+  "fake.color.lab": [0.832133, -80.3245, 100.1234],
+  "fake.color.lch": [0.522345, 72.2, 56.2],
+  "fake.color.rgb": "#0d7f26",
+  "fake.color.space": "sRGB",
+  "fake.commerce.department": "Garden",
+  "fake.commerce.isbn": "978-0-692-82459-7",
+  "fake.commerce.price": "828.07",
+  "fake.commerce.product": "Computer",
+  "fake.commerce.productAdjective": "Handcrafted",
+  "fake.commerce.productDescription":
     "Featuring Phosphorus-enhanced technology, our Fish offers unparalleled Modern performance",
-  "faker.commerce.productMaterial": "Rubber",
-  "faker.commerce.productName": "Incredible Soft Gloves",
-  "faker.commerce.upc": "036000291452",
-  "faker.company.buzzAdjective": "one-to-one",
-  "faker.company.buzzNoun": "paradigms",
-  "faker.company.buzzPhrase": "cultivate synergistic e-markets",
-  "faker.company.buzzVerb": "empower",
-  "faker.company.catchPhrase": "Upgradable systematic flexibility",
-  "faker.company.catchPhraseAdjective": "Multi-tiered",
-  "faker.company.catchPhraseDescriptor": "composite",
-  "faker.company.catchPhraseNoun": "leverage",
-  "faker.company.name": "Zieme, Hauck and McClure",
-  "faker.database.collation": "utf8_unicode_ci",
-  "faker.database.column": "createdAt",
-  "faker.database.engine": "ARCHIVE",
-  "faker.database.mongodbObjectId": "e175cac316a79afdd0ad3afb",
-  "faker.database.type": "timestamp",
-  "faker.datatype.boolean": true,
-  "faker.date.anytime": "2022-07-31T01:33:29.567Z",
-  "faker.date.birthdate": "1977-07-10T01:37:30.719Z",
-  "faker.date.future": "2022-11-19T05:52:49.100Z",
-  "faker.date.month": "October",
-  "faker.date.past": "2021-12-03T05:40:44.408Z",
-  "faker.date.recent": "2022-02-04T02:09:35.077Z",
-  "faker.date.soon": "2022-02-05T09:55:39.216Z",
-  "faker.date.timeZone": "Pacific/Guam",
-  "faker.date.weekday": "Monday",
-  "faker.finance.accountName": "Personal Loan Account",
-  "faker.finance.accountNumber": "92842238",
-  "faker.finance.amount": "617.87",
-  "faker.finance.bic": "WYAUPGX1",
-  "faker.finance.bitcoinAddress": "1TeZEFLmGPLEQrSRdAcnZLoWwYeiHwmRog",
-  "faker.finance.creditCardCVV": "506",
-  "faker.finance.creditCardIssuer": "discover",
-  "faker.finance.creditCardNumber": "4427163488662",
-  "faker.finance.currencyCode": "USD",
-  "faker.finance.currencyName": "US Dollar",
-  "faker.finance.currencyNumericCode": "840",
-  "faker.finance.currencySymbol": "$",
-  "faker.finance.ethereumAddress": "0xf03dfeecbafc5147241cc4c4ca20b3c9dfd04c4a",
-  "faker.finance.iban": "TR736918640040966092800056",
-  "faker.finance.litecoinAddress": "MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW",
-  "faker.finance.pin": "5067",
-  "faker.finance.routingNumber": "062197511",
-  "faker.finance.transactionDescription":
+  "fake.commerce.productMaterial": "Rubber",
+  "fake.commerce.productName": "Incredible Soft Gloves",
+  "fake.commerce.upc": "036000291452",
+  "fake.company.buzzAdjective": "one-to-one",
+  "fake.company.buzzNoun": "paradigms",
+  "fake.company.buzzPhrase": "cultivate synergistic e-markets",
+  "fake.company.buzzVerb": "empower",
+  "fake.company.catchPhrase": "Upgradable systematic flexibility",
+  "fake.company.catchPhraseAdjective": "Multi-tiered",
+  "fake.company.catchPhraseDescriptor": "composite",
+  "fake.company.catchPhraseNoun": "leverage",
+  "fake.company.name": "Zieme, Hauck and McClure",
+  "fake.database.collation": "utf8_unicode_ci",
+  "fake.database.column": "createdAt",
+  "fake.database.engine": "ARCHIVE",
+  "fake.database.mongodbObjectId": "e175cac316a79afdd0ad3afb",
+  "fake.database.type": "timestamp",
+  "fake.datatype.boolean": true,
+  "fake.date.anytime": "2022-07-31T01:33:29.567Z",
+  "fake.date.birthdate": "1977-07-10T01:37:30.719Z",
+  "fake.date.future": "2022-11-19T05:52:49.100Z",
+  "fake.date.month": "October",
+  "fake.date.past": "2021-12-03T05:40:44.408Z",
+  "fake.date.recent": "2022-02-04T02:09:35.077Z",
+  "fake.date.soon": "2022-02-05T09:55:39.216Z",
+  "fake.date.timeZone": "Pacific/Guam",
+  "fake.date.weekday": "Monday",
+  "fake.finance.accountName": "Personal Loan Account",
+  "fake.finance.accountNumber": "92842238",
+  "fake.finance.amount": "617.87",
+  "fake.finance.bic": "WYAUPGX1",
+  "fake.finance.bitcoinAddress": "1TeZEFLmGPLEQrSRdAcnZLoWwYeiHwmRog",
+  "fake.finance.creditCardCVV": "506",
+  "fake.finance.creditCardIssuer": "discover",
+  "fake.finance.creditCardNumber": "4427163488662",
+  "fake.finance.currencyCode": "USD",
+  "fake.finance.currencyName": "US Dollar",
+  "fake.finance.currencyNumericCode": "840",
+  "fake.finance.currencySymbol": "$",
+  "fake.finance.ethereumAddress": "0xf03dfeecbafc5147241cc4c4ca20b3c9dfd04c4a",
+  "fake.finance.iban": "TR736918640040966092800056",
+  "fake.finance.litecoinAddress": "MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW",
+  "fake.finance.pin": "5067",
+  "fake.finance.routingNumber": "062197511",
+  "fake.finance.transactionDescription":
     "payment transaction at Emard LLC using card ending with ****9187",
-  "faker.finance.transactionType": "payment",
+  "fake.finance.transactionType": "payment",
 };
 
 vi.mock("@faker-js/faker", () => {
   return {
     faker: {
       string: {
-        uuid: () => MOCK_FAKER_VALUES["faker.string.uuid"],
+        uuid: () => MOCK_FAKER_VALUES["fake.string.uuid"],
       },
       internet: {
-        email: () => MOCK_FAKER_VALUES["faker.internet.email"],
+        email: () => MOCK_FAKER_VALUES["fake.internet.email"],
       },
       person: {
-        firstName: () => MOCK_FAKER_VALUES["faker.person.firstName"],
-        lastName: () => MOCK_FAKER_VALUES["faker.person.lastName"],
-        fullName: () => MOCK_FAKER_VALUES["faker.person.fullName"],
+        firstName: () => MOCK_FAKER_VALUES["fake.person.firstName"],
+        lastName: () => MOCK_FAKER_VALUES["fake.person.lastName"],
+        fullName: () => MOCK_FAKER_VALUES["fake.person.fullName"],
       },
       airline: {
-        aircraftType: () => MOCK_FAKER_VALUES["faker.airline.aircraftType"],
-        airline: () => MOCK_FAKER_VALUES["faker.airline"],
-        airplane: () => MOCK_FAKER_VALUES["faker.airline.airplane"],
-        airport: () => MOCK_FAKER_VALUES["faker.airline.airport"],
-        flightNumber: () => MOCK_FAKER_VALUES["faker.airline.flightNumber"],
-        recordLocator: () => MOCK_FAKER_VALUES["faker.airline.recordLocator"],
-        seat: () => MOCK_FAKER_VALUES["faker.airline.seat"],
+        aircraftType: () => MOCK_FAKER_VALUES["fake.airline.aircraftType"],
+        airline: () => MOCK_FAKER_VALUES["fake.airline"],
+        airplane: () => MOCK_FAKER_VALUES["fake.airline.airplane"],
+        airport: () => MOCK_FAKER_VALUES["fake.airline.airport"],
+        flightNumber: () => MOCK_FAKER_VALUES["fake.airline.flightNumber"],
+        recordLocator: () => MOCK_FAKER_VALUES["fake.airline.recordLocator"],
+        seat: () => MOCK_FAKER_VALUES["fake.airline.seat"],
       },
       animal: {
-        bear: () => MOCK_FAKER_VALUES["faker.animal.bear"],
-        bird: () => MOCK_FAKER_VALUES["faker.animal.bird"],
-        cat: () => MOCK_FAKER_VALUES["faker.animal.cat"],
-        cetacean: () => MOCK_FAKER_VALUES["faker.animal.cetacean"],
-        cow: () => MOCK_FAKER_VALUES["faker.animal.cow"],
-        crocodilia: () => MOCK_FAKER_VALUES["faker.animal.crocodilia"],
-        dog: () => MOCK_FAKER_VALUES["faker.animal.dog"],
-        fish: () => MOCK_FAKER_VALUES["faker.animal.fish"],
-        horse: () => MOCK_FAKER_VALUES["faker.animal.horse"],
-        insect: () => MOCK_FAKER_VALUES["faker.animal.insect"],
-        lion: () => MOCK_FAKER_VALUES["faker.animal.lion"],
-        petName: () => MOCK_FAKER_VALUES["faker.animal.petName"],
-        rabbit: () => MOCK_FAKER_VALUES["faker.animal.rabbit"],
-        rodent: () => MOCK_FAKER_VALUES["faker.animal.rodent"],
-        snake: () => MOCK_FAKER_VALUES["faker.animal.snake"],
-        type: () => MOCK_FAKER_VALUES["faker.animal.type"],
+        bear: () => MOCK_FAKER_VALUES["fake.animal.bear"],
+        bird: () => MOCK_FAKER_VALUES["fake.animal.bird"],
+        cat: () => MOCK_FAKER_VALUES["fake.animal.cat"],
+        cetacean: () => MOCK_FAKER_VALUES["fake.animal.cetacean"],
+        cow: () => MOCK_FAKER_VALUES["fake.animal.cow"],
+        crocodilia: () => MOCK_FAKER_VALUES["fake.animal.crocodilia"],
+        dog: () => MOCK_FAKER_VALUES["fake.animal.dog"],
+        fish: () => MOCK_FAKER_VALUES["fake.animal.fish"],
+        horse: () => MOCK_FAKER_VALUES["fake.animal.horse"],
+        insect: () => MOCK_FAKER_VALUES["fake.animal.insect"],
+        lion: () => MOCK_FAKER_VALUES["fake.animal.lion"],
+        petName: () => MOCK_FAKER_VALUES["fake.animal.petName"],
+        rabbit: () => MOCK_FAKER_VALUES["fake.animal.rabbit"],
+        rodent: () => MOCK_FAKER_VALUES["fake.animal.rodent"],
+        snake: () => MOCK_FAKER_VALUES["fake.animal.snake"],
+        type: () => MOCK_FAKER_VALUES["fake.animal.type"],
       },
       book: {
-        author: () => MOCK_FAKER_VALUES["faker.book.author"],
-        format: () => MOCK_FAKER_VALUES["faker.book.format"],
-        genre: () => MOCK_FAKER_VALUES["faker.book.genre"],
-        publisher: () => MOCK_FAKER_VALUES["faker.book.publisher"],
-        series: () => MOCK_FAKER_VALUES["faker.book.series"],
-        title: () => MOCK_FAKER_VALUES["faker.book.title"],
+        author: () => MOCK_FAKER_VALUES["fake.book.author"],
+        format: () => MOCK_FAKER_VALUES["fake.book.format"],
+        genre: () => MOCK_FAKER_VALUES["fake.book.genre"],
+        publisher: () => MOCK_FAKER_VALUES["fake.book.publisher"],
+        series: () => MOCK_FAKER_VALUES["fake.book.series"],
+        title: () => MOCK_FAKER_VALUES["fake.book.title"],
       },
       color: {
-        cmyk: () => MOCK_FAKER_VALUES["faker.color.cmyk"],
+        cmyk: () => MOCK_FAKER_VALUES["fake.color.cmyk"],
         colorByCSSColorSpace: () =>
-          MOCK_FAKER_VALUES["faker.color.colorByCSSColorSpace"],
+          MOCK_FAKER_VALUES["fake.color.colorByCSSColorSpace"],
         cssSupportedFunction: () =>
-          MOCK_FAKER_VALUES["faker.color.cssSupportedFunction"],
+          MOCK_FAKER_VALUES["fake.color.cssSupportedFunction"],
         cssSupportedSpace: () =>
-          MOCK_FAKER_VALUES["faker.color.cssSupportedSpace"],
-        hsl: () => MOCK_FAKER_VALUES["faker.color.hsl"],
-        human: () => MOCK_FAKER_VALUES["faker.color.human"],
-        hwb: () => MOCK_FAKER_VALUES["faker.color.hwb"],
-        lab: () => MOCK_FAKER_VALUES["faker.color.lab"],
-        lch: () => MOCK_FAKER_VALUES["faker.color.lch"],
-        rgb: () => MOCK_FAKER_VALUES["faker.color.rgb"],
-        space: () => MOCK_FAKER_VALUES["faker.color.space"],
+          MOCK_FAKER_VALUES["fake.color.cssSupportedSpace"],
+        hsl: () => MOCK_FAKER_VALUES["fake.color.hsl"],
+        human: () => MOCK_FAKER_VALUES["fake.color.human"],
+        hwb: () => MOCK_FAKER_VALUES["fake.color.hwb"],
+        lab: () => MOCK_FAKER_VALUES["fake.color.lab"],
+        lch: () => MOCK_FAKER_VALUES["fake.color.lch"],
+        rgb: () => MOCK_FAKER_VALUES["fake.color.rgb"],
+        space: () => MOCK_FAKER_VALUES["fake.color.space"],
       },
       commerce: {
-        department: () => MOCK_FAKER_VALUES["faker.commerce.department"],
-        isbn: () => MOCK_FAKER_VALUES["faker.commerce.isbn"],
-        price: () => MOCK_FAKER_VALUES["faker.commerce.price"],
-        product: () => MOCK_FAKER_VALUES["faker.commerce.product"],
+        department: () => MOCK_FAKER_VALUES["fake.commerce.department"],
+        isbn: () => MOCK_FAKER_VALUES["fake.commerce.isbn"],
+        price: () => MOCK_FAKER_VALUES["fake.commerce.price"],
+        product: () => MOCK_FAKER_VALUES["fake.commerce.product"],
         productAdjective: () =>
-          MOCK_FAKER_VALUES["faker.commerce.productAdjective"],
+          MOCK_FAKER_VALUES["fake.commerce.productAdjective"],
         productDescription: () =>
-          MOCK_FAKER_VALUES["faker.commerce.productDescription"],
+          MOCK_FAKER_VALUES["fake.commerce.productDescription"],
         productMaterial: () =>
-          MOCK_FAKER_VALUES["faker.commerce.productMaterial"],
-        productName: () => MOCK_FAKER_VALUES["faker.commerce.productName"],
-        upc: () => MOCK_FAKER_VALUES["faker.commerce.upc"],
+          MOCK_FAKER_VALUES["fake.commerce.productMaterial"],
+        productName: () => MOCK_FAKER_VALUES["fake.commerce.productName"],
+        upc: () => MOCK_FAKER_VALUES["fake.commerce.upc"],
       },
       company: {
-        buzzAdjective: () => MOCK_FAKER_VALUES["faker.company.buzzAdjective"],
-        buzzNoun: () => MOCK_FAKER_VALUES["faker.company.buzzNoun"],
-        buzzPhrase: () => MOCK_FAKER_VALUES["faker.company.buzzPhrase"],
-        buzzVerb: () => MOCK_FAKER_VALUES["faker.company.buzzVerb"],
-        catchPhrase: () => MOCK_FAKER_VALUES["faker.company.catchPhrase"],
+        buzzAdjective: () => MOCK_FAKER_VALUES["fake.company.buzzAdjective"],
+        buzzNoun: () => MOCK_FAKER_VALUES["fake.company.buzzNoun"],
+        buzzPhrase: () => MOCK_FAKER_VALUES["fake.company.buzzPhrase"],
+        buzzVerb: () => MOCK_FAKER_VALUES["fake.company.buzzVerb"],
+        catchPhrase: () => MOCK_FAKER_VALUES["fake.company.catchPhrase"],
         catchPhraseAdjective: () =>
-          MOCK_FAKER_VALUES["faker.company.catchPhraseAdjective"],
+          MOCK_FAKER_VALUES["fake.company.catchPhraseAdjective"],
         catchPhraseDescriptor: () =>
-          MOCK_FAKER_VALUES["faker.company.catchPhraseDescriptor"],
+          MOCK_FAKER_VALUES["fake.company.catchPhraseDescriptor"],
         catchPhraseNoun: () =>
-          MOCK_FAKER_VALUES["faker.company.catchPhraseNoun"],
-        name: () => MOCK_FAKER_VALUES["faker.company.name"],
+          MOCK_FAKER_VALUES["fake.company.catchPhraseNoun"],
+        name: () => MOCK_FAKER_VALUES["fake.company.name"],
       },
       database: {
-        collation: () => MOCK_FAKER_VALUES["faker.database.collation"],
-        column: () => MOCK_FAKER_VALUES["faker.database.column"],
-        engine: () => MOCK_FAKER_VALUES["faker.database.engine"],
+        collation: () => MOCK_FAKER_VALUES["fake.database.collation"],
+        column: () => MOCK_FAKER_VALUES["fake.database.column"],
+        engine: () => MOCK_FAKER_VALUES["fake.database.engine"],
         mongodbObjectId: () =>
-          MOCK_FAKER_VALUES["faker.database.mongodbObjectId"],
-        type: () => MOCK_FAKER_VALUES["faker.database.type"],
+          MOCK_FAKER_VALUES["fake.database.mongodbObjectId"],
+        type: () => MOCK_FAKER_VALUES["fake.database.type"],
       },
       datatype: {
-        boolean: () => MOCK_FAKER_VALUES["faker.datatype.boolean"],
+        boolean: () => MOCK_FAKER_VALUES["fake.datatype.boolean"],
       },
       date: {
         anytime: () =>
-          new Date(MOCK_FAKER_VALUES["faker.date.anytime"] as string),
+          new Date(MOCK_FAKER_VALUES["fake.date.anytime"] as string),
         birthdate: () =>
-          new Date(MOCK_FAKER_VALUES["faker.date.birthdate"] as string),
-        future: () =>
-          new Date(MOCK_FAKER_VALUES["faker.date.future"] as string),
-        month: () => MOCK_FAKER_VALUES["faker.date.month"],
-        past: () => new Date(MOCK_FAKER_VALUES["faker.date.past"] as string),
-        recent: () =>
-          new Date(MOCK_FAKER_VALUES["faker.date.recent"] as string),
-        soon: () => new Date(MOCK_FAKER_VALUES["faker.date.soon"] as string),
-        timeZone: () => MOCK_FAKER_VALUES["faker.date.timeZone"],
-        weekday: () => MOCK_FAKER_VALUES["faker.date.weekday"],
+          new Date(MOCK_FAKER_VALUES["fake.date.birthdate"] as string),
+        future: () => new Date(MOCK_FAKER_VALUES["fake.date.future"] as string),
+        month: () => MOCK_FAKER_VALUES["fake.date.month"],
+        past: () => new Date(MOCK_FAKER_VALUES["fake.date.past"] as string),
+        recent: () => new Date(MOCK_FAKER_VALUES["fake.date.recent"] as string),
+        soon: () => new Date(MOCK_FAKER_VALUES["fake.date.soon"] as string),
+        timeZone: () => MOCK_FAKER_VALUES["fake.date.timeZone"],
+        weekday: () => MOCK_FAKER_VALUES["fake.date.weekday"],
       },
       finance: {
-        accountName: () => MOCK_FAKER_VALUES["faker.finance.accountName"],
-        accountNumber: () => MOCK_FAKER_VALUES["faker.finance.accountNumber"],
-        amount: () => MOCK_FAKER_VALUES["faker.finance.amount"],
-        bic: () => MOCK_FAKER_VALUES["faker.finance.bic"],
-        bitcoinAddress: () => MOCK_FAKER_VALUES["faker.finance.bitcoinAddress"],
-        creditCardCVV: () => MOCK_FAKER_VALUES["faker.finance.creditCardCVV"],
+        accountName: () => MOCK_FAKER_VALUES["fake.finance.accountName"],
+        accountNumber: () => MOCK_FAKER_VALUES["fake.finance.accountNumber"],
+        amount: () => MOCK_FAKER_VALUES["fake.finance.amount"],
+        bic: () => MOCK_FAKER_VALUES["fake.finance.bic"],
+        bitcoinAddress: () => MOCK_FAKER_VALUES["fake.finance.bitcoinAddress"],
+        creditCardCVV: () => MOCK_FAKER_VALUES["fake.finance.creditCardCVV"],
         creditCardIssuer: () =>
-          MOCK_FAKER_VALUES["faker.finance.creditCardIssuer"],
+          MOCK_FAKER_VALUES["fake.finance.creditCardIssuer"],
         creditCardNumber: () =>
-          MOCK_FAKER_VALUES["faker.finance.creditCardNumber"],
-        currencyCode: () => MOCK_FAKER_VALUES["faker.finance.currencyCode"],
-        currencyName: () => MOCK_FAKER_VALUES["faker.finance.currencyName"],
+          MOCK_FAKER_VALUES["fake.finance.creditCardNumber"],
+        currencyCode: () => MOCK_FAKER_VALUES["fake.finance.currencyCode"],
+        currencyName: () => MOCK_FAKER_VALUES["fake.finance.currencyName"],
         currencyNumericCode: () =>
-          MOCK_FAKER_VALUES["faker.finance.currencyNumericCode"],
-        currencySymbol: () => MOCK_FAKER_VALUES["faker.finance.currencySymbol"],
+          MOCK_FAKER_VALUES["fake.finance.currencyNumericCode"],
+        currencySymbol: () => MOCK_FAKER_VALUES["fake.finance.currencySymbol"],
         ethereumAddress: () =>
-          MOCK_FAKER_VALUES["faker.finance.ethereumAddress"],
-        iban: () => MOCK_FAKER_VALUES["faker.finance.iban"],
+          MOCK_FAKER_VALUES["fake.finance.ethereumAddress"],
+        iban: () => MOCK_FAKER_VALUES["fake.finance.iban"],
         litecoinAddress: () =>
-          MOCK_FAKER_VALUES["faker.finance.litecoinAddress"],
-        pin: () => MOCK_FAKER_VALUES["faker.finance.pin"],
-        routingNumber: () => MOCK_FAKER_VALUES["faker.finance.routingNumber"],
+          MOCK_FAKER_VALUES["fake.finance.litecoinAddress"],
+        pin: () => MOCK_FAKER_VALUES["fake.finance.pin"],
+        routingNumber: () => MOCK_FAKER_VALUES["fake.finance.routingNumber"],
         transactionDescription: () =>
-          MOCK_FAKER_VALUES["faker.finance.transactionDescription"],
+          MOCK_FAKER_VALUES["fake.finance.transactionDescription"],
         transactionType: () =>
-          MOCK_FAKER_VALUES["faker.finance.transactionType"],
+          MOCK_FAKER_VALUES["fake.finance.transactionType"],
       },
     },
   };
@@ -282,312 +280,312 @@ describe("transpiler", () => {
 
   describe("faker values", () => {
     it("transpiles a faker type at the root into its generated value", () => {
-      expect(transpile("faker.string.uuid")).toBe(
-        MOCK_FAKER_VALUES["faker.string.uuid"],
+      expect(transpile("fake.string.uuid")).toBe(
+        MOCK_FAKER_VALUES["fake.string.uuid"],
       );
-      expect(transpile("faker.internet.email")).toBe(
-        MOCK_FAKER_VALUES["faker.internet.email"],
+      expect(transpile("fake.internet.email")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.email"],
       );
-      expect(transpile("faker.person.firstName")).toBe(
-        MOCK_FAKER_VALUES["faker.person.firstName"],
+      expect(transpile("fake.person.firstName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.firstName"],
       );
-      expect(transpile("faker.person.lastName")).toBe(
-        MOCK_FAKER_VALUES["faker.person.lastName"],
+      expect(transpile("fake.person.lastName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.lastName"],
       );
-      expect(transpile("faker.person.fullName")).toBe(
-        MOCK_FAKER_VALUES["faker.person.fullName"],
+      expect(transpile("fake.person.fullName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.fullName"],
       );
       // airline
-      expect(transpile("faker.airline.aircraftType")).toBe(
-        MOCK_FAKER_VALUES["faker.airline.aircraftType"],
+      expect(transpile("fake.airline.aircraftType")).toBe(
+        MOCK_FAKER_VALUES["fake.airline.aircraftType"],
       );
-      expect(transpile("faker.airline")).toEqual(
-        MOCK_FAKER_VALUES["faker.airline"],
+      expect(transpile("fake.airline")).toEqual(
+        MOCK_FAKER_VALUES["fake.airline"],
       );
-      expect(transpile("faker.airline.airplane")).toEqual(
-        MOCK_FAKER_VALUES["faker.airline.airplane"],
+      expect(transpile("fake.airline.airplane")).toEqual(
+        MOCK_FAKER_VALUES["fake.airline.airplane"],
       );
-      expect(transpile("faker.airline.airport")).toEqual(
-        MOCK_FAKER_VALUES["faker.airline.airport"],
+      expect(transpile("fake.airline.airport")).toEqual(
+        MOCK_FAKER_VALUES["fake.airline.airport"],
       );
-      expect(transpile("faker.airline.flightNumber")).toBe(
-        MOCK_FAKER_VALUES["faker.airline.flightNumber"],
+      expect(transpile("fake.airline.flightNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.airline.flightNumber"],
       );
-      expect(transpile("faker.airline.recordLocator")).toBe(
-        MOCK_FAKER_VALUES["faker.airline.recordLocator"],
+      expect(transpile("fake.airline.recordLocator")).toBe(
+        MOCK_FAKER_VALUES["fake.airline.recordLocator"],
       );
-      expect(transpile("faker.airline.seat")).toBe(
-        MOCK_FAKER_VALUES["faker.airline.seat"],
+      expect(transpile("fake.airline.seat")).toBe(
+        MOCK_FAKER_VALUES["fake.airline.seat"],
       );
       // animal
-      expect(transpile("faker.animal.bear")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.bear"],
+      expect(transpile("fake.animal.bear")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.bear"],
       );
-      expect(transpile("faker.animal.bird")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.bird"],
+      expect(transpile("fake.animal.bird")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.bird"],
       );
-      expect(transpile("faker.animal.cat")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.cat"],
+      expect(transpile("fake.animal.cat")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.cat"],
       );
-      expect(transpile("faker.animal.cetacean")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.cetacean"],
+      expect(transpile("fake.animal.cetacean")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.cetacean"],
       );
-      expect(transpile("faker.animal.cow")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.cow"],
+      expect(transpile("fake.animal.cow")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.cow"],
       );
-      expect(transpile("faker.animal.crocodilia")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.crocodilia"],
+      expect(transpile("fake.animal.crocodilia")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.crocodilia"],
       );
-      expect(transpile("faker.animal.dog")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.dog"],
+      expect(transpile("fake.animal.dog")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.dog"],
       );
-      expect(transpile("faker.animal.fish")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.fish"],
+      expect(transpile("fake.animal.fish")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.fish"],
       );
-      expect(transpile("faker.animal.horse")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.horse"],
+      expect(transpile("fake.animal.horse")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.horse"],
       );
-      expect(transpile("faker.animal.insect")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.insect"],
+      expect(transpile("fake.animal.insect")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.insect"],
       );
-      expect(transpile("faker.animal.lion")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.lion"],
+      expect(transpile("fake.animal.lion")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.lion"],
       );
-      expect(transpile("faker.animal.petName")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.petName"],
+      expect(transpile("fake.animal.petName")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.petName"],
       );
-      expect(transpile("faker.animal.rabbit")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.rabbit"],
+      expect(transpile("fake.animal.rabbit")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.rabbit"],
       );
-      expect(transpile("faker.animal.rodent")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.rodent"],
+      expect(transpile("fake.animal.rodent")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.rodent"],
       );
-      expect(transpile("faker.animal.snake")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.snake"],
+      expect(transpile("fake.animal.snake")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.snake"],
       );
-      expect(transpile("faker.animal.type")).toBe(
-        MOCK_FAKER_VALUES["faker.animal.type"],
+      expect(transpile("fake.animal.type")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.type"],
       );
       // book
-      expect(transpile("faker.book.author")).toBe(
-        MOCK_FAKER_VALUES["faker.book.author"],
+      expect(transpile("fake.book.author")).toBe(
+        MOCK_FAKER_VALUES["fake.book.author"],
       );
-      expect(transpile("faker.book.format")).toBe(
-        MOCK_FAKER_VALUES["faker.book.format"],
+      expect(transpile("fake.book.format")).toBe(
+        MOCK_FAKER_VALUES["fake.book.format"],
       );
-      expect(transpile("faker.book.genre")).toBe(
-        MOCK_FAKER_VALUES["faker.book.genre"],
+      expect(transpile("fake.book.genre")).toBe(
+        MOCK_FAKER_VALUES["fake.book.genre"],
       );
-      expect(transpile("faker.book.publisher")).toBe(
-        MOCK_FAKER_VALUES["faker.book.publisher"],
+      expect(transpile("fake.book.publisher")).toBe(
+        MOCK_FAKER_VALUES["fake.book.publisher"],
       );
-      expect(transpile("faker.book.series")).toBe(
-        MOCK_FAKER_VALUES["faker.book.series"],
+      expect(transpile("fake.book.series")).toBe(
+        MOCK_FAKER_VALUES["fake.book.series"],
       );
-      expect(transpile("faker.book.title")).toBe(
-        MOCK_FAKER_VALUES["faker.book.title"],
+      expect(transpile("fake.book.title")).toBe(
+        MOCK_FAKER_VALUES["fake.book.title"],
       );
       // color
-      expect(transpile("faker.color.cmyk")).toEqual(
-        MOCK_FAKER_VALUES["faker.color.cmyk"],
+      expect(transpile("fake.color.cmyk")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.cmyk"],
       );
-      expect(transpile("faker.color.colorByCSSColorSpace")).toEqual(
-        MOCK_FAKER_VALUES["faker.color.colorByCSSColorSpace"],
+      expect(transpile("fake.color.colorByCSSColorSpace")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.colorByCSSColorSpace"],
       );
-      expect(transpile("faker.color.cssSupportedFunction")).toBe(
-        MOCK_FAKER_VALUES["faker.color.cssSupportedFunction"],
+      expect(transpile("fake.color.cssSupportedFunction")).toBe(
+        MOCK_FAKER_VALUES["fake.color.cssSupportedFunction"],
       );
-      expect(transpile("faker.color.cssSupportedSpace")).toBe(
-        MOCK_FAKER_VALUES["faker.color.cssSupportedSpace"],
+      expect(transpile("fake.color.cssSupportedSpace")).toBe(
+        MOCK_FAKER_VALUES["fake.color.cssSupportedSpace"],
       );
-      expect(transpile("faker.color.hsl")).toEqual(
-        MOCK_FAKER_VALUES["faker.color.hsl"],
+      expect(transpile("fake.color.hsl")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.hsl"],
       );
-      expect(transpile("faker.color.human")).toBe(
-        MOCK_FAKER_VALUES["faker.color.human"],
+      expect(transpile("fake.color.human")).toBe(
+        MOCK_FAKER_VALUES["fake.color.human"],
       );
-      expect(transpile("faker.color.hwb")).toEqual(
-        MOCK_FAKER_VALUES["faker.color.hwb"],
+      expect(transpile("fake.color.hwb")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.hwb"],
       );
-      expect(transpile("faker.color.lab")).toEqual(
-        MOCK_FAKER_VALUES["faker.color.lab"],
+      expect(transpile("fake.color.lab")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.lab"],
       );
-      expect(transpile("faker.color.lch")).toEqual(
-        MOCK_FAKER_VALUES["faker.color.lch"],
+      expect(transpile("fake.color.lch")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.lch"],
       );
-      expect(transpile("faker.color.rgb")).toBe(
-        MOCK_FAKER_VALUES["faker.color.rgb"],
+      expect(transpile("fake.color.rgb")).toBe(
+        MOCK_FAKER_VALUES["fake.color.rgb"],
       );
-      expect(transpile("faker.color.space")).toBe(
-        MOCK_FAKER_VALUES["faker.color.space"],
+      expect(transpile("fake.color.space")).toBe(
+        MOCK_FAKER_VALUES["fake.color.space"],
       );
       // commerce
-      expect(transpile("faker.commerce.department")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.department"],
+      expect(transpile("fake.commerce.department")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.department"],
       );
-      expect(transpile("faker.commerce.isbn")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.isbn"],
+      expect(transpile("fake.commerce.isbn")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.isbn"],
       );
-      expect(transpile("faker.commerce.price")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.price"],
+      expect(transpile("fake.commerce.price")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.price"],
       );
-      expect(transpile("faker.commerce.product")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.product"],
+      expect(transpile("fake.commerce.product")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.product"],
       );
-      expect(transpile("faker.commerce.productAdjective")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.productAdjective"],
+      expect(transpile("fake.commerce.productAdjective")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.productAdjective"],
       );
-      expect(transpile("faker.commerce.productDescription")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.productDescription"],
+      expect(transpile("fake.commerce.productDescription")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.productDescription"],
       );
-      expect(transpile("faker.commerce.productMaterial")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.productMaterial"],
+      expect(transpile("fake.commerce.productMaterial")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.productMaterial"],
       );
-      expect(transpile("faker.commerce.productName")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.productName"],
+      expect(transpile("fake.commerce.productName")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.productName"],
       );
-      expect(transpile("faker.commerce.upc")).toBe(
-        MOCK_FAKER_VALUES["faker.commerce.upc"],
+      expect(transpile("fake.commerce.upc")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.upc"],
       );
       // company
-      expect(transpile("faker.company.buzzAdjective")).toBe(
-        MOCK_FAKER_VALUES["faker.company.buzzAdjective"],
+      expect(transpile("fake.company.buzzAdjective")).toBe(
+        MOCK_FAKER_VALUES["fake.company.buzzAdjective"],
       );
-      expect(transpile("faker.company.buzzNoun")).toBe(
-        MOCK_FAKER_VALUES["faker.company.buzzNoun"],
+      expect(transpile("fake.company.buzzNoun")).toBe(
+        MOCK_FAKER_VALUES["fake.company.buzzNoun"],
       );
-      expect(transpile("faker.company.buzzPhrase")).toBe(
-        MOCK_FAKER_VALUES["faker.company.buzzPhrase"],
+      expect(transpile("fake.company.buzzPhrase")).toBe(
+        MOCK_FAKER_VALUES["fake.company.buzzPhrase"],
       );
-      expect(transpile("faker.company.buzzVerb")).toBe(
-        MOCK_FAKER_VALUES["faker.company.buzzVerb"],
+      expect(transpile("fake.company.buzzVerb")).toBe(
+        MOCK_FAKER_VALUES["fake.company.buzzVerb"],
       );
-      expect(transpile("faker.company.catchPhrase")).toBe(
-        MOCK_FAKER_VALUES["faker.company.catchPhrase"],
+      expect(transpile("fake.company.catchPhrase")).toBe(
+        MOCK_FAKER_VALUES["fake.company.catchPhrase"],
       );
-      expect(transpile("faker.company.catchPhraseAdjective")).toBe(
-        MOCK_FAKER_VALUES["faker.company.catchPhraseAdjective"],
+      expect(transpile("fake.company.catchPhraseAdjective")).toBe(
+        MOCK_FAKER_VALUES["fake.company.catchPhraseAdjective"],
       );
-      expect(transpile("faker.company.catchPhraseDescriptor")).toBe(
-        MOCK_FAKER_VALUES["faker.company.catchPhraseDescriptor"],
+      expect(transpile("fake.company.catchPhraseDescriptor")).toBe(
+        MOCK_FAKER_VALUES["fake.company.catchPhraseDescriptor"],
       );
-      expect(transpile("faker.company.catchPhraseNoun")).toBe(
-        MOCK_FAKER_VALUES["faker.company.catchPhraseNoun"],
+      expect(transpile("fake.company.catchPhraseNoun")).toBe(
+        MOCK_FAKER_VALUES["fake.company.catchPhraseNoun"],
       );
-      expect(transpile("faker.company.name")).toBe(
-        MOCK_FAKER_VALUES["faker.company.name"],
+      expect(transpile("fake.company.name")).toBe(
+        MOCK_FAKER_VALUES["fake.company.name"],
       );
       // database
-      expect(transpile("faker.database.collation")).toBe(
-        MOCK_FAKER_VALUES["faker.database.collation"],
+      expect(transpile("fake.database.collation")).toBe(
+        MOCK_FAKER_VALUES["fake.database.collation"],
       );
-      expect(transpile("faker.database.column")).toBe(
-        MOCK_FAKER_VALUES["faker.database.column"],
+      expect(transpile("fake.database.column")).toBe(
+        MOCK_FAKER_VALUES["fake.database.column"],
       );
-      expect(transpile("faker.database.engine")).toBe(
-        MOCK_FAKER_VALUES["faker.database.engine"],
+      expect(transpile("fake.database.engine")).toBe(
+        MOCK_FAKER_VALUES["fake.database.engine"],
       );
-      expect(transpile("faker.database.mongodbObjectId")).toBe(
-        MOCK_FAKER_VALUES["faker.database.mongodbObjectId"],
+      expect(transpile("fake.database.mongodbObjectId")).toBe(
+        MOCK_FAKER_VALUES["fake.database.mongodbObjectId"],
       );
-      expect(transpile("faker.database.type")).toBe(
-        MOCK_FAKER_VALUES["faker.database.type"],
+      expect(transpile("fake.database.type")).toBe(
+        MOCK_FAKER_VALUES["fake.database.type"],
       );
       // datatype
-      expect(transpile("faker.datatype.boolean")).toBe(
-        MOCK_FAKER_VALUES["faker.datatype.boolean"],
+      expect(transpile("fake.datatype.boolean")).toBe(
+        MOCK_FAKER_VALUES["fake.datatype.boolean"],
       );
       // date
-      expect(transpile("faker.date.anytime")).toBe(
-        MOCK_FAKER_VALUES["faker.date.anytime"],
+      expect(transpile("fake.date.anytime")).toBe(
+        MOCK_FAKER_VALUES["fake.date.anytime"],
       );
-      expect(transpile("faker.date.birthdate")).toBe(
-        MOCK_FAKER_VALUES["faker.date.birthdate"],
+      expect(transpile("fake.date.birthdate")).toBe(
+        MOCK_FAKER_VALUES["fake.date.birthdate"],
       );
-      expect(transpile("faker.date.future")).toBe(
-        MOCK_FAKER_VALUES["faker.date.future"],
+      expect(transpile("fake.date.future")).toBe(
+        MOCK_FAKER_VALUES["fake.date.future"],
       );
-      expect(transpile("faker.date.month")).toBe(
-        MOCK_FAKER_VALUES["faker.date.month"],
+      expect(transpile("fake.date.month")).toBe(
+        MOCK_FAKER_VALUES["fake.date.month"],
       );
-      expect(transpile("faker.date.past")).toBe(
-        MOCK_FAKER_VALUES["faker.date.past"],
+      expect(transpile("fake.date.past")).toBe(
+        MOCK_FAKER_VALUES["fake.date.past"],
       );
-      expect(transpile("faker.date.recent")).toBe(
-        MOCK_FAKER_VALUES["faker.date.recent"],
+      expect(transpile("fake.date.recent")).toBe(
+        MOCK_FAKER_VALUES["fake.date.recent"],
       );
-      expect(transpile("faker.date.soon")).toBe(
-        MOCK_FAKER_VALUES["faker.date.soon"],
+      expect(transpile("fake.date.soon")).toBe(
+        MOCK_FAKER_VALUES["fake.date.soon"],
       );
-      expect(transpile("faker.date.timeZone")).toBe(
-        MOCK_FAKER_VALUES["faker.date.timeZone"],
+      expect(transpile("fake.date.timeZone")).toBe(
+        MOCK_FAKER_VALUES["fake.date.timeZone"],
       );
-      expect(transpile("faker.date.weekday")).toBe(
-        MOCK_FAKER_VALUES["faker.date.weekday"],
+      expect(transpile("fake.date.weekday")).toBe(
+        MOCK_FAKER_VALUES["fake.date.weekday"],
       );
       // finance
-      expect(transpile("faker.finance.accountName")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.accountName"],
+      expect(transpile("fake.finance.accountName")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.accountName"],
       );
-      expect(transpile("faker.finance.accountNumber")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.accountNumber"],
+      expect(transpile("fake.finance.accountNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.accountNumber"],
       );
-      expect(transpile("faker.finance.amount")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.amount"],
+      expect(transpile("fake.finance.amount")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.amount"],
       );
-      expect(transpile("faker.finance.bic")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.bic"],
+      expect(transpile("fake.finance.bic")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.bic"],
       );
-      expect(transpile("faker.finance.bitcoinAddress")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.bitcoinAddress"],
+      expect(transpile("fake.finance.bitcoinAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.bitcoinAddress"],
       );
-      expect(transpile("faker.finance.creditCardCVV")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.creditCardCVV"],
+      expect(transpile("fake.finance.creditCardCVV")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.creditCardCVV"],
       );
-      expect(transpile("faker.finance.creditCardIssuer")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.creditCardIssuer"],
+      expect(transpile("fake.finance.creditCardIssuer")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.creditCardIssuer"],
       );
-      expect(transpile("faker.finance.creditCardNumber")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.creditCardNumber"],
+      expect(transpile("fake.finance.creditCardNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.creditCardNumber"],
       );
-      expect(transpile("faker.finance.currencyCode")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.currencyCode"],
+      expect(transpile("fake.finance.currencyCode")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.currencyCode"],
       );
-      expect(transpile("faker.finance.currencyName")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.currencyName"],
+      expect(transpile("fake.finance.currencyName")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.currencyName"],
       );
-      expect(transpile("faker.finance.currencyNumericCode")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.currencyNumericCode"],
+      expect(transpile("fake.finance.currencyNumericCode")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.currencyNumericCode"],
       );
-      expect(transpile("faker.finance.currencySymbol")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.currencySymbol"],
+      expect(transpile("fake.finance.currencySymbol")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.currencySymbol"],
       );
-      expect(transpile("faker.finance.ethereumAddress")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.ethereumAddress"],
+      expect(transpile("fake.finance.ethereumAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.ethereumAddress"],
       );
-      expect(transpile("faker.finance.iban")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.iban"],
+      expect(transpile("fake.finance.iban")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.iban"],
       );
-      expect(transpile("faker.finance.litecoinAddress")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.litecoinAddress"],
+      expect(transpile("fake.finance.litecoinAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.litecoinAddress"],
       );
-      expect(transpile("faker.finance.pin")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.pin"],
+      expect(transpile("fake.finance.pin")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.pin"],
       );
-      expect(transpile("faker.finance.routingNumber")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.routingNumber"],
+      expect(transpile("fake.finance.routingNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.routingNumber"],
       );
-      expect(transpile("faker.finance.transactionDescription")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.transactionDescription"],
+      expect(transpile("fake.finance.transactionDescription")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.transactionDescription"],
       );
-      expect(transpile("faker.finance.transactionType")).toBe(
-        MOCK_FAKER_VALUES["faker.finance.transactionType"],
+      expect(transpile("fake.finance.transactionType")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.transactionType"],
       );
     });
 
     it("transpiles a faker type nested in an object", () => {
-      expect(transpile({ email: "faker.internet.email" })).toEqual({
-        email: MOCK_FAKER_VALUES["faker.internet.email"],
+      expect(transpile({ email: "fake.internet.email" })).toEqual({
+        email: MOCK_FAKER_VALUES["fake.internet.email"],
       });
     });
   });
@@ -596,13 +594,13 @@ describe("transpiler", () => {
     it("transpiles an object mixing plain primitives and faker types", () => {
       expect(
         transpile({
-          id: "faker.string.uuid",
+          id: "fake.string.uuid",
           name: "Alice",
           age: 30,
           isActive: true,
         }),
       ).toEqual({
-        id: MOCK_FAKER_VALUES["faker.string.uuid"],
+        id: MOCK_FAKER_VALUES["fake.string.uuid"],
         name: "Alice",
         age: 30,
         isActive: true,
@@ -638,8 +636,8 @@ describe("transpiler", () => {
     });
 
     it("transpiles arrays containing faker types", () => {
-      expect(transpile(["faker.person.firstName", "literal"])).toEqual([
-        MOCK_FAKER_VALUES["faker.person.firstName"],
+      expect(transpile(["fake.person.firstName", "literal"])).toEqual([
+        MOCK_FAKER_VALUES["fake.person.firstName"],
         "literal",
       ]);
     });
