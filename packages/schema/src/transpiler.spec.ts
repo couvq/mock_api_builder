@@ -25,6 +25,16 @@ const MOCK_FAKER_VALUES: Record<
   | MockUnit
 > = {
   "fake.string.uuid": "test-uuid",
+  "fake.string.alpha": "b",
+  "fake.string.alphanumeric": "a7",
+  "fake.string.binary": "0b1",
+  "fake.string.hexadecimal": "0xB",
+  "fake.string.nanoid": "ptL0KpX_yRMI98JFr6B3n",
+  "fake.string.numeric": "2",
+  "fake.string.octal": "0o3",
+  "fake.string.sample": "Zo!.:*e>wR",
+  "fake.string.symbol": "$",
+  "fake.string.ulid": "01ARZ3NDEKTSV4RRFFQ69G5FAV",
   "fake.airline.aircraftType": "narrowbody",
   "fake.airline": { name: "American Airlines", iataCode: "AA" },
   "fake.airline.airplane": { name: "Airbus A321", iataTypeCode: "321" },
@@ -249,6 +259,16 @@ vi.mock("@faker-js/faker", () => {
     faker: {
       string: {
         uuid: () => MOCK_FAKER_VALUES["fake.string.uuid"],
+        alpha: () => MOCK_FAKER_VALUES["fake.string.alpha"],
+        alphanumeric: () => MOCK_FAKER_VALUES["fake.string.alphanumeric"],
+        binary: () => MOCK_FAKER_VALUES["fake.string.binary"],
+        hexadecimal: () => MOCK_FAKER_VALUES["fake.string.hexadecimal"],
+        nanoid: () => MOCK_FAKER_VALUES["fake.string.nanoid"],
+        numeric: () => MOCK_FAKER_VALUES["fake.string.numeric"],
+        octal: () => MOCK_FAKER_VALUES["fake.string.octal"],
+        sample: () => MOCK_FAKER_VALUES["fake.string.sample"],
+        symbol: () => MOCK_FAKER_VALUES["fake.string.symbol"],
+        ulid: () => MOCK_FAKER_VALUES["fake.string.ulid"],
       },
       internet: {
         displayName: () => MOCK_FAKER_VALUES["fake.internet.displayName"],
@@ -538,6 +558,36 @@ describe("transpiler", () => {
     it("transpiles a faker type at the root into its generated value", () => {
       expect(transpile("fake.string.uuid")).toBe(
         MOCK_FAKER_VALUES["fake.string.uuid"],
+      );
+      expect(transpile("fake.string.alpha")).toBe(
+        MOCK_FAKER_VALUES["fake.string.alpha"],
+      );
+      expect(transpile("fake.string.alphanumeric")).toBe(
+        MOCK_FAKER_VALUES["fake.string.alphanumeric"],
+      );
+      expect(transpile("fake.string.binary")).toBe(
+        MOCK_FAKER_VALUES["fake.string.binary"],
+      );
+      expect(transpile("fake.string.hexadecimal")).toBe(
+        MOCK_FAKER_VALUES["fake.string.hexadecimal"],
+      );
+      expect(transpile("fake.string.nanoid")).toBe(
+        MOCK_FAKER_VALUES["fake.string.nanoid"],
+      );
+      expect(transpile("fake.string.numeric")).toBe(
+        MOCK_FAKER_VALUES["fake.string.numeric"],
+      );
+      expect(transpile("fake.string.octal")).toBe(
+        MOCK_FAKER_VALUES["fake.string.octal"],
+      );
+      expect(transpile("fake.string.sample")).toBe(
+        MOCK_FAKER_VALUES["fake.string.sample"],
+      );
+      expect(transpile("fake.string.symbol")).toBe(
+        MOCK_FAKER_VALUES["fake.string.symbol"],
+      );
+      expect(transpile("fake.string.ulid")).toBe(
+        MOCK_FAKER_VALUES["fake.string.ulid"],
       );
       // airline
       expect(transpile("fake.airline.aircraftType")).toBe(

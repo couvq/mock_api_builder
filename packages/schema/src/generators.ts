@@ -22,8 +22,18 @@ export const fakerGenerators: Record<
     | ChemicalElement
     | Unit
 > = {
-  //string
+  //string (uuid kept first: it is the client's default faker type; fromCharacters omitted: requires a characters argument)
   "fake.string.uuid": () => faker.string.uuid(),
+  "fake.string.alpha": () => faker.string.alpha(),
+  "fake.string.alphanumeric": () => faker.string.alphanumeric(),
+  "fake.string.binary": () => faker.string.binary(),
+  "fake.string.hexadecimal": () => faker.string.hexadecimal(),
+  "fake.string.nanoid": () => faker.string.nanoid(),
+  "fake.string.numeric": () => faker.string.numeric(),
+  "fake.string.octal": () => faker.string.octal(),
+  "fake.string.sample": () => faker.string.sample(),
+  "fake.string.symbol": () => faker.string.symbol(),
+  "fake.string.ulid": () => faker.string.ulid(),
   //airline
   "fake.airline.aircraftType": () => faker.airline.aircraftType(),
   "fake.airline": () => faker.airline.airline(),

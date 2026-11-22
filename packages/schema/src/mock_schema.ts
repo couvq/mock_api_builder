@@ -1,8 +1,18 @@
 import { z } from "zod";
 
 export const FakerSchema = z.enum([
-  // string
+  // string (uuid kept first: it is the client's default faker type; fromCharacters omitted: requires a characters argument)
   "fake.string.uuid",
+  "fake.string.alpha",
+  "fake.string.alphanumeric",
+  "fake.string.binary",
+  "fake.string.hexadecimal",
+  "fake.string.nanoid",
+  "fake.string.numeric",
+  "fake.string.octal",
+  "fake.string.sample",
+  "fake.string.symbol",
+  "fake.string.ulid",
   // airline
   "fake.airline.aircraftType",
   "fake.airline",
