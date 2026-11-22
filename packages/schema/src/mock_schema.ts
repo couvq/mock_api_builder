@@ -215,6 +215,9 @@ export const FakerSchema = z.enum([
   "fake.person.sex",
   "fake.person.suffix",
   "fake.person.zodiacSign",
+  // phone
+  "fake.phone.imei",
+  "fake.phone.number",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

@@ -236,4 +236,7 @@ export const fakerGenerators: Record<
   "fake.person.sex": () => faker.person.sex(),
   "fake.person.suffix": () => faker.person.suffix(),
   "fake.person.zodiacSign": () => faker.person.zodiacSign(),
+  //phone
+  "fake.phone.imei": () => faker.phone.imei(),
+  "fake.phone.number": () => faker.phone.number(),
 };

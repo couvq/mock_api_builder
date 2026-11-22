@@ -226,6 +226,8 @@ const MOCK_FAKER_VALUES: Record<
   "fake.person.sex": "female",
   "fake.person.suffix": "DDS",
   "fake.person.zodiacSign": "Pisces",
+  "fake.phone.imei": "13-850175-913761-7",
+  "fake.phone.number": "961-770-7727",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -272,6 +274,10 @@ vi.mock("@faker-js/faker", () => {
         sex: () => MOCK_FAKER_VALUES["fake.person.sex"],
         suffix: () => MOCK_FAKER_VALUES["fake.person.suffix"],
         zodiacSign: () => MOCK_FAKER_VALUES["fake.person.zodiacSign"],
+      },
+      phone: {
+        imei: () => MOCK_FAKER_VALUES["fake.phone.imei"],
+        number: () => MOCK_FAKER_VALUES["fake.phone.number"],
       },
       airline: {
         aircraftType: () => MOCK_FAKER_VALUES["fake.airline.aircraftType"],
@@ -1109,6 +1115,13 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.person.zodiacSign")).toBe(
         MOCK_FAKER_VALUES["fake.person.zodiacSign"],
+      );
+      // phone
+      expect(transpile("fake.phone.imei")).toBe(
+        MOCK_FAKER_VALUES["fake.phone.imei"],
+      );
+      expect(transpile("fake.phone.number")).toBe(
+        MOCK_FAKER_VALUES["fake.phone.number"],
       );
     });
 
