@@ -31,6 +31,13 @@ export const FakerSchema = z.enum([
   "faker.animal.rodent",
   "faker.animal.snake",
   "faker.animal.type",
+  // book
+  "faker.book.author",
+  "faker.book.format",
+  "faker.book.genre",
+  "faker.book.publisher",
+  "faker.book.series",
+  "faker.book.title",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

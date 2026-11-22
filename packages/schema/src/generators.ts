@@ -39,4 +39,11 @@ export const fakerGenerators: Record<
   "faker.animal.rodent": () => faker.animal.rodent(),
   "faker.animal.snake": () => faker.animal.snake(),
   "faker.animal.type": () => faker.animal.type(),
+  //book
+  "faker.book.author": () => faker.book.author(),
+  "faker.book.format": () => faker.book.format(),
+  "faker.book.genre": () => faker.book.genre(),
+  "faker.book.publisher": () => faker.book.publisher(),
+  "faker.book.series": () => faker.book.series(),
+  "faker.book.title": () => faker.book.title(),
 };

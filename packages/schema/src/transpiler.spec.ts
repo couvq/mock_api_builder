@@ -40,6 +40,12 @@ const MOCK_FAKER_VALUES: Record<
   "faker.animal.rodent": "Cuscomys ashanika",
   "faker.animal.snake": "Eyelash viper",
   "faker.animal.type": "crocodile",
+  "faker.book.author": "William Shakespeare",
+  "faker.book.format": "Hardcover",
+  "faker.book.genre": "Fantasy",
+  "faker.book.publisher": "Addison-Wesley",
+  "faker.book.series": "Harry Potter",
+  "faker.book.title": "Romeo and Juliet",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -82,6 +88,14 @@ vi.mock("@faker-js/faker", () => {
         rodent: () => MOCK_FAKER_VALUES["faker.animal.rodent"],
         snake: () => MOCK_FAKER_VALUES["faker.animal.snake"],
         type: () => MOCK_FAKER_VALUES["faker.animal.type"],
+      },
+      book: {
+        author: () => MOCK_FAKER_VALUES["faker.book.author"],
+        format: () => MOCK_FAKER_VALUES["faker.book.format"],
+        genre: () => MOCK_FAKER_VALUES["faker.book.genre"],
+        publisher: () => MOCK_FAKER_VALUES["faker.book.publisher"],
+        series: () => MOCK_FAKER_VALUES["faker.book.series"],
+        title: () => MOCK_FAKER_VALUES["faker.book.title"],
       },
     },
   };
@@ -190,6 +204,25 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.animal.type")).toBe(
         MOCK_FAKER_VALUES["faker.animal.type"],
+      );
+      // book
+      expect(transpile("faker.book.author")).toBe(
+        MOCK_FAKER_VALUES["faker.book.author"],
+      );
+      expect(transpile("faker.book.format")).toBe(
+        MOCK_FAKER_VALUES["faker.book.format"],
+      );
+      expect(transpile("faker.book.genre")).toBe(
+        MOCK_FAKER_VALUES["faker.book.genre"],
+      );
+      expect(transpile("faker.book.publisher")).toBe(
+        MOCK_FAKER_VALUES["faker.book.publisher"],
+      );
+      expect(transpile("faker.book.series")).toBe(
+        MOCK_FAKER_VALUES["faker.book.series"],
+      );
+      expect(transpile("faker.book.title")).toBe(
+        MOCK_FAKER_VALUES["faker.book.title"],
       );
     });
 
