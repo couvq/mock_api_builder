@@ -111,6 +111,16 @@ const MOCK_FAKER_VALUES: Record<
   "fake.finance.transactionDescription":
     "payment transaction at Emard LLC using card ending with ****9187",
   "fake.finance.transactionType": "payment",
+  "fake.food.adjective": "crispy",
+  "fake.food.description":
+    "An ostrich roast with longan and red cabbage, slow-roasted to perfection",
+  "fake.food.dish": "Tagine-Rubbed Venison Salad",
+  "fake.food.ethnicCategory": "Italian",
+  "fake.food.fruit": "lemon",
+  "fake.food.ingredient": "butter",
+  "fake.food.meat": "venison",
+  "fake.food.spice": "chilli",
+  "fake.food.vegetable": "broccoli",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -257,6 +267,17 @@ vi.mock("@faker-js/faker", () => {
           MOCK_FAKER_VALUES["fake.finance.transactionDescription"],
         transactionType: () =>
           MOCK_FAKER_VALUES["fake.finance.transactionType"],
+      },
+      food: {
+        adjective: () => MOCK_FAKER_VALUES["fake.food.adjective"],
+        description: () => MOCK_FAKER_VALUES["fake.food.description"],
+        dish: () => MOCK_FAKER_VALUES["fake.food.dish"],
+        ethnicCategory: () => MOCK_FAKER_VALUES["fake.food.ethnicCategory"],
+        fruit: () => MOCK_FAKER_VALUES["fake.food.fruit"],
+        ingredient: () => MOCK_FAKER_VALUES["fake.food.ingredient"],
+        meat: () => MOCK_FAKER_VALUES["fake.food.meat"],
+        spice: () => MOCK_FAKER_VALUES["fake.food.spice"],
+        vegetable: () => MOCK_FAKER_VALUES["fake.food.vegetable"],
       },
     },
   };
@@ -580,6 +601,34 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.finance.transactionType")).toBe(
         MOCK_FAKER_VALUES["fake.finance.transactionType"],
+      );
+      // food
+      expect(transpile("fake.food.adjective")).toBe(
+        MOCK_FAKER_VALUES["fake.food.adjective"],
+      );
+      expect(transpile("fake.food.description")).toBe(
+        MOCK_FAKER_VALUES["fake.food.description"],
+      );
+      expect(transpile("fake.food.dish")).toBe(
+        MOCK_FAKER_VALUES["fake.food.dish"],
+      );
+      expect(transpile("fake.food.ethnicCategory")).toBe(
+        MOCK_FAKER_VALUES["fake.food.ethnicCategory"],
+      );
+      expect(transpile("fake.food.fruit")).toBe(
+        MOCK_FAKER_VALUES["fake.food.fruit"],
+      );
+      expect(transpile("fake.food.ingredient")).toBe(
+        MOCK_FAKER_VALUES["fake.food.ingredient"],
+      );
+      expect(transpile("fake.food.meat")).toBe(
+        MOCK_FAKER_VALUES["fake.food.meat"],
+      );
+      expect(transpile("fake.food.spice")).toBe(
+        MOCK_FAKER_VALUES["fake.food.spice"],
+      );
+      expect(transpile("fake.food.vegetable")).toBe(
+        MOCK_FAKER_VALUES["fake.food.vegetable"],
       );
     });
 

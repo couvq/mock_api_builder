@@ -108,6 +108,16 @@ export const FakerSchema = z.enum([
   "fake.finance.routingNumber",
   "fake.finance.transactionDescription",
   "fake.finance.transactionType",
+  // food
+  "fake.food.adjective",
+  "fake.food.description",
+  "fake.food.dish",
+  "fake.food.ethnicCategory",
+  "fake.food.fruit",
+  "fake.food.ingredient",
+  "fake.food.meat",
+  "fake.food.spice",
+  "fake.food.vegetable",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

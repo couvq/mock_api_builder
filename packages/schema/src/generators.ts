@@ -119,4 +119,14 @@ export const fakerGenerators: Record<
   "fake.finance.transactionDescription": () =>
     faker.finance.transactionDescription(),
   "fake.finance.transactionType": () => faker.finance.transactionType(),
+  //food
+  "fake.food.adjective": () => faker.food.adjective(),
+  "fake.food.description": () => faker.food.description(),
+  "fake.food.dish": () => faker.food.dish(),
+  "fake.food.ethnicCategory": () => faker.food.ethnicCategory(),
+  "fake.food.fruit": () => faker.food.fruit(),
+  "fake.food.ingredient": () => faker.food.ingredient(),
+  "fake.food.meat": () => faker.food.meat(),
+  "fake.food.spice": () => faker.food.spice(),
+  "fake.food.vegetable": () => faker.food.vegetable(),
 };
