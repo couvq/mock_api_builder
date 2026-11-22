@@ -7,9 +7,10 @@ import { http, HttpResponse } from "msw";
 
 const user = userEvent.setup();
 
-// The example-response tree is collapsed by default (see ResponseSchemaEditor).
-// Alt+click its root collapse control to expand that node and all descendants
-// so the generated values render, then return queries scoped to the region.
+// The example-response tree opens only to its root by default (collapse={1} in
+// ResponseSchemaEditor), so nested collections render collapsed. Alt+click the
+// root collapse control to expand the whole tree and reveal the generated
+// values, then return queries scoped to the region.
 const expandExampleResponse = () => {
   const region = screen.getByRole("region", { name: /example response/i });
   const collapseIcon = region.querySelector(".jer-collapse-icon");
