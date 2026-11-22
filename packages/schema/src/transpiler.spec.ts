@@ -273,6 +273,15 @@ const MOCK_FAKER_VALUES: Record<
   "fake.vehicle.vehicle": "BMW Explorer",
   "fake.vehicle.vin": "YV1MH682762184654",
   "fake.vehicle.vrm": "MF56UPA",
+  "fake.word.adjective": "pungent",
+  "fake.word.adverb": "quarrelsomely",
+  "fake.word.conjunction": "in order that",
+  "fake.word.interjection": "gah",
+  "fake.word.noun": "external",
+  "fake.word.preposition": "without",
+  "fake.word.sample": "incidentally",
+  "fake.word.verb": "act",
+  "fake.word.words": "almost",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -580,6 +589,17 @@ vi.mock("@faker-js/faker", () => {
         vehicle: () => MOCK_FAKER_VALUES["fake.vehicle.vehicle"],
         vin: () => MOCK_FAKER_VALUES["fake.vehicle.vin"],
         vrm: () => MOCK_FAKER_VALUES["fake.vehicle.vrm"],
+      },
+      word: {
+        adjective: () => MOCK_FAKER_VALUES["fake.word.adjective"],
+        adverb: () => MOCK_FAKER_VALUES["fake.word.adverb"],
+        conjunction: () => MOCK_FAKER_VALUES["fake.word.conjunction"],
+        interjection: () => MOCK_FAKER_VALUES["fake.word.interjection"],
+        noun: () => MOCK_FAKER_VALUES["fake.word.noun"],
+        preposition: () => MOCK_FAKER_VALUES["fake.word.preposition"],
+        sample: () => MOCK_FAKER_VALUES["fake.word.sample"],
+        verb: () => MOCK_FAKER_VALUES["fake.word.verb"],
+        words: () => MOCK_FAKER_VALUES["fake.word.words"],
       },
     },
   };
@@ -1310,6 +1330,34 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.vehicle.vrm")).toBe(
         MOCK_FAKER_VALUES["fake.vehicle.vrm"],
+      );
+      // word
+      expect(transpile("fake.word.adjective")).toBe(
+        MOCK_FAKER_VALUES["fake.word.adjective"],
+      );
+      expect(transpile("fake.word.adverb")).toBe(
+        MOCK_FAKER_VALUES["fake.word.adverb"],
+      );
+      expect(transpile("fake.word.conjunction")).toBe(
+        MOCK_FAKER_VALUES["fake.word.conjunction"],
+      );
+      expect(transpile("fake.word.interjection")).toBe(
+        MOCK_FAKER_VALUES["fake.word.interjection"],
+      );
+      expect(transpile("fake.word.noun")).toBe(
+        MOCK_FAKER_VALUES["fake.word.noun"],
+      );
+      expect(transpile("fake.word.preposition")).toBe(
+        MOCK_FAKER_VALUES["fake.word.preposition"],
+      );
+      expect(transpile("fake.word.sample")).toBe(
+        MOCK_FAKER_VALUES["fake.word.sample"],
+      );
+      expect(transpile("fake.word.verb")).toBe(
+        MOCK_FAKER_VALUES["fake.word.verb"],
+      );
+      expect(transpile("fake.word.words")).toBe(
+        MOCK_FAKER_VALUES["fake.word.words"],
       );
     });
 

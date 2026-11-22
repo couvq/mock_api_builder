@@ -254,6 +254,16 @@ export const FakerSchema = z.enum([
   "fake.vehicle.vehicle",
   "fake.vehicle.vin",
   "fake.vehicle.vrm",
+  // word
+  "fake.word.adjective",
+  "fake.word.adverb",
+  "fake.word.conjunction",
+  "fake.word.interjection",
+  "fake.word.noun",
+  "fake.word.preposition",
+  "fake.word.sample",
+  "fake.word.verb",
+  "fake.word.words",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

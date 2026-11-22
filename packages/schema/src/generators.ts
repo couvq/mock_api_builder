@@ -279,4 +279,14 @@ export const fakerGenerators: Record<
   "fake.vehicle.vehicle": () => faker.vehicle.vehicle(),
   "fake.vehicle.vin": () => faker.vehicle.vin(),
   "fake.vehicle.vrm": () => faker.vehicle.vrm(),
+  //word
+  "fake.word.adjective": () => faker.word.adjective(),
+  "fake.word.adverb": () => faker.word.adverb(),
+  "fake.word.conjunction": () => faker.word.conjunction(),
+  "fake.word.interjection": () => faker.word.interjection(),
+  "fake.word.noun": () => faker.word.noun(),
+  "fake.word.preposition": () => faker.word.preposition(),
+  "fake.word.sample": () => faker.word.sample(),
+  "fake.word.verb": () => faker.word.verb(),
+  "fake.word.words": () => faker.word.words(),
 };
