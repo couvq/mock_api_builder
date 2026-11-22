@@ -134,6 +134,14 @@ const MOCK_FAKER_VALUES: Record<
   "fake.hacker.phrase":
     "If we override the card, we can get to the HDD feed through the back-end HDD sensor!",
   "fake.hacker.verb": "copy",
+  "fake.image.avatar": "https://avatars.githubusercontent.com/u/97165289",
+  "fake.image.avatarGitHub": "https://avatars.githubusercontent.com/u/97165289",
+  "fake.image.dataUri":
+    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+  "fake.image.personPortrait":
+    "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/57.jpg",
+  "fake.image.url": "https://picsum.photos/seed/NWbJM2B/640/480",
+  "fake.image.urlPicsumPhotos": "https://picsum.photos/seed/NWbJM2B/640/480",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -306,6 +314,14 @@ vi.mock("@faker-js/faker", () => {
         noun: () => MOCK_FAKER_VALUES["fake.hacker.noun"],
         phrase: () => MOCK_FAKER_VALUES["fake.hacker.phrase"],
         verb: () => MOCK_FAKER_VALUES["fake.hacker.verb"],
+      },
+      image: {
+        avatar: () => MOCK_FAKER_VALUES["fake.image.avatar"],
+        avatarGitHub: () => MOCK_FAKER_VALUES["fake.image.avatarGitHub"],
+        dataUri: () => MOCK_FAKER_VALUES["fake.image.dataUri"],
+        personPortrait: () => MOCK_FAKER_VALUES["fake.image.personPortrait"],
+        url: () => MOCK_FAKER_VALUES["fake.image.url"],
+        urlPicsumPhotos: () => MOCK_FAKER_VALUES["fake.image.urlPicsumPhotos"],
       },
     },
   };
@@ -692,6 +708,25 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.hacker.verb")).toBe(
         MOCK_FAKER_VALUES["fake.hacker.verb"],
+      );
+      // image
+      expect(transpile("fake.image.avatar")).toBe(
+        MOCK_FAKER_VALUES["fake.image.avatar"],
+      );
+      expect(transpile("fake.image.avatarGitHub")).toBe(
+        MOCK_FAKER_VALUES["fake.image.avatarGitHub"],
+      );
+      expect(transpile("fake.image.dataUri")).toBe(
+        MOCK_FAKER_VALUES["fake.image.dataUri"],
+      );
+      expect(transpile("fake.image.personPortrait")).toBe(
+        MOCK_FAKER_VALUES["fake.image.personPortrait"],
+      );
+      expect(transpile("fake.image.url")).toBe(
+        MOCK_FAKER_VALUES["fake.image.url"],
+      );
+      expect(transpile("fake.image.urlPicsumPhotos")).toBe(
+        MOCK_FAKER_VALUES["fake.image.urlPicsumPhotos"],
       );
     });
 

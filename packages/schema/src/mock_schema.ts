@@ -131,6 +131,13 @@ export const FakerSchema = z.enum([
   "fake.hacker.noun",
   "fake.hacker.phrase",
   "fake.hacker.verb",
+  // image (urlLoremFlickr omitted: deprecated, LoremFlickr links are broken)
+  "fake.image.avatar",
+  "fake.image.avatarGitHub",
+  "fake.image.dataUri",
+  "fake.image.personPortrait",
+  "fake.image.url",
+  "fake.image.urlPicsumPhotos",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

@@ -142,4 +142,11 @@ export const fakerGenerators: Record<
   "fake.hacker.noun": () => faker.hacker.noun(),
   "fake.hacker.phrase": () => faker.hacker.phrase(),
   "fake.hacker.verb": () => faker.hacker.verb(),
+  //image (urlLoremFlickr omitted: deprecated, LoremFlickr links are broken)
+  "fake.image.avatar": () => faker.image.avatar(),
+  "fake.image.avatarGitHub": () => faker.image.avatarGitHub(),
+  "fake.image.dataUri": () => faker.image.dataUri(),
+  "fake.image.personPortrait": () => faker.image.personPortrait(),
+  "fake.image.url": () => faker.image.url(),
+  "fake.image.urlPicsumPhotos": () => faker.image.urlPicsumPhotos(),
 };
