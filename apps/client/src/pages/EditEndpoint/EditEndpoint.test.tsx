@@ -1,3 +1,4 @@
+import { QueryClient } from "@tanstack/react-query";
 import { screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import EditEndpoint from ".";
@@ -48,5 +49,24 @@ describe("EditEndpoint", () => {
         `Failed to fetch endpoint: ${statusCode} ${statusText}`,
       ),
     ).toBeInTheDocument();
+  });
+
+  it("prefills from fresh server data rather than a stale cache entry", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    queryClient.setQueryData(["endpoints", sampleEndpoint.id], {
+      ...sampleEndpoint,
+      path: "/stale-path",
+    });
+    renderWithProviders(<EditEndpoint />, {
+      initialEntries: [`/endpoint/edit?endpointId=${sampleEndpoint.id}`],
+      queryClient,
+    });
+
+    expect(
+      await screen.findByDisplayValue(sampleEndpoint.path),
+    ).toBeInTheDocument();
+    expect(screen.queryByDisplayValue("/stale-path")).not.toBeInTheDocument();
   });
 });

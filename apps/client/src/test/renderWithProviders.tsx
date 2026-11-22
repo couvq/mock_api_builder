@@ -10,6 +10,8 @@ import ToastProvider from "../context/ToastProvider";
 interface RenderOptions {
   /** Initial history entries for the router (e.g. to seed query params). */
   initialEntries?: string[];
+  /** Supply a pre-seeded QueryClient (e.g. to simulate cached data). */
+  queryClient?: QueryClient;
 }
 
 /**
@@ -21,14 +23,16 @@ interface RenderOptions {
  */
 const renderWithProviders = (
   ui: ReactElement,
-  { initialEntries }: RenderOptions = {},
+  { initialEntries, queryClient: providedClient }: RenderOptions = {},
 ) => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: { retry: false, gcTime: 0 },
-      mutations: { retry: false },
-    },
-  });
+  const queryClient =
+    providedClient ??
+    new QueryClient({
+      defaultOptions: {
+        queries: { retry: false, gcTime: 0 },
+        mutations: { retry: false },
+      },
+    });
 
   return render(
     <AppThemeProvider>

@@ -32,7 +32,8 @@ const Headings = () => (
 const EditEndpoint = () => {
   const [searchParams] = useSearchParams();
   const endpointId = searchParams.get("endpointId") ?? undefined;
-  const { data, isPending, isError, error } = useEndpoint(endpointId);
+  const { data, isPending, isError, error, isFetchedAfterMount } =
+    useEndpoint(endpointId);
 
   const renderBody = () => {
     if (!endpointId) {
@@ -42,15 +43,17 @@ const EditEndpoint = () => {
         </Alert>
       );
     }
-    if (isPending) {
+    if (isError) {
+      return <Alert severity="error">{error.message}</Alert>;
+    }
+    // Cached data may be stale (e.g. edited elsewhere). Wait for the refetch on
+    // mount so the form, which seeds its state once, starts from fresh values.
+    if (isPending || !isFetchedAfterMount) {
       return (
         <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
           <CircularProgress aria-label="Loading endpoint" />
         </Box>
       );
-    }
-    if (isError) {
-      return <Alert severity="error">{error.message}</Alert>;
     }
     return <Form endpoint={data} />;
   };
