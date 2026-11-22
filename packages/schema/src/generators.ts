@@ -7,7 +7,7 @@ export type Airport = ReturnType<typeof faker.airline.airport>;
 
 export const fakerGenerators: Record<
   FakerType,
-  () => string | Airline | Airplane | Airport | number[] | boolean
+  () => string | Airline | Airplane | Airport | number[] | boolean | Date
 > = {
   "faker.string.uuid": () => faker.string.uuid(),
   "faker.internet.email": () => faker.internet.email(),
@@ -89,4 +89,14 @@ export const fakerGenerators: Record<
   "faker.database.type": () => faker.database.type(),
   //datatype
   "faker.datatype.boolean": () => faker.datatype.boolean(),
+  //date (between/betweens omitted: they require from/to arguments)
+  "faker.date.anytime": () => faker.date.anytime(),
+  "faker.date.birthdate": () => faker.date.birthdate(),
+  "faker.date.future": () => faker.date.future(),
+  "faker.date.month": () => faker.date.month(),
+  "faker.date.past": () => faker.date.past(),
+  "faker.date.recent": () => faker.date.recent(),
+  "faker.date.soon": () => faker.date.soon(),
+  "faker.date.timeZone": () => faker.date.timeZone(),
+  "faker.date.weekday": () => faker.date.weekday(),
 };

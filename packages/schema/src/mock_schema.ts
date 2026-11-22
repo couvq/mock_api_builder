@@ -78,6 +78,16 @@ export const FakerSchema = z.enum([
   "faker.database.type",
   // datatype
   "faker.datatype.boolean",
+  // date (between/betweens omitted: they require from/to arguments)
+  "faker.date.anytime",
+  "faker.date.birthdate",
+  "faker.date.future",
+  "faker.date.month",
+  "faker.date.past",
+  "faker.date.recent",
+  "faker.date.soon",
+  "faker.date.timeZone",
+  "faker.date.weekday",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
