@@ -135,4 +135,11 @@ export const fakerGenerators: Record<
   "fake.git.commitEntry": () => faker.git.commitEntry(),
   "fake.git.commitMessage": () => faker.git.commitMessage(),
   "fake.git.commitSha": () => faker.git.commitSha(),
+  //hacker
+  "fake.hacker.abbreviation": () => faker.hacker.abbreviation(),
+  "fake.hacker.adjective": () => faker.hacker.adjective(),
+  "fake.hacker.ingverb": () => faker.hacker.ingverb(),
+  "fake.hacker.noun": () => faker.hacker.noun(),
+  "fake.hacker.phrase": () => faker.hacker.phrase(),
+  "fake.hacker.verb": () => faker.hacker.verb(),
 };

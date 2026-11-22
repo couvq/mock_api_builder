@@ -124,6 +124,13 @@ export const FakerSchema = z.enum([
   "fake.git.commitEntry",
   "fake.git.commitMessage",
   "fake.git.commitSha",
+  // hacker
+  "fake.hacker.abbreviation",
+  "fake.hacker.adjective",
+  "fake.hacker.ingverb",
+  "fake.hacker.noun",
+  "fake.hacker.phrase",
+  "fake.hacker.verb",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

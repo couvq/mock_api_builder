@@ -127,6 +127,13 @@ const MOCK_FAKER_VALUES: Record<
     "commit fe8c38a965d13d9794eb36918cb24cebe49a45c2\nAuthor: Marion Becker <Marion_Becker49@gmail.com>\nDate: Mon Nov 7 05:38:37 2022 -0600\n\n    generate open-source system",
   "fake.git.commitMessage": "reboot cross-platform driver",
   "fake.git.commitSha": "2c6e3880fd94ddb7ef72d34e683cdc0c47bec6e6",
+  "fake.hacker.abbreviation": "THX",
+  "fake.hacker.adjective": "cross-platform",
+  "fake.hacker.ingverb": "navigating",
+  "fake.hacker.noun": "system",
+  "fake.hacker.phrase":
+    "If we override the card, we can get to the HDD feed through the back-end HDD sensor!",
+  "fake.hacker.verb": "copy",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -291,6 +298,14 @@ vi.mock("@faker-js/faker", () => {
         commitEntry: () => MOCK_FAKER_VALUES["fake.git.commitEntry"],
         commitMessage: () => MOCK_FAKER_VALUES["fake.git.commitMessage"],
         commitSha: () => MOCK_FAKER_VALUES["fake.git.commitSha"],
+      },
+      hacker: {
+        abbreviation: () => MOCK_FAKER_VALUES["fake.hacker.abbreviation"],
+        adjective: () => MOCK_FAKER_VALUES["fake.hacker.adjective"],
+        ingverb: () => MOCK_FAKER_VALUES["fake.hacker.ingverb"],
+        noun: () => MOCK_FAKER_VALUES["fake.hacker.noun"],
+        phrase: () => MOCK_FAKER_VALUES["fake.hacker.phrase"],
+        verb: () => MOCK_FAKER_VALUES["fake.hacker.verb"],
       },
     },
   };
@@ -658,6 +673,25 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.git.commitSha")).toBe(
         MOCK_FAKER_VALUES["fake.git.commitSha"],
+      );
+      // hacker
+      expect(transpile("fake.hacker.abbreviation")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.abbreviation"],
+      );
+      expect(transpile("fake.hacker.adjective")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.adjective"],
+      );
+      expect(transpile("fake.hacker.ingverb")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.ingverb"],
+      );
+      expect(transpile("fake.hacker.noun")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.noun"],
+      );
+      expect(transpile("fake.hacker.phrase")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.phrase"],
+      );
+      expect(transpile("fake.hacker.verb")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.verb"],
       );
     });
 
