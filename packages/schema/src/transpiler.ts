@@ -2,7 +2,9 @@ import {
   Airline,
   Airplane,
   Airport,
+  ChemicalElement,
   Language,
+  Unit,
   fakerGenerators,
 } from "./generators.js";
 import {
@@ -19,6 +21,8 @@ export type TranspiledSchema =
   | Airplane
   | Airport
   | Language
+  | ChemicalElement
+  | Unit
   | number
   | boolean
   | TranspiledSchema[]

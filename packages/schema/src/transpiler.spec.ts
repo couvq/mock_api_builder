@@ -5,6 +5,12 @@ import { FakerType } from "./index.js";
 type MockAirline = { name: string; iataCode: string };
 type MockAirplane = { name: string; iataTypeCode: string };
 type MockLanguage = { alpha2: string; alpha3: string; name: string };
+type MockChemicalElement = {
+  symbol: string;
+  name: string;
+  atomicNumber: number;
+};
+type MockUnit = { name: string; symbol: string };
 
 const MOCK_FAKER_VALUES: Record<
   FakerType,
@@ -15,6 +21,8 @@ const MOCK_FAKER_VALUES: Record<
   | boolean
   | number
   | MockLanguage
+  | MockChemicalElement
+  | MockUnit
 > = {
   "fake.string.uuid": "test-uuid",
   "fake.airline.aircraftType": "narrowbody",
@@ -228,6 +236,12 @@ const MOCK_FAKER_VALUES: Record<
   "fake.person.zodiacSign": "Pisces",
   "fake.phone.imei": "13-850175-913761-7",
   "fake.phone.number": "961-770-7727",
+  "fake.science.chemicalElement": {
+    symbol: "H",
+    name: "Hydrogen",
+    atomicNumber: 1,
+  },
+  "fake.science.unit": { name: "meter", symbol: "m" },
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -278,6 +292,11 @@ vi.mock("@faker-js/faker", () => {
       phone: {
         imei: () => MOCK_FAKER_VALUES["fake.phone.imei"],
         number: () => MOCK_FAKER_VALUES["fake.phone.number"],
+      },
+      science: {
+        chemicalElement: () =>
+          MOCK_FAKER_VALUES["fake.science.chemicalElement"],
+        unit: () => MOCK_FAKER_VALUES["fake.science.unit"],
       },
       airline: {
         aircraftType: () => MOCK_FAKER_VALUES["fake.airline.aircraftType"],
@@ -1122,6 +1141,13 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.phone.number")).toBe(
         MOCK_FAKER_VALUES["fake.phone.number"],
+      );
+      // science
+      expect(transpile("fake.science.chemicalElement")).toEqual(
+        MOCK_FAKER_VALUES["fake.science.chemicalElement"],
+      );
+      expect(transpile("fake.science.unit")).toEqual(
+        MOCK_FAKER_VALUES["fake.science.unit"],
       );
     });
 

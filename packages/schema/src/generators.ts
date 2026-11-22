@@ -5,6 +5,8 @@ export type Airline = ReturnType<typeof faker.airline.airline>;
 export type Airplane = ReturnType<typeof faker.airline.airplane>;
 export type Airport = ReturnType<typeof faker.airline.airport>;
 export type Language = ReturnType<typeof faker.location.language>;
+export type ChemicalElement = ReturnType<typeof faker.science.chemicalElement>;
+export type Unit = ReturnType<typeof faker.science.unit>;
 
 export const fakerGenerators: Record<
   FakerType,
@@ -17,6 +19,8 @@ export const fakerGenerators: Record<
     | boolean
     | number
     | Language
+    | ChemicalElement
+    | Unit
 > = {
   //string
   "fake.string.uuid": () => faker.string.uuid(),
@@ -239,4 +243,7 @@ export const fakerGenerators: Record<
   //phone
   "fake.phone.imei": () => faker.phone.imei(),
   "fake.phone.number": () => faker.phone.number(),
+  //science
+  "fake.science.chemicalElement": () => faker.science.chemicalElement(),
+  "fake.science.unit": () => faker.science.unit(),
 };

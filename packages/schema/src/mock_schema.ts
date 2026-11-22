@@ -218,6 +218,9 @@ export const FakerSchema = z.enum([
   // phone
   "fake.phone.imei",
   "fake.phone.number",
+  // science
+  "fake.science.chemicalElement",
+  "fake.science.unit",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
