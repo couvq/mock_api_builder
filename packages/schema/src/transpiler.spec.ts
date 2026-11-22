@@ -67,6 +67,15 @@ const MOCK_FAKER_VALUES: Record<
   "faker.commerce.productMaterial": "Rubber",
   "faker.commerce.productName": "Incredible Soft Gloves",
   "faker.commerce.upc": "036000291452",
+  "faker.company.buzzAdjective": "one-to-one",
+  "faker.company.buzzNoun": "paradigms",
+  "faker.company.buzzPhrase": "cultivate synergistic e-markets",
+  "faker.company.buzzVerb": "empower",
+  "faker.company.catchPhrase": "Upgradable systematic flexibility",
+  "faker.company.catchPhraseAdjective": "Multi-tiered",
+  "faker.company.catchPhraseDescriptor": "composite",
+  "faker.company.catchPhraseNoun": "leverage",
+  "faker.company.name": "Zieme, Hauck and McClure",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -147,6 +156,20 @@ vi.mock("@faker-js/faker", () => {
           MOCK_FAKER_VALUES["faker.commerce.productMaterial"],
         productName: () => MOCK_FAKER_VALUES["faker.commerce.productName"],
         upc: () => MOCK_FAKER_VALUES["faker.commerce.upc"],
+      },
+      company: {
+        buzzAdjective: () => MOCK_FAKER_VALUES["faker.company.buzzAdjective"],
+        buzzNoun: () => MOCK_FAKER_VALUES["faker.company.buzzNoun"],
+        buzzPhrase: () => MOCK_FAKER_VALUES["faker.company.buzzPhrase"],
+        buzzVerb: () => MOCK_FAKER_VALUES["faker.company.buzzVerb"],
+        catchPhrase: () => MOCK_FAKER_VALUES["faker.company.catchPhrase"],
+        catchPhraseAdjective: () =>
+          MOCK_FAKER_VALUES["faker.company.catchPhraseAdjective"],
+        catchPhraseDescriptor: () =>
+          MOCK_FAKER_VALUES["faker.company.catchPhraseDescriptor"],
+        catchPhraseNoun: () =>
+          MOCK_FAKER_VALUES["faker.company.catchPhraseNoun"],
+        name: () => MOCK_FAKER_VALUES["faker.company.name"],
       },
     },
   };
@@ -336,6 +359,34 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.commerce.upc")).toBe(
         MOCK_FAKER_VALUES["faker.commerce.upc"],
+      );
+      // company
+      expect(transpile("faker.company.buzzAdjective")).toBe(
+        MOCK_FAKER_VALUES["faker.company.buzzAdjective"],
+      );
+      expect(transpile("faker.company.buzzNoun")).toBe(
+        MOCK_FAKER_VALUES["faker.company.buzzNoun"],
+      );
+      expect(transpile("faker.company.buzzPhrase")).toBe(
+        MOCK_FAKER_VALUES["faker.company.buzzPhrase"],
+      );
+      expect(transpile("faker.company.buzzVerb")).toBe(
+        MOCK_FAKER_VALUES["faker.company.buzzVerb"],
+      );
+      expect(transpile("faker.company.catchPhrase")).toBe(
+        MOCK_FAKER_VALUES["faker.company.catchPhrase"],
+      );
+      expect(transpile("faker.company.catchPhraseAdjective")).toBe(
+        MOCK_FAKER_VALUES["faker.company.catchPhraseAdjective"],
+      );
+      expect(transpile("faker.company.catchPhraseDescriptor")).toBe(
+        MOCK_FAKER_VALUES["faker.company.catchPhraseDescriptor"],
+      );
+      expect(transpile("faker.company.catchPhraseNoun")).toBe(
+        MOCK_FAKER_VALUES["faker.company.catchPhraseNoun"],
+      );
+      expect(transpile("faker.company.name")).toBe(
+        MOCK_FAKER_VALUES["faker.company.name"],
       );
     });
 

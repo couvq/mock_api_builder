@@ -60,6 +60,16 @@ export const FakerSchema = z.enum([
   "faker.commerce.productMaterial",
   "faker.commerce.productName",
   "faker.commerce.upc",
+  // company
+  "faker.company.buzzAdjective",
+  "faker.company.buzzNoun",
+  "faker.company.buzzPhrase",
+  "faker.company.buzzVerb",
+  "faker.company.catchPhrase",
+  "faker.company.catchPhraseAdjective",
+  "faker.company.catchPhraseDescriptor",
+  "faker.company.catchPhraseNoun",
+  "faker.company.name",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

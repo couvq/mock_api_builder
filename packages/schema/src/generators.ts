@@ -69,4 +69,16 @@ export const fakerGenerators: Record<
   "faker.commerce.productMaterial": () => faker.commerce.productMaterial(),
   "faker.commerce.productName": () => faker.commerce.productName(),
   "faker.commerce.upc": () => faker.commerce.upc(),
+  //company
+  "faker.company.buzzAdjective": () => faker.company.buzzAdjective(),
+  "faker.company.buzzNoun": () => faker.company.buzzNoun(),
+  "faker.company.buzzPhrase": () => faker.company.buzzPhrase(),
+  "faker.company.buzzVerb": () => faker.company.buzzVerb(),
+  "faker.company.catchPhrase": () => faker.company.catchPhrase(),
+  "faker.company.catchPhraseAdjective": () =>
+    faker.company.catchPhraseAdjective(),
+  "faker.company.catchPhraseDescriptor": () =>
+    faker.company.catchPhraseDescriptor(),
+  "faker.company.catchPhraseNoun": () => faker.company.catchPhraseNoun(),
+  "faker.company.name": () => faker.company.name(),
 };
