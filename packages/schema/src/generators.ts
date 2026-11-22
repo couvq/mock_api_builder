@@ -4,10 +4,19 @@ import type { FakerType } from "./mock_schema.js";
 export type Airline = ReturnType<typeof faker.airline.airline>;
 export type Airplane = ReturnType<typeof faker.airline.airplane>;
 export type Airport = ReturnType<typeof faker.airline.airport>;
+export type Language = ReturnType<typeof faker.location.language>;
 
 export const fakerGenerators: Record<
   FakerType,
-  () => string | Airline | Airplane | Airport | number[] | boolean | number
+  () =>
+    | string
+    | Airline
+    | Airplane
+    | Airport
+    | number[]
+    | boolean
+    | number
+    | Language
 > = {
   "fake.string.uuid": () => faker.string.uuid(),
   "fake.internet.email": () => faker.internet.email(),
@@ -170,4 +179,26 @@ export const fakerGenerators: Record<
   "fake.internet.url": () => faker.internet.url(),
   "fake.internet.userAgent": () => faker.internet.userAgent(),
   "fake.internet.username": () => faker.internet.username(),
+  //location
+  "fake.location.buildingNumber": () => faker.location.buildingNumber(),
+  "fake.location.cardinalDirection": () => faker.location.cardinalDirection(),
+  "fake.location.city": () => faker.location.city(),
+  "fake.location.continent": () => faker.location.continent(),
+  "fake.location.country": () => faker.location.country(),
+  "fake.location.countryCode": () => faker.location.countryCode(),
+  "fake.location.county": () => faker.location.county(),
+  "fake.location.direction": () => faker.location.direction(),
+  "fake.location.language": () => faker.location.language(),
+  "fake.location.latitude": () => faker.location.latitude(),
+  "fake.location.longitude": () => faker.location.longitude(),
+  "fake.location.nearbyGPSCoordinate": () =>
+    faker.location.nearbyGPSCoordinate(),
+  "fake.location.ordinalDirection": () => faker.location.ordinalDirection(),
+  "fake.location.postalAddress": () => faker.location.postalAddress(),
+  "fake.location.secondaryAddress": () => faker.location.secondaryAddress(),
+  "fake.location.state": () => faker.location.state(),
+  "fake.location.street": () => faker.location.street(),
+  "fake.location.streetAddress": () => faker.location.streetAddress(),
+  "fake.location.timeZone": () => faker.location.timeZone(),
+  "fake.location.zipCode": () => faker.location.zipCode(),
 };

@@ -1,4 +1,10 @@
-import { Airline, Airplane, Airport, fakerGenerators } from "./generators.js";
+import {
+  Airline,
+  Airplane,
+  Airport,
+  Language,
+  fakerGenerators,
+} from "./generators.js";
 import {
   FakerSchema,
   MockSchema,
@@ -12,6 +18,7 @@ export type TranspiledSchema =
   | Airline
   | Airplane
   | Airport
+  | Language
   | number
   | boolean
   | TranspiledSchema[]

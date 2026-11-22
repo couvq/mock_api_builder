@@ -159,6 +159,27 @@ export const FakerSchema = z.enum([
   "fake.internet.url",
   "fake.internet.userAgent",
   "fake.internet.username",
+  // location
+  "fake.location.buildingNumber",
+  "fake.location.cardinalDirection",
+  "fake.location.city",
+  "fake.location.continent",
+  "fake.location.country",
+  "fake.location.countryCode",
+  "fake.location.county",
+  "fake.location.direction",
+  "fake.location.language",
+  "fake.location.latitude",
+  "fake.location.longitude",
+  "fake.location.nearbyGPSCoordinate",
+  "fake.location.ordinalDirection",
+  "fake.location.postalAddress",
+  "fake.location.secondaryAddress",
+  "fake.location.state",
+  "fake.location.street",
+  "fake.location.streetAddress",
+  "fake.location.timeZone",
+  "fake.location.zipCode",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

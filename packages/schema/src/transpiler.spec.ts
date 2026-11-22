@@ -4,10 +4,17 @@ import { FakerType } from "./index.js";
 
 type MockAirline = { name: string; iataCode: string };
 type MockAirplane = { name: string; iataTypeCode: string };
+type MockLanguage = { alpha2: string; alpha3: string; name: string };
 
 const MOCK_FAKER_VALUES: Record<
   FakerType,
-  string | MockAirline | MockAirplane | number[] | boolean | number
+  | string
+  | MockAirline
+  | MockAirplane
+  | number[]
+  | boolean
+  | number
+  | MockLanguage
 > = {
   "fake.string.uuid": "test-uuid",
   "fake.internet.email": "test@example.com",
@@ -164,6 +171,27 @@ const MOCK_FAKER_VALUES: Record<
   "fake.internet.userAgent":
     "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15",
   "fake.internet.username": "Nettie_Zboncak40",
+  "fake.location.buildingNumber": "379",
+  "fake.location.cardinalDirection": "North",
+  "fake.location.city": "East Jarretmouth",
+  "fake.location.continent": "Asia",
+  "fake.location.country": "Greece",
+  "fake.location.countryCode": "SJ",
+  "fake.location.county": "Cambridgeshire",
+  "fake.location.direction": "Northeast",
+  "fake.location.language": { alpha2: "de", alpha3: "deu", name: "German" },
+  "fake.location.latitude": -30.9501,
+  "fake.location.longitude": 139.4567,
+  "fake.location.nearbyGPSCoordinate": [33.8475, -170.5953],
+  "fake.location.ordinalDirection": "Northeast",
+  "fake.location.postalAddress":
+    "Apt. 980\n0917 OConner Estates\nWest Shannonview\nMichigan\n82180",
+  "fake.location.secondaryAddress": "Apt. 861",
+  "fake.location.state": "Mississippi",
+  "fake.location.street": "Schroeder Isle",
+  "fake.location.streetAddress": "0917 OConner Estates",
+  "fake.location.timeZone": "Pacific/Guam",
+  "fake.location.zipCode": "17839",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -364,6 +392,32 @@ vi.mock("@faker-js/faker", () => {
         personPortrait: () => MOCK_FAKER_VALUES["fake.image.personPortrait"],
         url: () => MOCK_FAKER_VALUES["fake.image.url"],
         urlPicsumPhotos: () => MOCK_FAKER_VALUES["fake.image.urlPicsumPhotos"],
+      },
+      location: {
+        buildingNumber: () => MOCK_FAKER_VALUES["fake.location.buildingNumber"],
+        cardinalDirection: () =>
+          MOCK_FAKER_VALUES["fake.location.cardinalDirection"],
+        city: () => MOCK_FAKER_VALUES["fake.location.city"],
+        continent: () => MOCK_FAKER_VALUES["fake.location.continent"],
+        country: () => MOCK_FAKER_VALUES["fake.location.country"],
+        countryCode: () => MOCK_FAKER_VALUES["fake.location.countryCode"],
+        county: () => MOCK_FAKER_VALUES["fake.location.county"],
+        direction: () => MOCK_FAKER_VALUES["fake.location.direction"],
+        language: () => MOCK_FAKER_VALUES["fake.location.language"],
+        latitude: () => MOCK_FAKER_VALUES["fake.location.latitude"],
+        longitude: () => MOCK_FAKER_VALUES["fake.location.longitude"],
+        nearbyGPSCoordinate: () =>
+          MOCK_FAKER_VALUES["fake.location.nearbyGPSCoordinate"],
+        ordinalDirection: () =>
+          MOCK_FAKER_VALUES["fake.location.ordinalDirection"],
+        postalAddress: () => MOCK_FAKER_VALUES["fake.location.postalAddress"],
+        secondaryAddress: () =>
+          MOCK_FAKER_VALUES["fake.location.secondaryAddress"],
+        state: () => MOCK_FAKER_VALUES["fake.location.state"],
+        street: () => MOCK_FAKER_VALUES["fake.location.street"],
+        streetAddress: () => MOCK_FAKER_VALUES["fake.location.streetAddress"],
+        timeZone: () => MOCK_FAKER_VALUES["fake.location.timeZone"],
+        zipCode: () => MOCK_FAKER_VALUES["fake.location.zipCode"],
       },
     },
   };
@@ -830,6 +884,67 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.internet.username")).toBe(
         MOCK_FAKER_VALUES["fake.internet.username"],
+      );
+      // location
+      expect(transpile("fake.location.buildingNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.location.buildingNumber"],
+      );
+      expect(transpile("fake.location.cardinalDirection")).toBe(
+        MOCK_FAKER_VALUES["fake.location.cardinalDirection"],
+      );
+      expect(transpile("fake.location.city")).toBe(
+        MOCK_FAKER_VALUES["fake.location.city"],
+      );
+      expect(transpile("fake.location.continent")).toBe(
+        MOCK_FAKER_VALUES["fake.location.continent"],
+      );
+      expect(transpile("fake.location.country")).toBe(
+        MOCK_FAKER_VALUES["fake.location.country"],
+      );
+      expect(transpile("fake.location.countryCode")).toBe(
+        MOCK_FAKER_VALUES["fake.location.countryCode"],
+      );
+      expect(transpile("fake.location.county")).toBe(
+        MOCK_FAKER_VALUES["fake.location.county"],
+      );
+      expect(transpile("fake.location.direction")).toBe(
+        MOCK_FAKER_VALUES["fake.location.direction"],
+      );
+      expect(transpile("fake.location.language")).toEqual(
+        MOCK_FAKER_VALUES["fake.location.language"],
+      );
+      expect(transpile("fake.location.latitude")).toBe(
+        MOCK_FAKER_VALUES["fake.location.latitude"],
+      );
+      expect(transpile("fake.location.longitude")).toBe(
+        MOCK_FAKER_VALUES["fake.location.longitude"],
+      );
+      expect(transpile("fake.location.nearbyGPSCoordinate")).toEqual(
+        MOCK_FAKER_VALUES["fake.location.nearbyGPSCoordinate"],
+      );
+      expect(transpile("fake.location.ordinalDirection")).toBe(
+        MOCK_FAKER_VALUES["fake.location.ordinalDirection"],
+      );
+      expect(transpile("fake.location.postalAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.location.postalAddress"],
+      );
+      expect(transpile("fake.location.secondaryAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.location.secondaryAddress"],
+      );
+      expect(transpile("fake.location.state")).toBe(
+        MOCK_FAKER_VALUES["fake.location.state"],
+      );
+      expect(transpile("fake.location.street")).toBe(
+        MOCK_FAKER_VALUES["fake.location.street"],
+      );
+      expect(transpile("fake.location.streetAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.location.streetAddress"],
+      );
+      expect(transpile("fake.location.timeZone")).toBe(
+        MOCK_FAKER_VALUES["fake.location.timeZone"],
+      );
+      expect(transpile("fake.location.zipCode")).toBe(
+        MOCK_FAKER_VALUES["fake.location.zipCode"],
       );
     });
 
