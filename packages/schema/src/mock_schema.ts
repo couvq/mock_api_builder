@@ -231,6 +231,19 @@ export const FakerSchema = z.enum([
   // science
   "fake.science.chemicalElement",
   "fake.science.unit",
+  // system
+  "fake.system.commonFileExt",
+  "fake.system.commonFileName",
+  "fake.system.commonFileType",
+  "fake.system.cron",
+  "fake.system.directoryPath",
+  "fake.system.fileExt",
+  "fake.system.fileName",
+  "fake.system.filePath",
+  "fake.system.fileType",
+  "fake.system.mimeType",
+  "fake.system.networkInterface",
+  "fake.system.semver",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

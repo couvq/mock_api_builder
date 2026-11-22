@@ -252,6 +252,18 @@ const MOCK_FAKER_VALUES: Record<
     atomicNumber: 1,
   },
   "fake.science.unit": { name: "meter", symbol: "m" },
+  "fake.system.commonFileExt": "gif",
+  "fake.system.commonFileName": "dollar.jpg",
+  "fake.system.commonFileType": "audio",
+  "fake.system.cron": "45 23 * * 6",
+  "fake.system.directoryPath": "/etc/mail",
+  "fake.system.fileExt": "emf",
+  "fake.system.fileName": "faithfully_calculating.u8mdn",
+  "fake.system.filePath": "/usr/local/src/money.dotx",
+  "fake.system.fileType": "message",
+  "fake.system.mimeType": "video/vnd.vivo",
+  "fake.system.networkInterface": "enp0s3",
+  "fake.system.semver": "1.15.2",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -533,6 +545,21 @@ vi.mock("@faker-js/faker", () => {
         hex: () => MOCK_FAKER_VALUES["fake.number.hex"],
         octal: () => MOCK_FAKER_VALUES["fake.number.octal"],
         romanNumeral: () => MOCK_FAKER_VALUES["fake.number.romanNumeral"],
+      },
+      system: {
+        commonFileExt: () => MOCK_FAKER_VALUES["fake.system.commonFileExt"],
+        commonFileName: () => MOCK_FAKER_VALUES["fake.system.commonFileName"],
+        commonFileType: () => MOCK_FAKER_VALUES["fake.system.commonFileType"],
+        cron: () => MOCK_FAKER_VALUES["fake.system.cron"],
+        directoryPath: () => MOCK_FAKER_VALUES["fake.system.directoryPath"],
+        fileExt: () => MOCK_FAKER_VALUES["fake.system.fileExt"],
+        fileName: () => MOCK_FAKER_VALUES["fake.system.fileName"],
+        filePath: () => MOCK_FAKER_VALUES["fake.system.filePath"],
+        fileType: () => MOCK_FAKER_VALUES["fake.system.fileType"],
+        mimeType: () => MOCK_FAKER_VALUES["fake.system.mimeType"],
+        networkInterface: () =>
+          MOCK_FAKER_VALUES["fake.system.networkInterface"],
+        semver: () => MOCK_FAKER_VALUES["fake.system.semver"],
       },
     },
   };
@@ -1198,6 +1225,43 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.science.unit")).toEqual(
         MOCK_FAKER_VALUES["fake.science.unit"],
+      );
+      // system
+      expect(transpile("fake.system.commonFileExt")).toBe(
+        MOCK_FAKER_VALUES["fake.system.commonFileExt"],
+      );
+      expect(transpile("fake.system.commonFileName")).toBe(
+        MOCK_FAKER_VALUES["fake.system.commonFileName"],
+      );
+      expect(transpile("fake.system.commonFileType")).toBe(
+        MOCK_FAKER_VALUES["fake.system.commonFileType"],
+      );
+      expect(transpile("fake.system.cron")).toBe(
+        MOCK_FAKER_VALUES["fake.system.cron"],
+      );
+      expect(transpile("fake.system.directoryPath")).toBe(
+        MOCK_FAKER_VALUES["fake.system.directoryPath"],
+      );
+      expect(transpile("fake.system.fileExt")).toBe(
+        MOCK_FAKER_VALUES["fake.system.fileExt"],
+      );
+      expect(transpile("fake.system.fileName")).toBe(
+        MOCK_FAKER_VALUES["fake.system.fileName"],
+      );
+      expect(transpile("fake.system.filePath")).toBe(
+        MOCK_FAKER_VALUES["fake.system.filePath"],
+      );
+      expect(transpile("fake.system.fileType")).toBe(
+        MOCK_FAKER_VALUES["fake.system.fileType"],
+      );
+      expect(transpile("fake.system.mimeType")).toBe(
+        MOCK_FAKER_VALUES["fake.system.mimeType"],
+      );
+      expect(transpile("fake.system.networkInterface")).toBe(
+        MOCK_FAKER_VALUES["fake.system.networkInterface"],
+      );
+      expect(transpile("fake.system.semver")).toBe(
+        MOCK_FAKER_VALUES["fake.system.semver"],
       );
     });
 

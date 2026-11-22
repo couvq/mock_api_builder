@@ -256,4 +256,17 @@ export const fakerGenerators: Record<
   //science
   "fake.science.chemicalElement": () => faker.science.chemicalElement(),
   "fake.science.unit": () => faker.science.unit(),
+  //system
+  "fake.system.commonFileExt": () => faker.system.commonFileExt(),
+  "fake.system.commonFileName": () => faker.system.commonFileName(),
+  "fake.system.commonFileType": () => faker.system.commonFileType(),
+  "fake.system.cron": () => faker.system.cron(),
+  "fake.system.directoryPath": () => faker.system.directoryPath(),
+  "fake.system.fileExt": () => faker.system.fileExt(),
+  "fake.system.fileName": () => faker.system.fileName(),
+  "fake.system.filePath": () => faker.system.filePath(),
+  "fake.system.fileType": () => faker.system.fileType(),
+  "fake.system.mimeType": () => faker.system.mimeType(),
+  "fake.system.networkInterface": () => faker.system.networkInterface(),
+  "fake.system.semver": () => faker.system.semver(),
 };
