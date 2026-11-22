@@ -195,6 +195,13 @@ export const FakerSchema = z.enum([
   "fake.music.artist",
   "fake.music.genre",
   "fake.music.songName",
+  // number (bigInt omitted: returns a bigint that JSON.stringify cannot serialize)
+  "fake.number.int",
+  "fake.number.float",
+  "fake.number.binary",
+  "fake.number.hex",
+  "fake.number.octal",
+  "fake.number.romanNumeral",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

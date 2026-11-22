@@ -216,4 +216,11 @@ export const fakerGenerators: Record<
   "fake.music.artist": () => faker.music.artist(),
   "fake.music.genre": () => faker.music.genre(),
   "fake.music.songName": () => faker.music.songName(),
+  //number (bigInt omitted: returns a bigint that JSON.stringify cannot serialize)
+  "fake.number.int": () => faker.number.int(),
+  "fake.number.float": () => faker.number.float(),
+  "fake.number.binary": () => faker.number.binary(),
+  "fake.number.hex": () => faker.number.hex(),
+  "fake.number.octal": () => faker.number.octal(),
+  "fake.number.romanNumeral": () => faker.number.romanNumeral(),
 };

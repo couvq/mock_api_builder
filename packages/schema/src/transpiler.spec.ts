@@ -209,6 +209,12 @@ const MOCK_FAKER_VALUES: Record<
   "fake.music.artist": "The Beatles",
   "fake.music.genre": "Reggae",
   "fake.music.songName": "White Christmas",
+  "fake.number.int": 2900970162509863,
+  "fake.number.float": 0.5688541042618454,
+  "fake.number.binary": "1010",
+  "fake.number.hex": "b",
+  "fake.number.octal": "5",
+  "fake.number.romanNumeral": "CMXCIII",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -452,6 +458,14 @@ vi.mock("@faker-js/faker", () => {
         artist: () => MOCK_FAKER_VALUES["fake.music.artist"],
         genre: () => MOCK_FAKER_VALUES["fake.music.genre"],
         songName: () => MOCK_FAKER_VALUES["fake.music.songName"],
+      },
+      number: {
+        int: () => MOCK_FAKER_VALUES["fake.number.int"],
+        float: () => MOCK_FAKER_VALUES["fake.number.float"],
+        binary: () => MOCK_FAKER_VALUES["fake.number.binary"],
+        hex: () => MOCK_FAKER_VALUES["fake.number.hex"],
+        octal: () => MOCK_FAKER_VALUES["fake.number.octal"],
+        romanNumeral: () => MOCK_FAKER_VALUES["fake.number.romanNumeral"],
       },
     },
   };
@@ -1020,6 +1034,25 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.music.songName")).toBe(
         MOCK_FAKER_VALUES["fake.music.songName"],
+      );
+      // number
+      expect(transpile("fake.number.int")).toBe(
+        MOCK_FAKER_VALUES["fake.number.int"],
+      );
+      expect(transpile("fake.number.float")).toBe(
+        MOCK_FAKER_VALUES["fake.number.float"],
+      );
+      expect(transpile("fake.number.binary")).toBe(
+        MOCK_FAKER_VALUES["fake.number.binary"],
+      );
+      expect(transpile("fake.number.hex")).toBe(
+        MOCK_FAKER_VALUES["fake.number.hex"],
+      );
+      expect(transpile("fake.number.octal")).toBe(
+        MOCK_FAKER_VALUES["fake.number.octal"],
+      );
+      expect(transpile("fake.number.romanNumeral")).toBe(
+        MOCK_FAKER_VALUES["fake.number.romanNumeral"],
       );
     });
 
