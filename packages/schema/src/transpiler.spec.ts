@@ -91,6 +91,26 @@ const MOCK_FAKER_VALUES: Record<
   "faker.date.soon": "2022-02-05T09:55:39.216Z",
   "faker.date.timeZone": "Pacific/Guam",
   "faker.date.weekday": "Monday",
+  "faker.finance.accountName": "Personal Loan Account",
+  "faker.finance.accountNumber": "92842238",
+  "faker.finance.amount": "617.87",
+  "faker.finance.bic": "WYAUPGX1",
+  "faker.finance.bitcoinAddress": "1TeZEFLmGPLEQrSRdAcnZLoWwYeiHwmRog",
+  "faker.finance.creditCardCVV": "506",
+  "faker.finance.creditCardIssuer": "discover",
+  "faker.finance.creditCardNumber": "4427163488662",
+  "faker.finance.currencyCode": "USD",
+  "faker.finance.currencyName": "US Dollar",
+  "faker.finance.currencyNumericCode": "840",
+  "faker.finance.currencySymbol": "$",
+  "faker.finance.ethereumAddress": "0xf03dfeecbafc5147241cc4c4ca20b3c9dfd04c4a",
+  "faker.finance.iban": "TR736918640040966092800056",
+  "faker.finance.litecoinAddress": "MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW",
+  "faker.finance.pin": "5067",
+  "faker.finance.routingNumber": "062197511",
+  "faker.finance.transactionDescription":
+    "payment transaction at Emard LLC using card ending with ****9187",
+  "faker.finance.transactionType": "payment",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -211,6 +231,34 @@ vi.mock("@faker-js/faker", () => {
         soon: () => new Date(MOCK_FAKER_VALUES["faker.date.soon"] as string),
         timeZone: () => MOCK_FAKER_VALUES["faker.date.timeZone"],
         weekday: () => MOCK_FAKER_VALUES["faker.date.weekday"],
+      },
+      finance: {
+        accountName: () => MOCK_FAKER_VALUES["faker.finance.accountName"],
+        accountNumber: () => MOCK_FAKER_VALUES["faker.finance.accountNumber"],
+        amount: () => MOCK_FAKER_VALUES["faker.finance.amount"],
+        bic: () => MOCK_FAKER_VALUES["faker.finance.bic"],
+        bitcoinAddress: () => MOCK_FAKER_VALUES["faker.finance.bitcoinAddress"],
+        creditCardCVV: () => MOCK_FAKER_VALUES["faker.finance.creditCardCVV"],
+        creditCardIssuer: () =>
+          MOCK_FAKER_VALUES["faker.finance.creditCardIssuer"],
+        creditCardNumber: () =>
+          MOCK_FAKER_VALUES["faker.finance.creditCardNumber"],
+        currencyCode: () => MOCK_FAKER_VALUES["faker.finance.currencyCode"],
+        currencyName: () => MOCK_FAKER_VALUES["faker.finance.currencyName"],
+        currencyNumericCode: () =>
+          MOCK_FAKER_VALUES["faker.finance.currencyNumericCode"],
+        currencySymbol: () => MOCK_FAKER_VALUES["faker.finance.currencySymbol"],
+        ethereumAddress: () =>
+          MOCK_FAKER_VALUES["faker.finance.ethereumAddress"],
+        iban: () => MOCK_FAKER_VALUES["faker.finance.iban"],
+        litecoinAddress: () =>
+          MOCK_FAKER_VALUES["faker.finance.litecoinAddress"],
+        pin: () => MOCK_FAKER_VALUES["faker.finance.pin"],
+        routingNumber: () => MOCK_FAKER_VALUES["faker.finance.routingNumber"],
+        transactionDescription: () =>
+          MOCK_FAKER_VALUES["faker.finance.transactionDescription"],
+        transactionType: () =>
+          MOCK_FAKER_VALUES["faker.finance.transactionType"],
       },
     },
   };
@@ -476,6 +524,64 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.date.weekday")).toBe(
         MOCK_FAKER_VALUES["faker.date.weekday"],
+      );
+      // finance
+      expect(transpile("faker.finance.accountName")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.accountName"],
+      );
+      expect(transpile("faker.finance.accountNumber")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.accountNumber"],
+      );
+      expect(transpile("faker.finance.amount")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.amount"],
+      );
+      expect(transpile("faker.finance.bic")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.bic"],
+      );
+      expect(transpile("faker.finance.bitcoinAddress")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.bitcoinAddress"],
+      );
+      expect(transpile("faker.finance.creditCardCVV")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.creditCardCVV"],
+      );
+      expect(transpile("faker.finance.creditCardIssuer")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.creditCardIssuer"],
+      );
+      expect(transpile("faker.finance.creditCardNumber")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.creditCardNumber"],
+      );
+      expect(transpile("faker.finance.currencyCode")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.currencyCode"],
+      );
+      expect(transpile("faker.finance.currencyName")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.currencyName"],
+      );
+      expect(transpile("faker.finance.currencyNumericCode")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.currencyNumericCode"],
+      );
+      expect(transpile("faker.finance.currencySymbol")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.currencySymbol"],
+      );
+      expect(transpile("faker.finance.ethereumAddress")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.ethereumAddress"],
+      );
+      expect(transpile("faker.finance.iban")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.iban"],
+      );
+      expect(transpile("faker.finance.litecoinAddress")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.litecoinAddress"],
+      );
+      expect(transpile("faker.finance.pin")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.pin"],
+      );
+      expect(transpile("faker.finance.routingNumber")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.routingNumber"],
+      );
+      expect(transpile("faker.finance.transactionDescription")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.transactionDescription"],
+      );
+      expect(transpile("faker.finance.transactionType")).toBe(
+        MOCK_FAKER_VALUES["faker.finance.transactionType"],
       );
     });
 

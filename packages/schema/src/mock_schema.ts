@@ -88,6 +88,26 @@ export const FakerSchema = z.enum([
   "faker.date.soon",
   "faker.date.timeZone",
   "faker.date.weekday",
+  // finance (currency omitted: returns an object, composable from the string-returning currency* methods)
+  "faker.finance.accountName",
+  "faker.finance.accountNumber",
+  "faker.finance.amount",
+  "faker.finance.bic",
+  "faker.finance.bitcoinAddress",
+  "faker.finance.creditCardCVV",
+  "faker.finance.creditCardIssuer",
+  "faker.finance.creditCardNumber",
+  "faker.finance.currencyCode",
+  "faker.finance.currencyName",
+  "faker.finance.currencyNumericCode",
+  "faker.finance.currencySymbol",
+  "faker.finance.ethereumAddress",
+  "faker.finance.iban",
+  "faker.finance.litecoinAddress",
+  "faker.finance.pin",
+  "faker.finance.routingNumber",
+  "faker.finance.transactionDescription",
+  "faker.finance.transactionType",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

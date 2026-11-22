@@ -99,4 +99,26 @@ export const fakerGenerators: Record<
   "faker.date.soon": () => faker.date.soon().toISOString(),
   "faker.date.timeZone": () => faker.date.timeZone(),
   "faker.date.weekday": () => faker.date.weekday(),
+  //finance (currency omitted: returns an object, composable from the string-returning currency* methods)
+  "faker.finance.accountName": () => faker.finance.accountName(),
+  "faker.finance.accountNumber": () => faker.finance.accountNumber(),
+  "faker.finance.amount": () => faker.finance.amount(),
+  "faker.finance.bic": () => faker.finance.bic(),
+  "faker.finance.bitcoinAddress": () => faker.finance.bitcoinAddress(),
+  "faker.finance.creditCardCVV": () => faker.finance.creditCardCVV(),
+  "faker.finance.creditCardIssuer": () => faker.finance.creditCardIssuer(),
+  "faker.finance.creditCardNumber": () => faker.finance.creditCardNumber(),
+  "faker.finance.currencyCode": () => faker.finance.currencyCode(),
+  "faker.finance.currencyName": () => faker.finance.currencyName(),
+  "faker.finance.currencyNumericCode": () =>
+    faker.finance.currencyNumericCode(),
+  "faker.finance.currencySymbol": () => faker.finance.currencySymbol(),
+  "faker.finance.ethereumAddress": () => faker.finance.ethereumAddress(),
+  "faker.finance.iban": () => faker.finance.iban(),
+  "faker.finance.litecoinAddress": () => faker.finance.litecoinAddress(),
+  "faker.finance.pin": () => faker.finance.pin(),
+  "faker.finance.routingNumber": () => faker.finance.routingNumber(),
+  "faker.finance.transactionDescription": () =>
+    faker.finance.transactionDescription(),
+  "faker.finance.transactionType": () => faker.finance.transactionType(),
 };
