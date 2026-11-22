@@ -16,7 +16,7 @@ const Form = () => {
     DEFAULT_RESPONSE_SCHEMA,
   );
   const [delay, setDelay] = useState(0);
-  const { error, success } = useToast();
+  const toast = useToast();
   const queryClient = useQueryClient();
 
   const handleCreate = async (formData: {
@@ -35,11 +35,11 @@ const Form = () => {
       // Refresh the dashboard's endpoint list so the new endpoint shows up
       // without relying on a refetch-on-remount.
       queryClient.invalidateQueries({ queryKey: ["endpoints"] });
-      success(
+      toast.success(
         `Endpoint ${newEndpoint.method} /${newEndpoint.path} created successfully!`,
       );
     } catch {
-      error("Failed to create endpoint. Please try again.");
+      toast.error("Failed to create endpoint. Please try again.");
     }
   };
 

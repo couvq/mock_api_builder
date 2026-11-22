@@ -22,7 +22,7 @@ const Form = ({ endpoint }: FormProps) => {
     endpoint.responseSchema,
   );
   const [delay, setDelay] = useState(endpoint.delay);
-  const { error, success } = useToast();
+  const toast = useToast();
   const queryClient = useQueryClient();
   const { activeEndpointId } = useEditor();
   const editorDispatch = useEditorDispatch();
@@ -37,11 +37,11 @@ const Form = ({ endpoint }: FormProps) => {
       if (activeEndpointId === updatedEndpoint.id) {
         editorDispatch({ type: "UPDATE_DRAFT", draft: updatedEndpoint });
       }
-      success(
+      toast.success(
         `Endpoint ${updatedEndpoint.method} /${updatedEndpoint.path} updated successfully!`,
       );
     },
-    onError: () => error("Failed to update endpoint. Please try again."),
+    onError: () => toast.error("Failed to update endpoint. Please try again."),
   });
 
   const handleSave = (formData: {
