@@ -81,4 +81,10 @@ export const fakerGenerators: Record<
     faker.company.catchPhraseDescriptor(),
   "faker.company.catchPhraseNoun": () => faker.company.catchPhraseNoun(),
   "faker.company.name": () => faker.company.name(),
+  //database
+  "faker.database.collation": () => faker.database.collation(),
+  "faker.database.column": () => faker.database.column(),
+  "faker.database.engine": () => faker.database.engine(),
+  "faker.database.mongodbObjectId": () => faker.database.mongodbObjectId(),
+  "faker.database.type": () => faker.database.type(),
 };

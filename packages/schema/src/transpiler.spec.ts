@@ -76,6 +76,11 @@ const MOCK_FAKER_VALUES: Record<
   "faker.company.catchPhraseDescriptor": "composite",
   "faker.company.catchPhraseNoun": "leverage",
   "faker.company.name": "Zieme, Hauck and McClure",
+  "faker.database.collation": "utf8_unicode_ci",
+  "faker.database.column": "createdAt",
+  "faker.database.engine": "ARCHIVE",
+  "faker.database.mongodbObjectId": "e175cac316a79afdd0ad3afb",
+  "faker.database.type": "timestamp",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -170,6 +175,14 @@ vi.mock("@faker-js/faker", () => {
         catchPhraseNoun: () =>
           MOCK_FAKER_VALUES["faker.company.catchPhraseNoun"],
         name: () => MOCK_FAKER_VALUES["faker.company.name"],
+      },
+      database: {
+        collation: () => MOCK_FAKER_VALUES["faker.database.collation"],
+        column: () => MOCK_FAKER_VALUES["faker.database.column"],
+        engine: () => MOCK_FAKER_VALUES["faker.database.engine"],
+        mongodbObjectId: () =>
+          MOCK_FAKER_VALUES["faker.database.mongodbObjectId"],
+        type: () => MOCK_FAKER_VALUES["faker.database.type"],
       },
     },
   };
@@ -387,6 +400,22 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.company.name")).toBe(
         MOCK_FAKER_VALUES["faker.company.name"],
+      );
+      // database
+      expect(transpile("faker.database.collation")).toBe(
+        MOCK_FAKER_VALUES["faker.database.collation"],
+      );
+      expect(transpile("faker.database.column")).toBe(
+        MOCK_FAKER_VALUES["faker.database.column"],
+      );
+      expect(transpile("faker.database.engine")).toBe(
+        MOCK_FAKER_VALUES["faker.database.engine"],
+      );
+      expect(transpile("faker.database.mongodbObjectId")).toBe(
+        MOCK_FAKER_VALUES["faker.database.mongodbObjectId"],
+      );
+      expect(transpile("faker.database.type")).toBe(
+        MOCK_FAKER_VALUES["faker.database.type"],
       );
     });
 

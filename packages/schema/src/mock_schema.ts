@@ -70,6 +70,12 @@ export const FakerSchema = z.enum([
   "faker.company.catchPhraseDescriptor",
   "faker.company.catchPhraseNoun",
   "faker.company.name",
+  // database
+  "faker.database.collation",
+  "faker.database.column",
+  "faker.database.engine",
+  "faker.database.mongodbObjectId",
+  "faker.database.type",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
