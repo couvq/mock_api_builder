@@ -2,27 +2,604 @@ import { describe, expect, it, vi } from "vitest";
 import { transpile } from "./transpiler.js";
 import { FakerType } from "./index.js";
 
-const MOCK_FAKER_VALUES: Record<FakerType, string> = {
-  "faker.string.uuid": "test-uuid",
-  "faker.internet.email": "test@example.com",
-  "faker.person.firstName": "John",
-  "faker.person.lastName": "Doe",
-  "faker.person.fullName": "John Doe",
+type MockAirline = { name: string; iataCode: string };
+type MockAirplane = { name: string; iataTypeCode: string };
+type MockLanguage = { alpha2: string; alpha3: string; name: string };
+type MockChemicalElement = {
+  symbol: string;
+  name: string;
+  atomicNumber: number;
+};
+type MockUnit = { name: string; symbol: string };
+
+const MOCK_FAKER_VALUES: Record<
+  FakerType,
+  | string
+  | MockAirline
+  | MockAirplane
+  | number[]
+  | boolean
+  | number
+  | MockLanguage
+  | MockChemicalElement
+  | MockUnit
+> = {
+  "fake.string.uuid": "test-uuid",
+  "fake.string.alpha": "b",
+  "fake.string.alphanumeric": "a7",
+  "fake.string.binary": "0b1",
+  "fake.string.hexadecimal": "0xB",
+  "fake.string.nanoid": "ptL0KpX_yRMI98JFr6B3n",
+  "fake.string.numeric": "2",
+  "fake.string.octal": "0o3",
+  "fake.string.sample": "Zo!.:*e>wR",
+  "fake.string.symbol": "$",
+  "fake.string.ulid": "01ARZ3NDEKTSV4RRFFQ69G5FAV",
+  "fake.airline.aircraftType": "narrowbody",
+  "fake.airline": { name: "American Airlines", iataCode: "AA" },
+  "fake.airline.airplane": { name: "Airbus A321", iataTypeCode: "321" },
+  "fake.airline.airport": {
+    name: "Dallas Fort Worth International Airport",
+    iataCode: "DFW",
+  },
+  "fake.airline.flightNumber": "1234",
+  "fake.airline.recordLocator": "ABC123",
+  "fake.airline.seat": "12A",
+  "fake.animal.bear": "Asian black bear",
+  "fake.animal.bird": "Buller's Shearwater",
+  "fake.animal.cat": "Singapura",
+  "fake.animal.cetacean": "Spinner Dolphin",
+  "fake.animal.cow": "Brava",
+  "fake.animal.crocodilia": "Philippine Crocodile",
+  "fake.animal.dog": "Irish Water Spaniel",
+  "fake.animal.fish": "Mandarin fish",
+  "fake.animal.horse": "Swedish Warmblood",
+  "fake.animal.insect": "Pyramid ant",
+  "fake.animal.lion": "Northeast Congo Lion",
+  "fake.animal.petName": "Coco",
+  "fake.animal.rabbit": "Florida White",
+  "fake.animal.rodent": "Cuscomys ashanika",
+  "fake.animal.snake": "Eyelash viper",
+  "fake.animal.type": "crocodile",
+  "fake.book.author": "William Shakespeare",
+  "fake.book.format": "Hardcover",
+  "fake.book.genre": "Fantasy",
+  "fake.book.publisher": "Addison-Wesley",
+  "fake.book.series": "Harry Potter",
+  "fake.book.title": "Romeo and Juliet",
+  "fake.color.cmyk": [0.31, 0.52, 0.32, 0.43],
+  "fake.color.colorByCSSColorSpace": [0.93, 1, 0.82],
+  "fake.color.cssSupportedFunction": "rgb",
+  "fake.color.cssSupportedSpace": "display-p3",
+  "fake.color.hsl": [201, 0.23, 0.32],
+  "fake.color.human": "red",
+  "fake.color.hwb": [201, 0.21, 0.31],
+  "fake.color.lab": [0.832133, -80.3245, 100.1234],
+  "fake.color.lch": [0.522345, 72.2, 56.2],
+  "fake.color.rgb": "#0d7f26",
+  "fake.color.space": "sRGB",
+  "fake.commerce.department": "Garden",
+  "fake.commerce.isbn": "978-0-692-82459-7",
+  "fake.commerce.price": "828.07",
+  "fake.commerce.product": "Computer",
+  "fake.commerce.productAdjective": "Handcrafted",
+  "fake.commerce.productDescription":
+    "Featuring Phosphorus-enhanced technology, our Fish offers unparalleled Modern performance",
+  "fake.commerce.productMaterial": "Rubber",
+  "fake.commerce.productName": "Incredible Soft Gloves",
+  "fake.commerce.upc": "036000291452",
+  "fake.company.buzzAdjective": "one-to-one",
+  "fake.company.buzzNoun": "paradigms",
+  "fake.company.buzzPhrase": "cultivate synergistic e-markets",
+  "fake.company.buzzVerb": "empower",
+  "fake.company.catchPhrase": "Upgradable systematic flexibility",
+  "fake.company.catchPhraseAdjective": "Multi-tiered",
+  "fake.company.catchPhraseDescriptor": "composite",
+  "fake.company.catchPhraseNoun": "leverage",
+  "fake.company.name": "Zieme, Hauck and McClure",
+  "fake.database.collation": "utf8_unicode_ci",
+  "fake.database.column": "createdAt",
+  "fake.database.engine": "ARCHIVE",
+  "fake.database.mongodbObjectId": "e175cac316a79afdd0ad3afb",
+  "fake.database.type": "timestamp",
+  "fake.datatype.boolean": true,
+  "fake.date.anytime": "2022-07-31T01:33:29.567Z",
+  "fake.date.birthdate": "1977-07-10T01:37:30.719Z",
+  "fake.date.future": "2022-11-19T05:52:49.100Z",
+  "fake.date.month": "October",
+  "fake.date.past": "2021-12-03T05:40:44.408Z",
+  "fake.date.recent": "2022-02-04T02:09:35.077Z",
+  "fake.date.soon": "2022-02-05T09:55:39.216Z",
+  "fake.date.timeZone": "Pacific/Guam",
+  "fake.date.weekday": "Monday",
+  "fake.finance.accountName": "Personal Loan Account",
+  "fake.finance.accountNumber": "92842238",
+  "fake.finance.amount": "617.87",
+  "fake.finance.bic": "WYAUPGX1",
+  "fake.finance.bitcoinAddress": "1TeZEFLmGPLEQrSRdAcnZLoWwYeiHwmRog",
+  "fake.finance.creditCardCVV": "506",
+  "fake.finance.creditCardIssuer": "discover",
+  "fake.finance.creditCardNumber": "4427163488662",
+  "fake.finance.currencyCode": "USD",
+  "fake.finance.currencyName": "US Dollar",
+  "fake.finance.currencyNumericCode": "840",
+  "fake.finance.currencySymbol": "$",
+  "fake.finance.ethereumAddress": "0xf03dfeecbafc5147241cc4c4ca20b3c9dfd04c4a",
+  "fake.finance.iban": "TR736918640040966092800056",
+  "fake.finance.litecoinAddress": "MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW",
+  "fake.finance.pin": "5067",
+  "fake.finance.routingNumber": "062197511",
+  "fake.finance.transactionDescription":
+    "payment transaction at Emard LLC using card ending with ****9187",
+  "fake.finance.transactionType": "payment",
+  "fake.food.adjective": "crispy",
+  "fake.food.description":
+    "An ostrich roast with longan and red cabbage, slow-roasted to perfection",
+  "fake.food.dish": "Tagine-Rubbed Venison Salad",
+  "fake.food.ethnicCategory": "Italian",
+  "fake.food.fruit": "lemon",
+  "fake.food.ingredient": "butter",
+  "fake.food.meat": "venison",
+  "fake.food.spice": "chilli",
+  "fake.food.vegetable": "broccoli",
+  "fake.git.branch": "feed-parse",
+  "fake.git.commitDate": "Mon Nov 7 14:40:58 2022 +0600",
+  "fake.git.commitEntry":
+    "commit fe8c38a965d13d9794eb36918cb24cebe49a45c2\nAuthor: Marion Becker <Marion_Becker49@gmail.com>\nDate: Mon Nov 7 05:38:37 2022 -0600\n\n    generate open-source system",
+  "fake.git.commitMessage": "reboot cross-platform driver",
+  "fake.git.commitSha": "2c6e3880fd94ddb7ef72d34e683cdc0c47bec6e6",
+  "fake.hacker.abbreviation": "THX",
+  "fake.hacker.adjective": "cross-platform",
+  "fake.hacker.ingverb": "navigating",
+  "fake.hacker.noun": "system",
+  "fake.hacker.phrase":
+    "If we override the card, we can get to the HDD feed through the back-end HDD sensor!",
+  "fake.hacker.verb": "copy",
+  "fake.image.avatar": "https://avatars.githubusercontent.com/u/97165289",
+  "fake.image.avatarGitHub": "https://avatars.githubusercontent.com/u/97165289",
+  "fake.image.dataUri":
+    "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==",
+  "fake.image.personPortrait":
+    "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/57.jpg",
+  "fake.image.url": "https://picsum.photos/seed/NWbJM2B/640/480",
+  "fake.image.urlPicsumPhotos": "https://picsum.photos/seed/NWbJM2B/640/480",
+  "fake.internet.displayName": "Nettie_Zboncak40",
+  "fake.internet.domainName": "slow-timer.info",
+  "fake.internet.domainSuffix": "com",
+  "fake.internet.domainWord": "close-reality",
+  "fake.internet.email": "test@example.com",
+  "fake.internet.emoji": "🥰",
+  "fake.internet.exampleEmail": "Helmer.Graham23@example.com",
+  "fake.internet.httpMethod": "PATCH",
+  "fake.internet.httpStatusCode": 200,
+  "fake.internet.ip": "245.108.222.0",
+  "fake.internet.ipv4": "245.108.222.0",
+  "fake.internet.ipv6": "269f:1230:73e3:318d:842b:daab:326d:897b",
+  "fake.internet.jwt":
+    "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTYifQ.c2lnbmF0dXJl",
+  "fake.internet.jwtAlgorithm": "HS256",
+  "fake.internet.mac": "32:8e:2e:09:c6:05",
+  "fake.internet.password": "89G1wJuBLbGziIs",
+  "fake.internet.port": 9414,
+  "fake.internet.protocol": "http",
+  "fake.internet.url": "https://remarkable-hackwork.info",
+  "fake.internet.userAgent":
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15",
+  "fake.internet.username": "Nettie_Zboncak40",
+  "fake.location.buildingNumber": "379",
+  "fake.location.cardinalDirection": "North",
+  "fake.location.city": "East Jarretmouth",
+  "fake.location.continent": "Asia",
+  "fake.location.country": "Greece",
+  "fake.location.countryCode": "SJ",
+  "fake.location.county": "Cambridgeshire",
+  "fake.location.direction": "Northeast",
+  "fake.location.language": { alpha2: "de", alpha3: "deu", name: "German" },
+  "fake.location.latitude": -30.9501,
+  "fake.location.longitude": 139.4567,
+  "fake.location.nearbyGPSCoordinate": [33.8475, -170.5953],
+  "fake.location.ordinalDirection": "Northeast",
+  "fake.location.postalAddress":
+    "Apt. 980\n0917 OConner Estates\nWest Shannonview\nMichigan\n82180",
+  "fake.location.secondaryAddress": "Apt. 861",
+  "fake.location.state": "Mississippi",
+  "fake.location.street": "Schroeder Isle",
+  "fake.location.streetAddress": "0917 OConner Estates",
+  "fake.location.timeZone": "Pacific/Guam",
+  "fake.location.zipCode": "17839",
+  "fake.lorem.lines": "Rerum quia aliquam pariatur explicabo sint minima eos.",
+  "fake.lorem.paragraph":
+    "Non architecto nam unde sint. Ex tenetur dolor facere optio.",
+  "fake.lorem.paragraphs":
+    "Beatae voluptatem dicta et assumenda fugit eaque quidem consequatur.",
+  "fake.lorem.sentence":
+    "Voluptatum cupiditate suscipit autem eveniet aut dolorem aut officiis.",
+  "fake.lorem.sentences":
+    "Iste molestiae incidunt aliquam possimus reprehenderit eum corrupti.",
+  "fake.lorem.slug": "dolores-illo-est",
+  "fake.lorem.text": "Doloribus autem non quis vero quia.",
+  "fake.lorem.word": "temporibus",
+  "fake.lorem.words": "qui praesentium pariatur",
+  "fake.music.album": "1989",
+  "fake.music.artist": "The Beatles",
+  "fake.music.genre": "Reggae",
+  "fake.music.songName": "White Christmas",
+  "fake.number.int": 2900970162509863,
+  "fake.number.float": 0.5688541042618454,
+  "fake.number.binary": "1010",
+  "fake.number.hex": "b",
+  "fake.number.octal": "5",
+  "fake.number.romanNumeral": "CMXCIII",
+  "fake.person.bio": "oatmeal advocate, veteran 🐠",
+  "fake.person.firstName": "John",
+  "fake.person.fullName": "John Doe",
+  "fake.person.gender": "Trans*Man",
+  "fake.person.jobArea": "Brand",
+  "fake.person.jobDescriptor": "Customer",
+  "fake.person.jobTitle": "Global Accounts Engineer",
+  "fake.person.jobType": "Assistant",
+  "fake.person.lastName": "Doe",
+  "fake.person.middleName": "James",
+  "fake.person.prefix": "Miss",
+  "fake.person.sex": "female",
+  "fake.person.suffix": "DDS",
+  "fake.person.zodiacSign": "Pisces",
+  "fake.phone.imei": "13-850175-913761-7",
+  "fake.phone.number": "961-770-7727",
+  "fake.science.chemicalElement": {
+    symbol: "H",
+    name: "Hydrogen",
+    atomicNumber: 1,
+  },
+  "fake.science.unit": { name: "meter", symbol: "m" },
+  "fake.system.commonFileExt": "gif",
+  "fake.system.commonFileName": "dollar.jpg",
+  "fake.system.commonFileType": "audio",
+  "fake.system.cron": "45 23 * * 6",
+  "fake.system.directoryPath": "/etc/mail",
+  "fake.system.fileExt": "emf",
+  "fake.system.fileName": "faithfully_calculating.u8mdn",
+  "fake.system.filePath": "/usr/local/src/money.dotx",
+  "fake.system.fileType": "message",
+  "fake.system.mimeType": "video/vnd.vivo",
+  "fake.system.networkInterface": "enp0s3",
+  "fake.system.semver": "1.15.2",
+  "fake.vehicle.bicycle": "Adventure Road Bicycle",
+  "fake.vehicle.color": "red",
+  "fake.vehicle.fuel": "Electric",
+  "fake.vehicle.manufacturer": "Ford",
+  "fake.vehicle.model": "Explorer",
+  "fake.vehicle.type": "Coupe",
+  "fake.vehicle.vehicle": "BMW Explorer",
+  "fake.vehicle.vin": "YV1MH682762184654",
+  "fake.vehicle.vrm": "MF56UPA",
+  "fake.word.adjective": "pungent",
+  "fake.word.adverb": "quarrelsomely",
+  "fake.word.conjunction": "in order that",
+  "fake.word.interjection": "gah",
+  "fake.word.noun": "external",
+  "fake.word.preposition": "without",
+  "fake.word.sample": "incidentally",
+  "fake.word.verb": "act",
+  "fake.word.words": "almost",
 };
 
 vi.mock("@faker-js/faker", () => {
   return {
     faker: {
       string: {
-        uuid: () => MOCK_FAKER_VALUES["faker.string.uuid"],
+        uuid: () => MOCK_FAKER_VALUES["fake.string.uuid"],
+        alpha: () => MOCK_FAKER_VALUES["fake.string.alpha"],
+        alphanumeric: () => MOCK_FAKER_VALUES["fake.string.alphanumeric"],
+        binary: () => MOCK_FAKER_VALUES["fake.string.binary"],
+        hexadecimal: () => MOCK_FAKER_VALUES["fake.string.hexadecimal"],
+        nanoid: () => MOCK_FAKER_VALUES["fake.string.nanoid"],
+        numeric: () => MOCK_FAKER_VALUES["fake.string.numeric"],
+        octal: () => MOCK_FAKER_VALUES["fake.string.octal"],
+        sample: () => MOCK_FAKER_VALUES["fake.string.sample"],
+        symbol: () => MOCK_FAKER_VALUES["fake.string.symbol"],
+        ulid: () => MOCK_FAKER_VALUES["fake.string.ulid"],
       },
       internet: {
-        email: () => MOCK_FAKER_VALUES["faker.internet.email"],
+        displayName: () => MOCK_FAKER_VALUES["fake.internet.displayName"],
+        domainName: () => MOCK_FAKER_VALUES["fake.internet.domainName"],
+        domainSuffix: () => MOCK_FAKER_VALUES["fake.internet.domainSuffix"],
+        domainWord: () => MOCK_FAKER_VALUES["fake.internet.domainWord"],
+        email: () => MOCK_FAKER_VALUES["fake.internet.email"],
+        emoji: () => MOCK_FAKER_VALUES["fake.internet.emoji"],
+        exampleEmail: () => MOCK_FAKER_VALUES["fake.internet.exampleEmail"],
+        httpMethod: () => MOCK_FAKER_VALUES["fake.internet.httpMethod"],
+        httpStatusCode: () => MOCK_FAKER_VALUES["fake.internet.httpStatusCode"],
+        ip: () => MOCK_FAKER_VALUES["fake.internet.ip"],
+        ipv4: () => MOCK_FAKER_VALUES["fake.internet.ipv4"],
+        ipv6: () => MOCK_FAKER_VALUES["fake.internet.ipv6"],
+        jwt: () => MOCK_FAKER_VALUES["fake.internet.jwt"],
+        jwtAlgorithm: () => MOCK_FAKER_VALUES["fake.internet.jwtAlgorithm"],
+        mac: () => MOCK_FAKER_VALUES["fake.internet.mac"],
+        password: () => MOCK_FAKER_VALUES["fake.internet.password"],
+        port: () => MOCK_FAKER_VALUES["fake.internet.port"],
+        protocol: () => MOCK_FAKER_VALUES["fake.internet.protocol"],
+        url: () => MOCK_FAKER_VALUES["fake.internet.url"],
+        userAgent: () => MOCK_FAKER_VALUES["fake.internet.userAgent"],
+        username: () => MOCK_FAKER_VALUES["fake.internet.username"],
       },
       person: {
-        firstName: () => MOCK_FAKER_VALUES["faker.person.firstName"],
-        lastName: () => MOCK_FAKER_VALUES["faker.person.lastName"],
-        fullName: () => MOCK_FAKER_VALUES["faker.person.fullName"],
+        bio: () => MOCK_FAKER_VALUES["fake.person.bio"],
+        firstName: () => MOCK_FAKER_VALUES["fake.person.firstName"],
+        fullName: () => MOCK_FAKER_VALUES["fake.person.fullName"],
+        gender: () => MOCK_FAKER_VALUES["fake.person.gender"],
+        jobArea: () => MOCK_FAKER_VALUES["fake.person.jobArea"],
+        jobDescriptor: () => MOCK_FAKER_VALUES["fake.person.jobDescriptor"],
+        jobTitle: () => MOCK_FAKER_VALUES["fake.person.jobTitle"],
+        jobType: () => MOCK_FAKER_VALUES["fake.person.jobType"],
+        lastName: () => MOCK_FAKER_VALUES["fake.person.lastName"],
+        middleName: () => MOCK_FAKER_VALUES["fake.person.middleName"],
+        prefix: () => MOCK_FAKER_VALUES["fake.person.prefix"],
+        sex: () => MOCK_FAKER_VALUES["fake.person.sex"],
+        suffix: () => MOCK_FAKER_VALUES["fake.person.suffix"],
+        zodiacSign: () => MOCK_FAKER_VALUES["fake.person.zodiacSign"],
+      },
+      phone: {
+        imei: () => MOCK_FAKER_VALUES["fake.phone.imei"],
+        number: () => MOCK_FAKER_VALUES["fake.phone.number"],
+      },
+      science: {
+        chemicalElement: () =>
+          MOCK_FAKER_VALUES["fake.science.chemicalElement"],
+        unit: () => MOCK_FAKER_VALUES["fake.science.unit"],
+      },
+      airline: {
+        aircraftType: () => MOCK_FAKER_VALUES["fake.airline.aircraftType"],
+        airline: () => MOCK_FAKER_VALUES["fake.airline"],
+        airplane: () => MOCK_FAKER_VALUES["fake.airline.airplane"],
+        airport: () => MOCK_FAKER_VALUES["fake.airline.airport"],
+        flightNumber: () => MOCK_FAKER_VALUES["fake.airline.flightNumber"],
+        recordLocator: () => MOCK_FAKER_VALUES["fake.airline.recordLocator"],
+        seat: () => MOCK_FAKER_VALUES["fake.airline.seat"],
+      },
+      animal: {
+        bear: () => MOCK_FAKER_VALUES["fake.animal.bear"],
+        bird: () => MOCK_FAKER_VALUES["fake.animal.bird"],
+        cat: () => MOCK_FAKER_VALUES["fake.animal.cat"],
+        cetacean: () => MOCK_FAKER_VALUES["fake.animal.cetacean"],
+        cow: () => MOCK_FAKER_VALUES["fake.animal.cow"],
+        crocodilia: () => MOCK_FAKER_VALUES["fake.animal.crocodilia"],
+        dog: () => MOCK_FAKER_VALUES["fake.animal.dog"],
+        fish: () => MOCK_FAKER_VALUES["fake.animal.fish"],
+        horse: () => MOCK_FAKER_VALUES["fake.animal.horse"],
+        insect: () => MOCK_FAKER_VALUES["fake.animal.insect"],
+        lion: () => MOCK_FAKER_VALUES["fake.animal.lion"],
+        petName: () => MOCK_FAKER_VALUES["fake.animal.petName"],
+        rabbit: () => MOCK_FAKER_VALUES["fake.animal.rabbit"],
+        rodent: () => MOCK_FAKER_VALUES["fake.animal.rodent"],
+        snake: () => MOCK_FAKER_VALUES["fake.animal.snake"],
+        type: () => MOCK_FAKER_VALUES["fake.animal.type"],
+      },
+      book: {
+        author: () => MOCK_FAKER_VALUES["fake.book.author"],
+        format: () => MOCK_FAKER_VALUES["fake.book.format"],
+        genre: () => MOCK_FAKER_VALUES["fake.book.genre"],
+        publisher: () => MOCK_FAKER_VALUES["fake.book.publisher"],
+        series: () => MOCK_FAKER_VALUES["fake.book.series"],
+        title: () => MOCK_FAKER_VALUES["fake.book.title"],
+      },
+      color: {
+        cmyk: () => MOCK_FAKER_VALUES["fake.color.cmyk"],
+        colorByCSSColorSpace: () =>
+          MOCK_FAKER_VALUES["fake.color.colorByCSSColorSpace"],
+        cssSupportedFunction: () =>
+          MOCK_FAKER_VALUES["fake.color.cssSupportedFunction"],
+        cssSupportedSpace: () =>
+          MOCK_FAKER_VALUES["fake.color.cssSupportedSpace"],
+        hsl: () => MOCK_FAKER_VALUES["fake.color.hsl"],
+        human: () => MOCK_FAKER_VALUES["fake.color.human"],
+        hwb: () => MOCK_FAKER_VALUES["fake.color.hwb"],
+        lab: () => MOCK_FAKER_VALUES["fake.color.lab"],
+        lch: () => MOCK_FAKER_VALUES["fake.color.lch"],
+        rgb: () => MOCK_FAKER_VALUES["fake.color.rgb"],
+        space: () => MOCK_FAKER_VALUES["fake.color.space"],
+      },
+      commerce: {
+        department: () => MOCK_FAKER_VALUES["fake.commerce.department"],
+        isbn: () => MOCK_FAKER_VALUES["fake.commerce.isbn"],
+        price: () => MOCK_FAKER_VALUES["fake.commerce.price"],
+        product: () => MOCK_FAKER_VALUES["fake.commerce.product"],
+        productAdjective: () =>
+          MOCK_FAKER_VALUES["fake.commerce.productAdjective"],
+        productDescription: () =>
+          MOCK_FAKER_VALUES["fake.commerce.productDescription"],
+        productMaterial: () =>
+          MOCK_FAKER_VALUES["fake.commerce.productMaterial"],
+        productName: () => MOCK_FAKER_VALUES["fake.commerce.productName"],
+        upc: () => MOCK_FAKER_VALUES["fake.commerce.upc"],
+      },
+      company: {
+        buzzAdjective: () => MOCK_FAKER_VALUES["fake.company.buzzAdjective"],
+        buzzNoun: () => MOCK_FAKER_VALUES["fake.company.buzzNoun"],
+        buzzPhrase: () => MOCK_FAKER_VALUES["fake.company.buzzPhrase"],
+        buzzVerb: () => MOCK_FAKER_VALUES["fake.company.buzzVerb"],
+        catchPhrase: () => MOCK_FAKER_VALUES["fake.company.catchPhrase"],
+        catchPhraseAdjective: () =>
+          MOCK_FAKER_VALUES["fake.company.catchPhraseAdjective"],
+        catchPhraseDescriptor: () =>
+          MOCK_FAKER_VALUES["fake.company.catchPhraseDescriptor"],
+        catchPhraseNoun: () =>
+          MOCK_FAKER_VALUES["fake.company.catchPhraseNoun"],
+        name: () => MOCK_FAKER_VALUES["fake.company.name"],
+      },
+      database: {
+        collation: () => MOCK_FAKER_VALUES["fake.database.collation"],
+        column: () => MOCK_FAKER_VALUES["fake.database.column"],
+        engine: () => MOCK_FAKER_VALUES["fake.database.engine"],
+        mongodbObjectId: () =>
+          MOCK_FAKER_VALUES["fake.database.mongodbObjectId"],
+        type: () => MOCK_FAKER_VALUES["fake.database.type"],
+      },
+      datatype: {
+        boolean: () => MOCK_FAKER_VALUES["fake.datatype.boolean"],
+      },
+      date: {
+        anytime: () =>
+          new Date(MOCK_FAKER_VALUES["fake.date.anytime"] as string),
+        birthdate: () =>
+          new Date(MOCK_FAKER_VALUES["fake.date.birthdate"] as string),
+        future: () => new Date(MOCK_FAKER_VALUES["fake.date.future"] as string),
+        month: () => MOCK_FAKER_VALUES["fake.date.month"],
+        past: () => new Date(MOCK_FAKER_VALUES["fake.date.past"] as string),
+        recent: () => new Date(MOCK_FAKER_VALUES["fake.date.recent"] as string),
+        soon: () => new Date(MOCK_FAKER_VALUES["fake.date.soon"] as string),
+        timeZone: () => MOCK_FAKER_VALUES["fake.date.timeZone"],
+        weekday: () => MOCK_FAKER_VALUES["fake.date.weekday"],
+      },
+      finance: {
+        accountName: () => MOCK_FAKER_VALUES["fake.finance.accountName"],
+        accountNumber: () => MOCK_FAKER_VALUES["fake.finance.accountNumber"],
+        amount: () => MOCK_FAKER_VALUES["fake.finance.amount"],
+        bic: () => MOCK_FAKER_VALUES["fake.finance.bic"],
+        bitcoinAddress: () => MOCK_FAKER_VALUES["fake.finance.bitcoinAddress"],
+        creditCardCVV: () => MOCK_FAKER_VALUES["fake.finance.creditCardCVV"],
+        creditCardIssuer: () =>
+          MOCK_FAKER_VALUES["fake.finance.creditCardIssuer"],
+        creditCardNumber: () =>
+          MOCK_FAKER_VALUES["fake.finance.creditCardNumber"],
+        currencyCode: () => MOCK_FAKER_VALUES["fake.finance.currencyCode"],
+        currencyName: () => MOCK_FAKER_VALUES["fake.finance.currencyName"],
+        currencyNumericCode: () =>
+          MOCK_FAKER_VALUES["fake.finance.currencyNumericCode"],
+        currencySymbol: () => MOCK_FAKER_VALUES["fake.finance.currencySymbol"],
+        ethereumAddress: () =>
+          MOCK_FAKER_VALUES["fake.finance.ethereumAddress"],
+        iban: () => MOCK_FAKER_VALUES["fake.finance.iban"],
+        litecoinAddress: () =>
+          MOCK_FAKER_VALUES["fake.finance.litecoinAddress"],
+        pin: () => MOCK_FAKER_VALUES["fake.finance.pin"],
+        routingNumber: () => MOCK_FAKER_VALUES["fake.finance.routingNumber"],
+        transactionDescription: () =>
+          MOCK_FAKER_VALUES["fake.finance.transactionDescription"],
+        transactionType: () =>
+          MOCK_FAKER_VALUES["fake.finance.transactionType"],
+      },
+      food: {
+        adjective: () => MOCK_FAKER_VALUES["fake.food.adjective"],
+        description: () => MOCK_FAKER_VALUES["fake.food.description"],
+        dish: () => MOCK_FAKER_VALUES["fake.food.dish"],
+        ethnicCategory: () => MOCK_FAKER_VALUES["fake.food.ethnicCategory"],
+        fruit: () => MOCK_FAKER_VALUES["fake.food.fruit"],
+        ingredient: () => MOCK_FAKER_VALUES["fake.food.ingredient"],
+        meat: () => MOCK_FAKER_VALUES["fake.food.meat"],
+        spice: () => MOCK_FAKER_VALUES["fake.food.spice"],
+        vegetable: () => MOCK_FAKER_VALUES["fake.food.vegetable"],
+      },
+      git: {
+        branch: () => MOCK_FAKER_VALUES["fake.git.branch"],
+        commitDate: () => MOCK_FAKER_VALUES["fake.git.commitDate"],
+        commitEntry: () => MOCK_FAKER_VALUES["fake.git.commitEntry"],
+        commitMessage: () => MOCK_FAKER_VALUES["fake.git.commitMessage"],
+        commitSha: () => MOCK_FAKER_VALUES["fake.git.commitSha"],
+      },
+      hacker: {
+        abbreviation: () => MOCK_FAKER_VALUES["fake.hacker.abbreviation"],
+        adjective: () => MOCK_FAKER_VALUES["fake.hacker.adjective"],
+        ingverb: () => MOCK_FAKER_VALUES["fake.hacker.ingverb"],
+        noun: () => MOCK_FAKER_VALUES["fake.hacker.noun"],
+        phrase: () => MOCK_FAKER_VALUES["fake.hacker.phrase"],
+        verb: () => MOCK_FAKER_VALUES["fake.hacker.verb"],
+      },
+      image: {
+        avatar: () => MOCK_FAKER_VALUES["fake.image.avatar"],
+        avatarGitHub: () => MOCK_FAKER_VALUES["fake.image.avatarGitHub"],
+        dataUri: () => MOCK_FAKER_VALUES["fake.image.dataUri"],
+        personPortrait: () => MOCK_FAKER_VALUES["fake.image.personPortrait"],
+        url: () => MOCK_FAKER_VALUES["fake.image.url"],
+        urlPicsumPhotos: () => MOCK_FAKER_VALUES["fake.image.urlPicsumPhotos"],
+      },
+      location: {
+        buildingNumber: () => MOCK_FAKER_VALUES["fake.location.buildingNumber"],
+        cardinalDirection: () =>
+          MOCK_FAKER_VALUES["fake.location.cardinalDirection"],
+        city: () => MOCK_FAKER_VALUES["fake.location.city"],
+        continent: () => MOCK_FAKER_VALUES["fake.location.continent"],
+        country: () => MOCK_FAKER_VALUES["fake.location.country"],
+        countryCode: () => MOCK_FAKER_VALUES["fake.location.countryCode"],
+        county: () => MOCK_FAKER_VALUES["fake.location.county"],
+        direction: () => MOCK_FAKER_VALUES["fake.location.direction"],
+        language: () => MOCK_FAKER_VALUES["fake.location.language"],
+        latitude: () => MOCK_FAKER_VALUES["fake.location.latitude"],
+        longitude: () => MOCK_FAKER_VALUES["fake.location.longitude"],
+        nearbyGPSCoordinate: () =>
+          MOCK_FAKER_VALUES["fake.location.nearbyGPSCoordinate"],
+        ordinalDirection: () =>
+          MOCK_FAKER_VALUES["fake.location.ordinalDirection"],
+        postalAddress: () => MOCK_FAKER_VALUES["fake.location.postalAddress"],
+        secondaryAddress: () =>
+          MOCK_FAKER_VALUES["fake.location.secondaryAddress"],
+        state: () => MOCK_FAKER_VALUES["fake.location.state"],
+        street: () => MOCK_FAKER_VALUES["fake.location.street"],
+        streetAddress: () => MOCK_FAKER_VALUES["fake.location.streetAddress"],
+        timeZone: () => MOCK_FAKER_VALUES["fake.location.timeZone"],
+        zipCode: () => MOCK_FAKER_VALUES["fake.location.zipCode"],
+      },
+      lorem: {
+        lines: () => MOCK_FAKER_VALUES["fake.lorem.lines"],
+        paragraph: () => MOCK_FAKER_VALUES["fake.lorem.paragraph"],
+        paragraphs: () => MOCK_FAKER_VALUES["fake.lorem.paragraphs"],
+        sentence: () => MOCK_FAKER_VALUES["fake.lorem.sentence"],
+        sentences: () => MOCK_FAKER_VALUES["fake.lorem.sentences"],
+        slug: () => MOCK_FAKER_VALUES["fake.lorem.slug"],
+        text: () => MOCK_FAKER_VALUES["fake.lorem.text"],
+        word: () => MOCK_FAKER_VALUES["fake.lorem.word"],
+        words: () => MOCK_FAKER_VALUES["fake.lorem.words"],
+      },
+      music: {
+        album: () => MOCK_FAKER_VALUES["fake.music.album"],
+        artist: () => MOCK_FAKER_VALUES["fake.music.artist"],
+        genre: () => MOCK_FAKER_VALUES["fake.music.genre"],
+        songName: () => MOCK_FAKER_VALUES["fake.music.songName"],
+      },
+      number: {
+        int: () => MOCK_FAKER_VALUES["fake.number.int"],
+        float: () => MOCK_FAKER_VALUES["fake.number.float"],
+        binary: () => MOCK_FAKER_VALUES["fake.number.binary"],
+        hex: () => MOCK_FAKER_VALUES["fake.number.hex"],
+        octal: () => MOCK_FAKER_VALUES["fake.number.octal"],
+        romanNumeral: () => MOCK_FAKER_VALUES["fake.number.romanNumeral"],
+      },
+      system: {
+        commonFileExt: () => MOCK_FAKER_VALUES["fake.system.commonFileExt"],
+        commonFileName: () => MOCK_FAKER_VALUES["fake.system.commonFileName"],
+        commonFileType: () => MOCK_FAKER_VALUES["fake.system.commonFileType"],
+        cron: () => MOCK_FAKER_VALUES["fake.system.cron"],
+        directoryPath: () => MOCK_FAKER_VALUES["fake.system.directoryPath"],
+        fileExt: () => MOCK_FAKER_VALUES["fake.system.fileExt"],
+        fileName: () => MOCK_FAKER_VALUES["fake.system.fileName"],
+        filePath: () => MOCK_FAKER_VALUES["fake.system.filePath"],
+        fileType: () => MOCK_FAKER_VALUES["fake.system.fileType"],
+        mimeType: () => MOCK_FAKER_VALUES["fake.system.mimeType"],
+        networkInterface: () =>
+          MOCK_FAKER_VALUES["fake.system.networkInterface"],
+        semver: () => MOCK_FAKER_VALUES["fake.system.semver"],
+      },
+      vehicle: {
+        bicycle: () => MOCK_FAKER_VALUES["fake.vehicle.bicycle"],
+        color: () => MOCK_FAKER_VALUES["fake.vehicle.color"],
+        fuel: () => MOCK_FAKER_VALUES["fake.vehicle.fuel"],
+        manufacturer: () => MOCK_FAKER_VALUES["fake.vehicle.manufacturer"],
+        model: () => MOCK_FAKER_VALUES["fake.vehicle.model"],
+        type: () => MOCK_FAKER_VALUES["fake.vehicle.type"],
+        vehicle: () => MOCK_FAKER_VALUES["fake.vehicle.vehicle"],
+        vin: () => MOCK_FAKER_VALUES["fake.vehicle.vin"],
+        vrm: () => MOCK_FAKER_VALUES["fake.vehicle.vrm"],
+      },
+      word: {
+        adjective: () => MOCK_FAKER_VALUES["fake.word.adjective"],
+        adverb: () => MOCK_FAKER_VALUES["fake.word.adverb"],
+        conjunction: () => MOCK_FAKER_VALUES["fake.word.conjunction"],
+        interjection: () => MOCK_FAKER_VALUES["fake.word.interjection"],
+        noun: () => MOCK_FAKER_VALUES["fake.word.noun"],
+        preposition: () => MOCK_FAKER_VALUES["fake.word.preposition"],
+        sample: () => MOCK_FAKER_VALUES["fake.word.sample"],
+        verb: () => MOCK_FAKER_VALUES["fake.word.verb"],
+        words: () => MOCK_FAKER_VALUES["fake.word.words"],
       },
     },
   };
@@ -46,26 +623,747 @@ describe("transpiler", () => {
 
   describe("faker values", () => {
     it("transpiles a faker type at the root into its generated value", () => {
-      expect(transpile("faker.string.uuid")).toBe(
-        MOCK_FAKER_VALUES["faker.string.uuid"],
+      expect(transpile("fake.string.uuid")).toBe(
+        MOCK_FAKER_VALUES["fake.string.uuid"],
       );
-      expect(transpile("faker.internet.email")).toBe(
-        MOCK_FAKER_VALUES["faker.internet.email"],
+      expect(transpile("fake.string.alpha")).toBe(
+        MOCK_FAKER_VALUES["fake.string.alpha"],
       );
-      expect(transpile("faker.person.firstName")).toBe(
-        MOCK_FAKER_VALUES["faker.person.firstName"],
+      expect(transpile("fake.string.alphanumeric")).toBe(
+        MOCK_FAKER_VALUES["fake.string.alphanumeric"],
       );
-      expect(transpile("faker.person.lastName")).toBe(
-        MOCK_FAKER_VALUES["faker.person.lastName"],
+      expect(transpile("fake.string.binary")).toBe(
+        MOCK_FAKER_VALUES["fake.string.binary"],
       );
-      expect(transpile("faker.person.fullName")).toBe(
-        MOCK_FAKER_VALUES["faker.person.fullName"],
+      expect(transpile("fake.string.hexadecimal")).toBe(
+        MOCK_FAKER_VALUES["fake.string.hexadecimal"],
+      );
+      expect(transpile("fake.string.nanoid")).toBe(
+        MOCK_FAKER_VALUES["fake.string.nanoid"],
+      );
+      expect(transpile("fake.string.numeric")).toBe(
+        MOCK_FAKER_VALUES["fake.string.numeric"],
+      );
+      expect(transpile("fake.string.octal")).toBe(
+        MOCK_FAKER_VALUES["fake.string.octal"],
+      );
+      expect(transpile("fake.string.sample")).toBe(
+        MOCK_FAKER_VALUES["fake.string.sample"],
+      );
+      expect(transpile("fake.string.symbol")).toBe(
+        MOCK_FAKER_VALUES["fake.string.symbol"],
+      );
+      expect(transpile("fake.string.ulid")).toBe(
+        MOCK_FAKER_VALUES["fake.string.ulid"],
+      );
+      // airline
+      expect(transpile("fake.airline.aircraftType")).toBe(
+        MOCK_FAKER_VALUES["fake.airline.aircraftType"],
+      );
+      expect(transpile("fake.airline")).toEqual(
+        MOCK_FAKER_VALUES["fake.airline"],
+      );
+      expect(transpile("fake.airline.airplane")).toEqual(
+        MOCK_FAKER_VALUES["fake.airline.airplane"],
+      );
+      expect(transpile("fake.airline.airport")).toEqual(
+        MOCK_FAKER_VALUES["fake.airline.airport"],
+      );
+      expect(transpile("fake.airline.flightNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.airline.flightNumber"],
+      );
+      expect(transpile("fake.airline.recordLocator")).toBe(
+        MOCK_FAKER_VALUES["fake.airline.recordLocator"],
+      );
+      expect(transpile("fake.airline.seat")).toBe(
+        MOCK_FAKER_VALUES["fake.airline.seat"],
+      );
+      // animal
+      expect(transpile("fake.animal.bear")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.bear"],
+      );
+      expect(transpile("fake.animal.bird")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.bird"],
+      );
+      expect(transpile("fake.animal.cat")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.cat"],
+      );
+      expect(transpile("fake.animal.cetacean")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.cetacean"],
+      );
+      expect(transpile("fake.animal.cow")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.cow"],
+      );
+      expect(transpile("fake.animal.crocodilia")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.crocodilia"],
+      );
+      expect(transpile("fake.animal.dog")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.dog"],
+      );
+      expect(transpile("fake.animal.fish")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.fish"],
+      );
+      expect(transpile("fake.animal.horse")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.horse"],
+      );
+      expect(transpile("fake.animal.insect")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.insect"],
+      );
+      expect(transpile("fake.animal.lion")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.lion"],
+      );
+      expect(transpile("fake.animal.petName")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.petName"],
+      );
+      expect(transpile("fake.animal.rabbit")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.rabbit"],
+      );
+      expect(transpile("fake.animal.rodent")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.rodent"],
+      );
+      expect(transpile("fake.animal.snake")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.snake"],
+      );
+      expect(transpile("fake.animal.type")).toBe(
+        MOCK_FAKER_VALUES["fake.animal.type"],
+      );
+      // book
+      expect(transpile("fake.book.author")).toBe(
+        MOCK_FAKER_VALUES["fake.book.author"],
+      );
+      expect(transpile("fake.book.format")).toBe(
+        MOCK_FAKER_VALUES["fake.book.format"],
+      );
+      expect(transpile("fake.book.genre")).toBe(
+        MOCK_FAKER_VALUES["fake.book.genre"],
+      );
+      expect(transpile("fake.book.publisher")).toBe(
+        MOCK_FAKER_VALUES["fake.book.publisher"],
+      );
+      expect(transpile("fake.book.series")).toBe(
+        MOCK_FAKER_VALUES["fake.book.series"],
+      );
+      expect(transpile("fake.book.title")).toBe(
+        MOCK_FAKER_VALUES["fake.book.title"],
+      );
+      // color
+      expect(transpile("fake.color.cmyk")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.cmyk"],
+      );
+      expect(transpile("fake.color.colorByCSSColorSpace")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.colorByCSSColorSpace"],
+      );
+      expect(transpile("fake.color.cssSupportedFunction")).toBe(
+        MOCK_FAKER_VALUES["fake.color.cssSupportedFunction"],
+      );
+      expect(transpile("fake.color.cssSupportedSpace")).toBe(
+        MOCK_FAKER_VALUES["fake.color.cssSupportedSpace"],
+      );
+      expect(transpile("fake.color.hsl")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.hsl"],
+      );
+      expect(transpile("fake.color.human")).toBe(
+        MOCK_FAKER_VALUES["fake.color.human"],
+      );
+      expect(transpile("fake.color.hwb")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.hwb"],
+      );
+      expect(transpile("fake.color.lab")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.lab"],
+      );
+      expect(transpile("fake.color.lch")).toEqual(
+        MOCK_FAKER_VALUES["fake.color.lch"],
+      );
+      expect(transpile("fake.color.rgb")).toBe(
+        MOCK_FAKER_VALUES["fake.color.rgb"],
+      );
+      expect(transpile("fake.color.space")).toBe(
+        MOCK_FAKER_VALUES["fake.color.space"],
+      );
+      // commerce
+      expect(transpile("fake.commerce.department")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.department"],
+      );
+      expect(transpile("fake.commerce.isbn")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.isbn"],
+      );
+      expect(transpile("fake.commerce.price")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.price"],
+      );
+      expect(transpile("fake.commerce.product")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.product"],
+      );
+      expect(transpile("fake.commerce.productAdjective")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.productAdjective"],
+      );
+      expect(transpile("fake.commerce.productDescription")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.productDescription"],
+      );
+      expect(transpile("fake.commerce.productMaterial")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.productMaterial"],
+      );
+      expect(transpile("fake.commerce.productName")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.productName"],
+      );
+      expect(transpile("fake.commerce.upc")).toBe(
+        MOCK_FAKER_VALUES["fake.commerce.upc"],
+      );
+      // company
+      expect(transpile("fake.company.buzzAdjective")).toBe(
+        MOCK_FAKER_VALUES["fake.company.buzzAdjective"],
+      );
+      expect(transpile("fake.company.buzzNoun")).toBe(
+        MOCK_FAKER_VALUES["fake.company.buzzNoun"],
+      );
+      expect(transpile("fake.company.buzzPhrase")).toBe(
+        MOCK_FAKER_VALUES["fake.company.buzzPhrase"],
+      );
+      expect(transpile("fake.company.buzzVerb")).toBe(
+        MOCK_FAKER_VALUES["fake.company.buzzVerb"],
+      );
+      expect(transpile("fake.company.catchPhrase")).toBe(
+        MOCK_FAKER_VALUES["fake.company.catchPhrase"],
+      );
+      expect(transpile("fake.company.catchPhraseAdjective")).toBe(
+        MOCK_FAKER_VALUES["fake.company.catchPhraseAdjective"],
+      );
+      expect(transpile("fake.company.catchPhraseDescriptor")).toBe(
+        MOCK_FAKER_VALUES["fake.company.catchPhraseDescriptor"],
+      );
+      expect(transpile("fake.company.catchPhraseNoun")).toBe(
+        MOCK_FAKER_VALUES["fake.company.catchPhraseNoun"],
+      );
+      expect(transpile("fake.company.name")).toBe(
+        MOCK_FAKER_VALUES["fake.company.name"],
+      );
+      // database
+      expect(transpile("fake.database.collation")).toBe(
+        MOCK_FAKER_VALUES["fake.database.collation"],
+      );
+      expect(transpile("fake.database.column")).toBe(
+        MOCK_FAKER_VALUES["fake.database.column"],
+      );
+      expect(transpile("fake.database.engine")).toBe(
+        MOCK_FAKER_VALUES["fake.database.engine"],
+      );
+      expect(transpile("fake.database.mongodbObjectId")).toBe(
+        MOCK_FAKER_VALUES["fake.database.mongodbObjectId"],
+      );
+      expect(transpile("fake.database.type")).toBe(
+        MOCK_FAKER_VALUES["fake.database.type"],
+      );
+      // datatype
+      expect(transpile("fake.datatype.boolean")).toBe(
+        MOCK_FAKER_VALUES["fake.datatype.boolean"],
+      );
+      // date
+      expect(transpile("fake.date.anytime")).toBe(
+        MOCK_FAKER_VALUES["fake.date.anytime"],
+      );
+      expect(transpile("fake.date.birthdate")).toBe(
+        MOCK_FAKER_VALUES["fake.date.birthdate"],
+      );
+      expect(transpile("fake.date.future")).toBe(
+        MOCK_FAKER_VALUES["fake.date.future"],
+      );
+      expect(transpile("fake.date.month")).toBe(
+        MOCK_FAKER_VALUES["fake.date.month"],
+      );
+      expect(transpile("fake.date.past")).toBe(
+        MOCK_FAKER_VALUES["fake.date.past"],
+      );
+      expect(transpile("fake.date.recent")).toBe(
+        MOCK_FAKER_VALUES["fake.date.recent"],
+      );
+      expect(transpile("fake.date.soon")).toBe(
+        MOCK_FAKER_VALUES["fake.date.soon"],
+      );
+      expect(transpile("fake.date.timeZone")).toBe(
+        MOCK_FAKER_VALUES["fake.date.timeZone"],
+      );
+      expect(transpile("fake.date.weekday")).toBe(
+        MOCK_FAKER_VALUES["fake.date.weekday"],
+      );
+      // finance
+      expect(transpile("fake.finance.accountName")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.accountName"],
+      );
+      expect(transpile("fake.finance.accountNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.accountNumber"],
+      );
+      expect(transpile("fake.finance.amount")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.amount"],
+      );
+      expect(transpile("fake.finance.bic")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.bic"],
+      );
+      expect(transpile("fake.finance.bitcoinAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.bitcoinAddress"],
+      );
+      expect(transpile("fake.finance.creditCardCVV")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.creditCardCVV"],
+      );
+      expect(transpile("fake.finance.creditCardIssuer")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.creditCardIssuer"],
+      );
+      expect(transpile("fake.finance.creditCardNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.creditCardNumber"],
+      );
+      expect(transpile("fake.finance.currencyCode")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.currencyCode"],
+      );
+      expect(transpile("fake.finance.currencyName")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.currencyName"],
+      );
+      expect(transpile("fake.finance.currencyNumericCode")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.currencyNumericCode"],
+      );
+      expect(transpile("fake.finance.currencySymbol")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.currencySymbol"],
+      );
+      expect(transpile("fake.finance.ethereumAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.ethereumAddress"],
+      );
+      expect(transpile("fake.finance.iban")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.iban"],
+      );
+      expect(transpile("fake.finance.litecoinAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.litecoinAddress"],
+      );
+      expect(transpile("fake.finance.pin")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.pin"],
+      );
+      expect(transpile("fake.finance.routingNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.routingNumber"],
+      );
+      expect(transpile("fake.finance.transactionDescription")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.transactionDescription"],
+      );
+      expect(transpile("fake.finance.transactionType")).toBe(
+        MOCK_FAKER_VALUES["fake.finance.transactionType"],
+      );
+      // food
+      expect(transpile("fake.food.adjective")).toBe(
+        MOCK_FAKER_VALUES["fake.food.adjective"],
+      );
+      expect(transpile("fake.food.description")).toBe(
+        MOCK_FAKER_VALUES["fake.food.description"],
+      );
+      expect(transpile("fake.food.dish")).toBe(
+        MOCK_FAKER_VALUES["fake.food.dish"],
+      );
+      expect(transpile("fake.food.ethnicCategory")).toBe(
+        MOCK_FAKER_VALUES["fake.food.ethnicCategory"],
+      );
+      expect(transpile("fake.food.fruit")).toBe(
+        MOCK_FAKER_VALUES["fake.food.fruit"],
+      );
+      expect(transpile("fake.food.ingredient")).toBe(
+        MOCK_FAKER_VALUES["fake.food.ingredient"],
+      );
+      expect(transpile("fake.food.meat")).toBe(
+        MOCK_FAKER_VALUES["fake.food.meat"],
+      );
+      expect(transpile("fake.food.spice")).toBe(
+        MOCK_FAKER_VALUES["fake.food.spice"],
+      );
+      expect(transpile("fake.food.vegetable")).toBe(
+        MOCK_FAKER_VALUES["fake.food.vegetable"],
+      );
+      // git
+      expect(transpile("fake.git.branch")).toBe(
+        MOCK_FAKER_VALUES["fake.git.branch"],
+      );
+      expect(transpile("fake.git.commitDate")).toBe(
+        MOCK_FAKER_VALUES["fake.git.commitDate"],
+      );
+      expect(transpile("fake.git.commitEntry")).toBe(
+        MOCK_FAKER_VALUES["fake.git.commitEntry"],
+      );
+      expect(transpile("fake.git.commitMessage")).toBe(
+        MOCK_FAKER_VALUES["fake.git.commitMessage"],
+      );
+      expect(transpile("fake.git.commitSha")).toBe(
+        MOCK_FAKER_VALUES["fake.git.commitSha"],
+      );
+      // hacker
+      expect(transpile("fake.hacker.abbreviation")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.abbreviation"],
+      );
+      expect(transpile("fake.hacker.adjective")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.adjective"],
+      );
+      expect(transpile("fake.hacker.ingverb")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.ingverb"],
+      );
+      expect(transpile("fake.hacker.noun")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.noun"],
+      );
+      expect(transpile("fake.hacker.phrase")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.phrase"],
+      );
+      expect(transpile("fake.hacker.verb")).toBe(
+        MOCK_FAKER_VALUES["fake.hacker.verb"],
+      );
+      // image
+      expect(transpile("fake.image.avatar")).toBe(
+        MOCK_FAKER_VALUES["fake.image.avatar"],
+      );
+      expect(transpile("fake.image.avatarGitHub")).toBe(
+        MOCK_FAKER_VALUES["fake.image.avatarGitHub"],
+      );
+      expect(transpile("fake.image.dataUri")).toBe(
+        MOCK_FAKER_VALUES["fake.image.dataUri"],
+      );
+      expect(transpile("fake.image.personPortrait")).toBe(
+        MOCK_FAKER_VALUES["fake.image.personPortrait"],
+      );
+      expect(transpile("fake.image.url")).toBe(
+        MOCK_FAKER_VALUES["fake.image.url"],
+      );
+      expect(transpile("fake.image.urlPicsumPhotos")).toBe(
+        MOCK_FAKER_VALUES["fake.image.urlPicsumPhotos"],
+      );
+      // internet (email covered above)
+      expect(transpile("fake.internet.displayName")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.displayName"],
+      );
+      expect(transpile("fake.internet.domainName")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.domainName"],
+      );
+      expect(transpile("fake.internet.domainSuffix")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.domainSuffix"],
+      );
+      expect(transpile("fake.internet.domainWord")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.domainWord"],
+      );
+      expect(transpile("fake.internet.email")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.email"],
+      );
+      expect(transpile("fake.internet.emoji")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.emoji"],
+      );
+      expect(transpile("fake.internet.exampleEmail")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.exampleEmail"],
+      );
+      expect(transpile("fake.internet.httpMethod")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.httpMethod"],
+      );
+      expect(transpile("fake.internet.httpStatusCode")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.httpStatusCode"],
+      );
+      expect(transpile("fake.internet.ip")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.ip"],
+      );
+      expect(transpile("fake.internet.ipv4")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.ipv4"],
+      );
+      expect(transpile("fake.internet.ipv6")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.ipv6"],
+      );
+      expect(transpile("fake.internet.jwt")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.jwt"],
+      );
+      expect(transpile("fake.internet.jwtAlgorithm")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.jwtAlgorithm"],
+      );
+      expect(transpile("fake.internet.mac")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.mac"],
+      );
+      expect(transpile("fake.internet.password")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.password"],
+      );
+      expect(transpile("fake.internet.port")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.port"],
+      );
+      expect(transpile("fake.internet.protocol")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.protocol"],
+      );
+      expect(transpile("fake.internet.url")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.url"],
+      );
+      expect(transpile("fake.internet.userAgent")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.userAgent"],
+      );
+      expect(transpile("fake.internet.username")).toBe(
+        MOCK_FAKER_VALUES["fake.internet.username"],
+      );
+      // location
+      expect(transpile("fake.location.buildingNumber")).toBe(
+        MOCK_FAKER_VALUES["fake.location.buildingNumber"],
+      );
+      expect(transpile("fake.location.cardinalDirection")).toBe(
+        MOCK_FAKER_VALUES["fake.location.cardinalDirection"],
+      );
+      expect(transpile("fake.location.city")).toBe(
+        MOCK_FAKER_VALUES["fake.location.city"],
+      );
+      expect(transpile("fake.location.continent")).toBe(
+        MOCK_FAKER_VALUES["fake.location.continent"],
+      );
+      expect(transpile("fake.location.country")).toBe(
+        MOCK_FAKER_VALUES["fake.location.country"],
+      );
+      expect(transpile("fake.location.countryCode")).toBe(
+        MOCK_FAKER_VALUES["fake.location.countryCode"],
+      );
+      expect(transpile("fake.location.county")).toBe(
+        MOCK_FAKER_VALUES["fake.location.county"],
+      );
+      expect(transpile("fake.location.direction")).toBe(
+        MOCK_FAKER_VALUES["fake.location.direction"],
+      );
+      expect(transpile("fake.location.language")).toEqual(
+        MOCK_FAKER_VALUES["fake.location.language"],
+      );
+      expect(transpile("fake.location.latitude")).toBe(
+        MOCK_FAKER_VALUES["fake.location.latitude"],
+      );
+      expect(transpile("fake.location.longitude")).toBe(
+        MOCK_FAKER_VALUES["fake.location.longitude"],
+      );
+      expect(transpile("fake.location.nearbyGPSCoordinate")).toEqual(
+        MOCK_FAKER_VALUES["fake.location.nearbyGPSCoordinate"],
+      );
+      expect(transpile("fake.location.ordinalDirection")).toBe(
+        MOCK_FAKER_VALUES["fake.location.ordinalDirection"],
+      );
+      expect(transpile("fake.location.postalAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.location.postalAddress"],
+      );
+      expect(transpile("fake.location.secondaryAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.location.secondaryAddress"],
+      );
+      expect(transpile("fake.location.state")).toBe(
+        MOCK_FAKER_VALUES["fake.location.state"],
+      );
+      expect(transpile("fake.location.street")).toBe(
+        MOCK_FAKER_VALUES["fake.location.street"],
+      );
+      expect(transpile("fake.location.streetAddress")).toBe(
+        MOCK_FAKER_VALUES["fake.location.streetAddress"],
+      );
+      expect(transpile("fake.location.timeZone")).toBe(
+        MOCK_FAKER_VALUES["fake.location.timeZone"],
+      );
+      expect(transpile("fake.location.zipCode")).toBe(
+        MOCK_FAKER_VALUES["fake.location.zipCode"],
+      );
+      // lorem
+      expect(transpile("fake.lorem.lines")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.lines"],
+      );
+      expect(transpile("fake.lorem.paragraph")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.paragraph"],
+      );
+      expect(transpile("fake.lorem.paragraphs")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.paragraphs"],
+      );
+      expect(transpile("fake.lorem.sentence")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.sentence"],
+      );
+      expect(transpile("fake.lorem.sentences")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.sentences"],
+      );
+      expect(transpile("fake.lorem.slug")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.slug"],
+      );
+      expect(transpile("fake.lorem.text")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.text"],
+      );
+      expect(transpile("fake.lorem.word")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.word"],
+      );
+      expect(transpile("fake.lorem.words")).toBe(
+        MOCK_FAKER_VALUES["fake.lorem.words"],
+      );
+      // music
+      expect(transpile("fake.music.album")).toBe(
+        MOCK_FAKER_VALUES["fake.music.album"],
+      );
+      expect(transpile("fake.music.artist")).toBe(
+        MOCK_FAKER_VALUES["fake.music.artist"],
+      );
+      expect(transpile("fake.music.genre")).toBe(
+        MOCK_FAKER_VALUES["fake.music.genre"],
+      );
+      expect(transpile("fake.music.songName")).toBe(
+        MOCK_FAKER_VALUES["fake.music.songName"],
+      );
+      // number
+      expect(transpile("fake.number.int")).toBe(
+        MOCK_FAKER_VALUES["fake.number.int"],
+      );
+      expect(transpile("fake.number.float")).toBe(
+        MOCK_FAKER_VALUES["fake.number.float"],
+      );
+      expect(transpile("fake.number.binary")).toBe(
+        MOCK_FAKER_VALUES["fake.number.binary"],
+      );
+      expect(transpile("fake.number.hex")).toBe(
+        MOCK_FAKER_VALUES["fake.number.hex"],
+      );
+      expect(transpile("fake.number.octal")).toBe(
+        MOCK_FAKER_VALUES["fake.number.octal"],
+      );
+      expect(transpile("fake.number.romanNumeral")).toBe(
+        MOCK_FAKER_VALUES["fake.number.romanNumeral"],
+      );
+      // person
+      expect(transpile("fake.person.bio")).toBe(
+        MOCK_FAKER_VALUES["fake.person.bio"],
+      );
+      expect(transpile("fake.person.firstName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.firstName"],
+      );
+      expect(transpile("fake.person.fullName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.fullName"],
+      );
+      expect(transpile("fake.person.gender")).toBe(
+        MOCK_FAKER_VALUES["fake.person.gender"],
+      );
+      expect(transpile("fake.person.jobArea")).toBe(
+        MOCK_FAKER_VALUES["fake.person.jobArea"],
+      );
+      expect(transpile("fake.person.jobDescriptor")).toBe(
+        MOCK_FAKER_VALUES["fake.person.jobDescriptor"],
+      );
+      expect(transpile("fake.person.jobTitle")).toBe(
+        MOCK_FAKER_VALUES["fake.person.jobTitle"],
+      );
+      expect(transpile("fake.person.jobType")).toBe(
+        MOCK_FAKER_VALUES["fake.person.jobType"],
+      );
+      expect(transpile("fake.person.lastName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.lastName"],
+      );
+      expect(transpile("fake.person.middleName")).toBe(
+        MOCK_FAKER_VALUES["fake.person.middleName"],
+      );
+      expect(transpile("fake.person.prefix")).toBe(
+        MOCK_FAKER_VALUES["fake.person.prefix"],
+      );
+      expect(transpile("fake.person.sex")).toBe(
+        MOCK_FAKER_VALUES["fake.person.sex"],
+      );
+      expect(transpile("fake.person.suffix")).toBe(
+        MOCK_FAKER_VALUES["fake.person.suffix"],
+      );
+      expect(transpile("fake.person.zodiacSign")).toBe(
+        MOCK_FAKER_VALUES["fake.person.zodiacSign"],
+      );
+      // phone
+      expect(transpile("fake.phone.imei")).toBe(
+        MOCK_FAKER_VALUES["fake.phone.imei"],
+      );
+      expect(transpile("fake.phone.number")).toBe(
+        MOCK_FAKER_VALUES["fake.phone.number"],
+      );
+      // science
+      expect(transpile("fake.science.chemicalElement")).toEqual(
+        MOCK_FAKER_VALUES["fake.science.chemicalElement"],
+      );
+      expect(transpile("fake.science.unit")).toEqual(
+        MOCK_FAKER_VALUES["fake.science.unit"],
+      );
+      // system
+      expect(transpile("fake.system.commonFileExt")).toBe(
+        MOCK_FAKER_VALUES["fake.system.commonFileExt"],
+      );
+      expect(transpile("fake.system.commonFileName")).toBe(
+        MOCK_FAKER_VALUES["fake.system.commonFileName"],
+      );
+      expect(transpile("fake.system.commonFileType")).toBe(
+        MOCK_FAKER_VALUES["fake.system.commonFileType"],
+      );
+      expect(transpile("fake.system.cron")).toBe(
+        MOCK_FAKER_VALUES["fake.system.cron"],
+      );
+      expect(transpile("fake.system.directoryPath")).toBe(
+        MOCK_FAKER_VALUES["fake.system.directoryPath"],
+      );
+      expect(transpile("fake.system.fileExt")).toBe(
+        MOCK_FAKER_VALUES["fake.system.fileExt"],
+      );
+      expect(transpile("fake.system.fileName")).toBe(
+        MOCK_FAKER_VALUES["fake.system.fileName"],
+      );
+      expect(transpile("fake.system.filePath")).toBe(
+        MOCK_FAKER_VALUES["fake.system.filePath"],
+      );
+      expect(transpile("fake.system.fileType")).toBe(
+        MOCK_FAKER_VALUES["fake.system.fileType"],
+      );
+      expect(transpile("fake.system.mimeType")).toBe(
+        MOCK_FAKER_VALUES["fake.system.mimeType"],
+      );
+      expect(transpile("fake.system.networkInterface")).toBe(
+        MOCK_FAKER_VALUES["fake.system.networkInterface"],
+      );
+      expect(transpile("fake.system.semver")).toBe(
+        MOCK_FAKER_VALUES["fake.system.semver"],
+      );
+      // vehicle
+      expect(transpile("fake.vehicle.bicycle")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.bicycle"],
+      );
+      expect(transpile("fake.vehicle.color")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.color"],
+      );
+      expect(transpile("fake.vehicle.fuel")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.fuel"],
+      );
+      expect(transpile("fake.vehicle.manufacturer")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.manufacturer"],
+      );
+      expect(transpile("fake.vehicle.model")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.model"],
+      );
+      expect(transpile("fake.vehicle.type")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.type"],
+      );
+      expect(transpile("fake.vehicle.vehicle")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.vehicle"],
+      );
+      expect(transpile("fake.vehicle.vin")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.vin"],
+      );
+      expect(transpile("fake.vehicle.vrm")).toBe(
+        MOCK_FAKER_VALUES["fake.vehicle.vrm"],
+      );
+      // word
+      expect(transpile("fake.word.adjective")).toBe(
+        MOCK_FAKER_VALUES["fake.word.adjective"],
+      );
+      expect(transpile("fake.word.adverb")).toBe(
+        MOCK_FAKER_VALUES["fake.word.adverb"],
+      );
+      expect(transpile("fake.word.conjunction")).toBe(
+        MOCK_FAKER_VALUES["fake.word.conjunction"],
+      );
+      expect(transpile("fake.word.interjection")).toBe(
+        MOCK_FAKER_VALUES["fake.word.interjection"],
+      );
+      expect(transpile("fake.word.noun")).toBe(
+        MOCK_FAKER_VALUES["fake.word.noun"],
+      );
+      expect(transpile("fake.word.preposition")).toBe(
+        MOCK_FAKER_VALUES["fake.word.preposition"],
+      );
+      expect(transpile("fake.word.sample")).toBe(
+        MOCK_FAKER_VALUES["fake.word.sample"],
+      );
+      expect(transpile("fake.word.verb")).toBe(
+        MOCK_FAKER_VALUES["fake.word.verb"],
+      );
+      expect(transpile("fake.word.words")).toBe(
+        MOCK_FAKER_VALUES["fake.word.words"],
       );
     });
 
     it("transpiles a faker type nested in an object", () => {
-      expect(transpile({ email: "faker.internet.email" })).toEqual({
-        email: MOCK_FAKER_VALUES["faker.internet.email"],
+      expect(transpile({ email: "fake.internet.email" })).toEqual({
+        email: MOCK_FAKER_VALUES["fake.internet.email"],
       });
     });
   });
@@ -74,13 +1372,13 @@ describe("transpiler", () => {
     it("transpiles an object mixing plain primitives and faker types", () => {
       expect(
         transpile({
-          id: "faker.string.uuid",
+          id: "fake.string.uuid",
           name: "Alice",
           age: 30,
           isActive: true,
         }),
       ).toEqual({
-        id: MOCK_FAKER_VALUES["faker.string.uuid"],
+        id: MOCK_FAKER_VALUES["fake.string.uuid"],
         name: "Alice",
         age: 30,
         isActive: true,
@@ -116,8 +1414,8 @@ describe("transpiler", () => {
     });
 
     it("transpiles arrays containing faker types", () => {
-      expect(transpile(["faker.person.firstName", "literal"])).toEqual([
-        MOCK_FAKER_VALUES["faker.person.firstName"],
+      expect(transpile(["fake.person.firstName", "literal"])).toEqual([
+        MOCK_FAKER_VALUES["fake.person.firstName"],
         "literal",
       ]);
     });
