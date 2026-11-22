@@ -7,7 +7,7 @@ type MockAirplane = { name: string; iataTypeCode: string };
 
 const MOCK_FAKER_VALUES: Record<
   FakerType,
-  string | MockAirline | MockAirplane | number[]
+  string | MockAirline | MockAirplane | number[] | boolean
 > = {
   "faker.string.uuid": "test-uuid",
   "faker.internet.email": "test@example.com",
@@ -81,6 +81,7 @@ const MOCK_FAKER_VALUES: Record<
   "faker.database.engine": "ARCHIVE",
   "faker.database.mongodbObjectId": "e175cac316a79afdd0ad3afb",
   "faker.database.type": "timestamp",
+  "faker.datatype.boolean": true,
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -183,6 +184,9 @@ vi.mock("@faker-js/faker", () => {
         mongodbObjectId: () =>
           MOCK_FAKER_VALUES["faker.database.mongodbObjectId"],
         type: () => MOCK_FAKER_VALUES["faker.database.type"],
+      },
+      datatype: {
+        boolean: () => MOCK_FAKER_VALUES["faker.datatype.boolean"],
       },
     },
   };
@@ -416,6 +420,10 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.database.type")).toBe(
         MOCK_FAKER_VALUES["faker.database.type"],
+      );
+      // datatype
+      expect(transpile("faker.datatype.boolean")).toBe(
+        MOCK_FAKER_VALUES["faker.datatype.boolean"],
       );
     });
 

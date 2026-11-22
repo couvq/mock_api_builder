@@ -7,7 +7,7 @@ export type Airport = ReturnType<typeof faker.airline.airport>;
 
 export const fakerGenerators: Record<
   FakerType,
-  () => string | Airline | Airplane | Airport | number[]
+  () => string | Airline | Airplane | Airport | number[] | boolean
 > = {
   "faker.string.uuid": () => faker.string.uuid(),
   "faker.internet.email": () => faker.internet.email(),
@@ -87,4 +87,6 @@ export const fakerGenerators: Record<
   "faker.database.engine": () => faker.database.engine(),
   "faker.database.mongodbObjectId": () => faker.database.mongodbObjectId(),
   "faker.database.type": () => faker.database.type(),
+  //datatype
+  "faker.datatype.boolean": () => faker.datatype.boolean(),
 };

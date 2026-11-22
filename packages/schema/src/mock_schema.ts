@@ -76,6 +76,8 @@ export const FakerSchema = z.enum([
   "faker.database.engine",
   "faker.database.mongodbObjectId",
   "faker.database.type",
+  // datatype
+  "faker.datatype.boolean",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
