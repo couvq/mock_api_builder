@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { fireEvent, screen, within } from "@testing-library/react";
 import Form from ".";
 import renderWithProviders from "../../../test/renderWithProviders";
 import { userEvent } from "@testing-library/user-event/dist/cjs/setup/index.js";
@@ -6,6 +6,18 @@ import { server } from "../../../test/server";
 import { http, HttpResponse } from "msw";
 
 const user = userEvent.setup();
+
+// The example-response tree is collapsed by default (see ResponseSchemaEditor).
+// Alt+click its root collapse control to expand that node and all descendants
+// so the generated values render, then return queries scoped to the region.
+const expandExampleResponse = () => {
+  const region = screen.getByRole("region", { name: /example response/i });
+  const collapseIcon = region.querySelector(".jer-collapse-icon");
+  if (!collapseIcon)
+    throw new Error("Example response collapse icon not found");
+  fireEvent.click(collapseIcon, { altKey: true });
+  return within(region);
+};
 
 describe("Form", () => {
   it("should show a success message when submitted with valid values", async () => {
@@ -95,9 +107,7 @@ describe("Form", () => {
     await user.click(jsonEditor);
     await user.paste('{"friends":["Alice","Bob"]}');
 
-    const exampleResponse = within(
-      screen.getByRole("region", { name: /example response/i }),
-    );
+    const exampleResponse = expandExampleResponse();
     expect(await exampleResponse.findByText(/Alice/)).toBeInTheDocument();
     expect(await exampleResponse.findByText(/Bob/)).toBeInTheDocument();
   });
@@ -117,9 +127,7 @@ describe("Form", () => {
 
     await user.click(screen.getByRole("button", { name: /Regenerate/i }));
 
-    const exampleResponse = within(
-      screen.getByRole("region", { name: /example response/i }),
-    );
+    const exampleResponse = expandExampleResponse();
     expect(await exampleResponse.findByText(/hello/)).toBeInTheDocument();
   });
 });

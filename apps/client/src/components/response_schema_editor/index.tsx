@@ -125,6 +125,7 @@ const ResponseSchemaEditor = ({
               data={value}
               theme={jsonEditorTheme}
               rootName="root"
+              collapse
               defaultValue={DEFAULT_FAKER_TYPE}
               restrictTypeSelection={FAKER_TYPE_SELECTION}
               onUpdate={(update) =>
@@ -180,6 +181,7 @@ const ResponseSchemaEditor = ({
             data={exampleResponse}
             theme={jsonEditorTheme}
             viewOnly
+            collapse
             rootName="root"
           />
         </Box>
