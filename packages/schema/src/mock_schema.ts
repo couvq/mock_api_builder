@@ -190,6 +190,11 @@ export const FakerSchema = z.enum([
   "fake.lorem.text",
   "fake.lorem.word",
   "fake.lorem.words",
+  // music
+  "fake.music.album",
+  "fake.music.artist",
+  "fake.music.genre",
+  "fake.music.songName",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;

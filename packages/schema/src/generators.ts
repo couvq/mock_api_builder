@@ -211,4 +211,9 @@ export const fakerGenerators: Record<
   "fake.lorem.text": () => faker.lorem.text(),
   "fake.lorem.word": () => faker.lorem.word(),
   "fake.lorem.words": () => faker.lorem.words(),
+  //music
+  "fake.music.album": () => faker.music.album(),
+  "fake.music.artist": () => faker.music.artist(),
+  "fake.music.genre": () => faker.music.genre(),
+  "fake.music.songName": () => faker.music.songName(),
 };

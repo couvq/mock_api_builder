@@ -205,6 +205,10 @@ const MOCK_FAKER_VALUES: Record<
   "fake.lorem.text": "Doloribus autem non quis vero quia.",
   "fake.lorem.word": "temporibus",
   "fake.lorem.words": "qui praesentium pariatur",
+  "fake.music.album": "1989",
+  "fake.music.artist": "The Beatles",
+  "fake.music.genre": "Reggae",
+  "fake.music.songName": "White Christmas",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -442,6 +446,12 @@ vi.mock("@faker-js/faker", () => {
         text: () => MOCK_FAKER_VALUES["fake.lorem.text"],
         word: () => MOCK_FAKER_VALUES["fake.lorem.word"],
         words: () => MOCK_FAKER_VALUES["fake.lorem.words"],
+      },
+      music: {
+        album: () => MOCK_FAKER_VALUES["fake.music.album"],
+        artist: () => MOCK_FAKER_VALUES["fake.music.artist"],
+        genre: () => MOCK_FAKER_VALUES["fake.music.genre"],
+        songName: () => MOCK_FAKER_VALUES["fake.music.songName"],
       },
     },
   };
@@ -997,6 +1007,19 @@ describe("transpiler", () => {
       );
       expect(transpile("fake.lorem.words")).toBe(
         MOCK_FAKER_VALUES["fake.lorem.words"],
+      );
+      // music
+      expect(transpile("fake.music.album")).toBe(
+        MOCK_FAKER_VALUES["fake.music.album"],
+      );
+      expect(transpile("fake.music.artist")).toBe(
+        MOCK_FAKER_VALUES["fake.music.artist"],
+      );
+      expect(transpile("fake.music.genre")).toBe(
+        MOCK_FAKER_VALUES["fake.music.genre"],
+      );
+      expect(transpile("fake.music.songName")).toBe(
+        MOCK_FAKER_VALUES["fake.music.songName"],
       );
     });
 
