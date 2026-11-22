@@ -24,6 +24,22 @@ const MOCK_FAKER_VALUES: Record<
   "faker.airline.flightNumber": "1234",
   "faker.airline.recordLocator": "ABC123",
   "faker.airline.seat": "12A",
+  "faker.animal.bear": "Asian black bear",
+  "faker.animal.bird": "Buller's Shearwater",
+  "faker.animal.cat": "Singapura",
+  "faker.animal.cetacean": "Spinner Dolphin",
+  "faker.animal.cow": "Brava",
+  "faker.animal.crocodilia": "Philippine Crocodile",
+  "faker.animal.dog": "Irish Water Spaniel",
+  "faker.animal.fish": "Mandarin fish",
+  "faker.animal.horse": "Swedish Warmblood",
+  "faker.animal.insect": "Pyramid ant",
+  "faker.animal.lion": "Northeast Congo Lion",
+  "faker.animal.petName": "Coco",
+  "faker.animal.rabbit": "Florida White",
+  "faker.animal.rodent": "Cuscomys ashanika",
+  "faker.animal.snake": "Eyelash viper",
+  "faker.animal.type": "crocodile",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -48,6 +64,24 @@ vi.mock("@faker-js/faker", () => {
         flightNumber: () => MOCK_FAKER_VALUES["faker.airline.flightNumber"],
         recordLocator: () => MOCK_FAKER_VALUES["faker.airline.recordLocator"],
         seat: () => MOCK_FAKER_VALUES["faker.airline.seat"],
+      },
+      animal: {
+        bear: () => MOCK_FAKER_VALUES["faker.animal.bear"],
+        bird: () => MOCK_FAKER_VALUES["faker.animal.bird"],
+        cat: () => MOCK_FAKER_VALUES["faker.animal.cat"],
+        cetacean: () => MOCK_FAKER_VALUES["faker.animal.cetacean"],
+        cow: () => MOCK_FAKER_VALUES["faker.animal.cow"],
+        crocodilia: () => MOCK_FAKER_VALUES["faker.animal.crocodilia"],
+        dog: () => MOCK_FAKER_VALUES["faker.animal.dog"],
+        fish: () => MOCK_FAKER_VALUES["faker.animal.fish"],
+        horse: () => MOCK_FAKER_VALUES["faker.animal.horse"],
+        insect: () => MOCK_FAKER_VALUES["faker.animal.insect"],
+        lion: () => MOCK_FAKER_VALUES["faker.animal.lion"],
+        petName: () => MOCK_FAKER_VALUES["faker.animal.petName"],
+        rabbit: () => MOCK_FAKER_VALUES["faker.animal.rabbit"],
+        rodent: () => MOCK_FAKER_VALUES["faker.animal.rodent"],
+        snake: () => MOCK_FAKER_VALUES["faker.animal.snake"],
+        type: () => MOCK_FAKER_VALUES["faker.animal.type"],
       },
     },
   };
@@ -107,6 +141,55 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.airline.seat")).toBe(
         MOCK_FAKER_VALUES["faker.airline.seat"],
+      );
+      // animal
+      expect(transpile("faker.animal.bear")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.bear"],
+      );
+      expect(transpile("faker.animal.bird")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.bird"],
+      );
+      expect(transpile("faker.animal.cat")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.cat"],
+      );
+      expect(transpile("faker.animal.cetacean")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.cetacean"],
+      );
+      expect(transpile("faker.animal.cow")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.cow"],
+      );
+      expect(transpile("faker.animal.crocodilia")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.crocodilia"],
+      );
+      expect(transpile("faker.animal.dog")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.dog"],
+      );
+      expect(transpile("faker.animal.fish")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.fish"],
+      );
+      expect(transpile("faker.animal.horse")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.horse"],
+      );
+      expect(transpile("faker.animal.insect")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.insect"],
+      );
+      expect(transpile("faker.animal.lion")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.lion"],
+      );
+      expect(transpile("faker.animal.petName")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.petName"],
+      );
+      expect(transpile("faker.animal.rabbit")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.rabbit"],
+      );
+      expect(transpile("faker.animal.rodent")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.rodent"],
+      );
+      expect(transpile("faker.animal.snake")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.snake"],
+      );
+      expect(transpile("faker.animal.type")).toBe(
+        MOCK_FAKER_VALUES["faker.animal.type"],
       );
     });
 
