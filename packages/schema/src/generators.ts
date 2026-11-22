@@ -58,4 +58,15 @@ export const fakerGenerators: Record<
   "faker.color.lch": () => faker.color.lch(),
   "faker.color.rgb": () => faker.color.rgb(),
   "faker.color.space": () => faker.color.space(),
+  //commerce
+  "faker.commerce.department": () => faker.commerce.department(),
+  "faker.commerce.isbn": () => faker.commerce.isbn(),
+  "faker.commerce.price": () => faker.commerce.price(),
+  "faker.commerce.product": () => faker.commerce.product(),
+  "faker.commerce.productAdjective": () => faker.commerce.productAdjective(),
+  "faker.commerce.productDescription": () =>
+    faker.commerce.productDescription(),
+  "faker.commerce.productMaterial": () => faker.commerce.productMaterial(),
+  "faker.commerce.productName": () => faker.commerce.productName(),
+  "faker.commerce.upc": () => faker.commerce.upc(),
 };

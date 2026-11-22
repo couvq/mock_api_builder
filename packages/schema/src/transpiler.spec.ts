@@ -57,6 +57,16 @@ const MOCK_FAKER_VALUES: Record<
   "faker.color.lch": [0.522345, 72.2, 56.2],
   "faker.color.rgb": "#0d7f26",
   "faker.color.space": "sRGB",
+  "faker.commerce.department": "Garden",
+  "faker.commerce.isbn": "978-0-692-82459-7",
+  "faker.commerce.price": "828.07",
+  "faker.commerce.product": "Computer",
+  "faker.commerce.productAdjective": "Handcrafted",
+  "faker.commerce.productDescription":
+    "Featuring Phosphorus-enhanced technology, our Fish offers unparalleled Modern performance",
+  "faker.commerce.productMaterial": "Rubber",
+  "faker.commerce.productName": "Incredible Soft Gloves",
+  "faker.commerce.upc": "036000291452",
 };
 
 vi.mock("@faker-js/faker", () => {
@@ -123,6 +133,20 @@ vi.mock("@faker-js/faker", () => {
         lch: () => MOCK_FAKER_VALUES["faker.color.lch"],
         rgb: () => MOCK_FAKER_VALUES["faker.color.rgb"],
         space: () => MOCK_FAKER_VALUES["faker.color.space"],
+      },
+      commerce: {
+        department: () => MOCK_FAKER_VALUES["faker.commerce.department"],
+        isbn: () => MOCK_FAKER_VALUES["faker.commerce.isbn"],
+        price: () => MOCK_FAKER_VALUES["faker.commerce.price"],
+        product: () => MOCK_FAKER_VALUES["faker.commerce.product"],
+        productAdjective: () =>
+          MOCK_FAKER_VALUES["faker.commerce.productAdjective"],
+        productDescription: () =>
+          MOCK_FAKER_VALUES["faker.commerce.productDescription"],
+        productMaterial: () =>
+          MOCK_FAKER_VALUES["faker.commerce.productMaterial"],
+        productName: () => MOCK_FAKER_VALUES["faker.commerce.productName"],
+        upc: () => MOCK_FAKER_VALUES["faker.commerce.upc"],
       },
     },
   };
@@ -284,6 +308,34 @@ describe("transpiler", () => {
       );
       expect(transpile("faker.color.space")).toBe(
         MOCK_FAKER_VALUES["faker.color.space"],
+      );
+      // commerce
+      expect(transpile("faker.commerce.department")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.department"],
+      );
+      expect(transpile("faker.commerce.isbn")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.isbn"],
+      );
+      expect(transpile("faker.commerce.price")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.price"],
+      );
+      expect(transpile("faker.commerce.product")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.product"],
+      );
+      expect(transpile("faker.commerce.productAdjective")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.productAdjective"],
+      );
+      expect(transpile("faker.commerce.productDescription")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.productDescription"],
+      );
+      expect(transpile("faker.commerce.productMaterial")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.productMaterial"],
+      );
+      expect(transpile("faker.commerce.productName")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.productName"],
+      );
+      expect(transpile("faker.commerce.upc")).toBe(
+        MOCK_FAKER_VALUES["faker.commerce.upc"],
       );
     });
 

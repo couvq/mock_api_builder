@@ -50,6 +50,16 @@ export const FakerSchema = z.enum([
   "faker.color.lch",
   "faker.color.rgb",
   "faker.color.space",
+  // commerce
+  "faker.commerce.department",
+  "faker.commerce.isbn",
+  "faker.commerce.price",
+  "faker.commerce.product",
+  "faker.commerce.productAdjective",
+  "faker.commerce.productDescription",
+  "faker.commerce.productMaterial",
+  "faker.commerce.productName",
+  "faker.commerce.upc",
 ]);
 
 export type FakerType = z.infer<typeof FakerSchema>;
