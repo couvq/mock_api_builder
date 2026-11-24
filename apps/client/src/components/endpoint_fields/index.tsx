@@ -20,10 +20,10 @@ interface EndpointFieldsProps {
 }
 
 /**
- * The method / path / status code / delay row shared by the create and edit
- * endpoint forms. `method` and `path` are react-hook-form fields (this must
- * render inside a `FormContainer`); `statusCode` and `delay` are controlled
- * values owned by the parent.
+ * The endpoint fields shared by the create and edit forms, laid out as two
+ * rows: method + path, then status code + delay. `method` and `path` are
+ * react-hook-form fields (this must render inside a `FormContainer`);
+ * `statusCode` and `delay` are controlled values owned by the parent.
  */
 const EndpointFields = ({
   statusCode,
@@ -42,7 +42,7 @@ const EndpointFields = ({
           fullWidth
         />
       </Grid>
-      <Grid size={{ xs: 12, sm: 6 }}>
+      <Grid size={{ xs: 12, sm: 10 }}>
         <TextFieldElement
           name="path"
           label="Path"
@@ -66,7 +66,7 @@ const EndpointFields = ({
           }}
         />
       </Grid>
-      <Grid size={{ xs: 12, sm: 2 }}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <StatusCodeInput
           required
           size="medium"
@@ -75,7 +75,7 @@ const EndpointFields = ({
           onValueChange={onStatusCodeChange}
         />
       </Grid>
-      <Grid size={{ xs: 12, sm: 2 }}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <DelayInput
           required
           size="medium"
