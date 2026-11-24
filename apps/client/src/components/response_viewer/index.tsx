@@ -1,9 +1,12 @@
 import { Box, Chip, CircularProgress, Stack, Typography } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { JsonEditor } from "json-edit-react";
 import { useJsonEditorTheme } from "../../hooks/jsonEditorTheme";
 import { MOCK_API_BASE_URL } from "../endpoint_viewer";
 import { MockRequestError } from "../../api/mock_api";
+import { useEditor } from "../../context/Editor/EditorContext";
+import EmptyState from "../common/EmptyState";
 
 const ResponseViewer = () => {
   const {
@@ -13,6 +16,7 @@ const ResponseViewer = () => {
     data: response,
     variables,
   } = useMockRequest();
+  const { activeEndpointId } = useEditor();
   const jsonEditorTheme = useJsonEditorTheme();
 
   if (isPending)
@@ -45,11 +49,38 @@ const ResponseViewer = () => {
     );
 
   if (response === undefined)
-    return <Typography>Nothing here yet — try sending a request.</Typography>;
+    return activeEndpointId ? (
+      <EmptyState
+        icon={<SendIcon />}
+        title="No response yet"
+        description="Press Send to see the response here."
+      />
+    ) : (
+      <EmptyState
+        muted
+        icon={<SendIcon />}
+        title="No response to show"
+        description="Select an endpoint, then press Send. The response will appear here."
+      />
+    );
 
   return (
-    <Box data-testid="response-json-viewer">
-      <Stack direction="row" spacing={2} sx={{ alignItems: "center", mb: 1.5 }}>
+    <Box
+      data-testid="response-json-viewer"
+      sx={{
+        height: "100%",
+        minHeight: 0,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Keep the status + timing header pinned while only the JSON response
+          below it scrolls. */}
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ alignItems: "center", mb: 1.5, flexShrink: 0 }}
+      >
         <Chip
           label={`${response.status} ${response.statusText}`}
           color="success"
@@ -58,7 +89,9 @@ const ResponseViewer = () => {
           {response.timeMs} ms {response.sizeBytes} B
         </Typography>
       </Stack>
-      <JsonEditor data={response.data} theme={jsonEditorTheme} viewOnly />
+      <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+        <JsonEditor data={response.data} theme={jsonEditorTheme} viewOnly />
+      </Box>
     </Box>
   );
 };

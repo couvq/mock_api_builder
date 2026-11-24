@@ -14,8 +14,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import ApiIcon from "@mui/icons-material/Api";
 import { JsonEditor } from "json-edit-react";
 import { isEqual } from "lodash";
+import EmptyState from "../common/EmptyState";
 import { updateEndpoint } from "../../api/endpoint";
 import {
   useEditor,
@@ -50,7 +52,22 @@ const EndpointViewer = () => {
   const serveMockRequestMutation = useMockRequest();
   const jsonEditorTheme = useJsonEditorTheme();
 
-  if (!activeEndpointId || !draft) return "No endpoint selected.";
+  if (!activeEndpointId || !draft) {
+    const hasNoEndpoints = isSuccess && data.length === 0;
+    return hasNoEndpoints ? (
+      <EmptyState
+        icon={<ApiIcon />}
+        title="No endpoints yet"
+        description="Create a mock endpoint to get started."
+      />
+    ) : (
+      <EmptyState
+        icon={<ApiIcon />}
+        title="Select an endpoint"
+        description="Choose a mock endpoint from the list to view its response schema."
+      />
+    );
+  }
 
   const { id, method, path, responseSchema } = draft;
 
