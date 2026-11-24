@@ -56,8 +56,22 @@ const ResponseViewer = () => {
     );
 
   return (
-    <Box data-testid="response-json-viewer">
-      <Stack direction="row" spacing={2} sx={{ alignItems: "center", mb: 1.5 }}>
+    <Box
+      data-testid="response-json-viewer"
+      sx={{
+        height: "100%",
+        minHeight: 0,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Keep the status + timing header pinned while only the JSON response
+          below it scrolls. */}
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ alignItems: "center", mb: 1.5, flexShrink: 0 }}
+      >
         <Chip
           label={`${response.status} ${response.statusText}`}
           color="success"
@@ -66,7 +80,9 @@ const ResponseViewer = () => {
           {response.timeMs} ms {response.sizeBytes} B
         </Typography>
       </Stack>
-      <JsonEditor data={response.data} theme={jsonEditorTheme} viewOnly />
+      <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+        <JsonEditor data={response.data} theme={jsonEditorTheme} viewOnly />
+      </Box>
     </Box>
   );
 };
