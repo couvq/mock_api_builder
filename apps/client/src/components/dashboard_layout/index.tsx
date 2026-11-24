@@ -1,5 +1,7 @@
-import { Box, Paper, Stack } from "@mui/material";
+import { Paper } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import type { ReactNode } from "react";
+import { Group, Panel, Separator } from "react-resizable-panels";
 
 interface DashboardLayoutProps {
   sidePanel: ReactNode;
@@ -7,34 +9,50 @@ interface DashboardLayoutProps {
   responsePanel: ReactNode;
 }
 
+// Separator applies its className to its own root div, so styled() targets it
+// directly. flex-grow/flex-shrink and the resize cursor are managed by the
+// library; flex-basis sets the divider thickness (works for both orientations).
+const ResizeHandle = styled(Separator)(({ theme }) => ({
+  flexBasis: 6,
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.divider,
+  transition: theme.transitions.create("background-color", { duration: 120 }),
+  "&:hover, &[data-separator='active'], &[data-separator='focus']": {
+    backgroundColor: theme.palette.primary.main,
+  },
+}));
+
 const DashboardLayout = ({
   sidePanel,
   editorPanel,
   responsePanel,
 }: DashboardLayoutProps) => {
   return (
-    <Box
-      sx={{ height: "100%", width: "100%", overflow: "hidden" }}
-      data-testid="dashboard"
-    >
-      <Stack direction="row" spacing={1} sx={{ height: "100%" }}>
-        <Paper sx={{ width: "25vw", flexShrink: 0, overflow: "hidden" }}>
-          {sidePanel}
-        </Paper>
-        <Stack
-          direction="column"
-          spacing={1}
-          sx={{ flex: 1, minWidth: 0, padding: 1.5 }}
-        >
-          <Paper sx={{ flex: 1, minHeight: 0, overflow: "auto", padding: 1 }}>
-            {editorPanel}
-          </Paper>
-          <Paper sx={{ flex: 1, minHeight: 0, overflow: "auto", padding: 1 }}>
-            {responsePanel}
-          </Paper>
-        </Stack>
-      </Stack>
-    </Box>
+    <Group orientation="horizontal" id="dashboard" style={{ gap: 3 }}>
+      <Panel defaultSize="20%" minSize="15%">
+        <Paper sx={{ height: "100%", overflow: "hidden" }}>{sidePanel}</Paper>
+      </Panel>
+
+      <ResizeHandle />
+
+      <Panel minSize="30%">
+        <Group orientation="vertical" style={{ gap: 3 }}>
+          <Panel defaultSize="50%" minSize="20%">
+            <Paper sx={{ height: "100%", overflow: "auto", p: 1 }}>
+              {editorPanel}
+            </Paper>
+          </Panel>
+
+          <ResizeHandle />
+
+          <Panel defaultSize="50%" minSize="20%">
+            <Paper sx={{ height: "100%", overflow: "auto", p: 1 }}>
+              {responsePanel}
+            </Paper>
+          </Panel>
+        </Group>
+      </Panel>
+    </Group>
   );
 };
 
