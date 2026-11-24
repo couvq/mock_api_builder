@@ -30,6 +30,7 @@ import {
   FAKER_TYPE_SELECTION,
 } from "../../config/jsonEditor";
 import DelayInput from "../delay_input";
+import StatusCodeInput from "../status_code_input";
 
 export const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
 
@@ -98,6 +99,7 @@ const EndpointViewer = () => {
                           }
                           variant="standard"
                           disableUnderline
+                          SelectDisplayProps={{ "aria-label": "HTTP method" }}
                         >
                           <MenuItem value="GET">GET</MenuItem>
                           <MenuItem value="POST">POST</MenuItem>
@@ -108,6 +110,13 @@ const EndpointViewer = () => {
                   ),
                 },
               }}
+            />
+
+            <StatusCodeInput
+              size="medium"
+              sx={{ width: 170, flexShrink: 0 }}
+              value={draft.statusCode}
+              onValueChange={(value) => updateDraft({ statusCode: value })}
             />
 
             <DelayInput

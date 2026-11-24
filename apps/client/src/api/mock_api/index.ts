@@ -36,6 +36,10 @@ export const serveMockRequest = async (
       "Content-Type": "application/json",
     },
     method: payload.method,
+    // Mock responses are edited on the fly and some status codes (404, 410, …)
+    // are cacheable by default, so bypass the browser HTTP cache to always
+    // reflect the endpoint's current configuration.
+    cache: "no-store",
   });
   const endTime = performance.now();
 

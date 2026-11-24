@@ -1,6 +1,7 @@
 import { Grid, InputAdornment, Typography } from "@mui/material";
 import { SelectElement, TextFieldElement } from "react-hook-form-mui";
 import DelayInput from "../delay_input";
+import StatusCodeInput from "../status_code_input";
 import { MOCK_API_BASE_URL } from "../endpoint_viewer";
 
 // `EndpointConfig.method` only models these two, so the dropdown matches it.
@@ -12,16 +13,24 @@ const METHOD_OPTIONS = HTTP_METHODS.map((method) => ({
 }));
 
 interface EndpointFieldsProps {
+  statusCode: number;
+  onStatusCodeChange: (statusCode: number) => void;
   delay: number;
   onDelayChange: (delay: number) => void;
 }
 
 /**
- * The method / path / delay row shared by the create and edit endpoint forms.
- * `method` and `path` are react-hook-form fields (this must render inside a
- * `FormContainer`); `delay` is a controlled value owned by the parent.
+ * The method / path / status code / delay row shared by the create and edit
+ * endpoint forms. `method` and `path` are react-hook-form fields (this must
+ * render inside a `FormContainer`); `statusCode` and `delay` are controlled
+ * values owned by the parent.
  */
-const EndpointFields = ({ delay, onDelayChange }: EndpointFieldsProps) => {
+const EndpointFields = ({
+  statusCode,
+  onStatusCodeChange,
+  delay,
+  onDelayChange,
+}: EndpointFieldsProps) => {
   return (
     <Grid container spacing={2}>
       <Grid size={{ xs: 12, sm: 2 }}>
@@ -33,7 +42,7 @@ const EndpointFields = ({ delay, onDelayChange }: EndpointFieldsProps) => {
           fullWidth
         />
       </Grid>
-      <Grid size={{ xs: 12, sm: 8 }}>
+      <Grid size={{ xs: 12, sm: 6 }}>
         <TextFieldElement
           name="path"
           label="Path"
@@ -55,6 +64,15 @@ const EndpointFields = ({ delay, onDelayChange }: EndpointFieldsProps) => {
               ),
             },
           }}
+        />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 2 }}>
+        <StatusCodeInput
+          required
+          size="medium"
+          fullWidth
+          value={statusCode}
+          onValueChange={onStatusCodeChange}
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 2 }}>
