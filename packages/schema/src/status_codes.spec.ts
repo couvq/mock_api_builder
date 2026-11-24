@@ -1,3 +1,4 @@
+import { STATUS_CODES } from "node:http";
 import { describe, expect, it } from "vitest";
 import { EndpointConfig } from "./dto/endpoint/config.js";
 import { isKnownStatusCode, STATUS_CODE_REASONS } from "./status_codes.js";
@@ -30,5 +31,14 @@ describe("statusCode validation", () => {
 
   it("defaults to 200", () => {
     expect(EndpointConfig.parse(base).statusCode).toBe(200);
+  });
+});
+
+describe("STATUS_CODE_REASONS", () => {
+  it("matches Node's http.STATUS_CODES", () => {
+    const node = Object.fromEntries(
+      Object.entries(STATUS_CODES).map(([code, reason]) => [code, reason]),
+    );
+    expect({ ...STATUS_CODE_REASONS }).toEqual(node);
   });
 });
