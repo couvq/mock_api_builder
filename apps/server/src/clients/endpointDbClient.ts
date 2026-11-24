@@ -11,6 +11,7 @@ export const endpointTable = t.sqliteTable(
     id: t.text().primaryKey(), // TODO: can I have the database assign this on create?
     method: t.text().notNull().$type<EndpointConfig['method']>(),
     path: t.text().notNull(),
+    statusCode: t.integer('status_code').notNull().default(200),
     delay: t.integer().notNull().default(0),
     responseSchema: t
       .text('response_schema', { mode: 'json' })

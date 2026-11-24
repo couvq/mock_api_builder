@@ -19,7 +19,10 @@ export class MockApiService {
   async serveMock(
     method: EndpointConfig['method'],
     path: EndpointConfig['path'],
-  ): Promise<TranspiledSchema> {
+  ): Promise<{
+    statusCode: EndpointConfig['statusCode'];
+    body: TranspiledSchema;
+  }> {
     this.logger.log('Mock request received', { method, path });
     const matchingEndpoint =
       await this.endpointRepository.getEndpointByMethodAndPath(method, path);
@@ -36,7 +39,7 @@ export class MockApiService {
 
     await delay(matchingEndpoint.delay);
 
-    const { responseSchema } = matchingEndpoint;
-    return transpile(responseSchema);
+    const { responseSchema, statusCode } = matchingEndpoint;
+    return { statusCode, body: transpile(responseSchema) };
   }
 }
