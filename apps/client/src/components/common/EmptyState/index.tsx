@@ -6,9 +6,16 @@ interface EmptyStateProps {
   icon: ReactNode;
   title: string;
   description: string;
+  /** Greyed-out treatment for a secondary / not-yet-actionable panel. */
+  muted?: boolean;
 }
 
-const EmptyState = ({ icon, title, description }: EmptyStateProps) => (
+const EmptyState = ({
+  icon,
+  title,
+  description,
+  muted = false,
+}: EmptyStateProps) => (
   <Box
     sx={{
       height: "100%",
@@ -31,14 +38,21 @@ const EmptyState = ({ icon, title, description }: EmptyStateProps) => (
           alignItems: "center",
           justifyContent: "center",
           borderRadius: "50%",
-          color: "primary.main",
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
+          color: muted ? "text.disabled" : "primary.main",
+          bgcolor: (theme) =>
+            muted
+              ? alpha(theme.palette.text.primary, 0.08)
+              : alpha(theme.palette.primary.main, 0.12),
           "& svg": { fontSize: 28 },
         }}
       >
         {icon}
       </Box>
-      <Typography variant="h6" component="h2">
+      <Typography
+        variant="h6"
+        component="h2"
+        color={muted ? "text.secondary" : "text.primary"}
+      >
         {title}
       </Typography>
       <Typography color="text.secondary">{description}</Typography>

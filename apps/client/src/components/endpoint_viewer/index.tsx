@@ -52,14 +52,22 @@ const EndpointViewer = () => {
   const serveMockRequestMutation = useMockRequest();
   const jsonEditorTheme = useJsonEditorTheme();
 
-  if (!activeEndpointId || !draft)
-    return (
+  if (!activeEndpointId || !draft) {
+    const hasNoEndpoints = isSuccess && data.length === 0;
+    return hasNoEndpoints ? (
+      <EmptyState
+        icon={<ApiIcon />}
+        title="No endpoints yet"
+        description="Create a mock endpoint to get started."
+      />
+    ) : (
       <EmptyState
         icon={<ApiIcon />}
         title="Select an endpoint"
-        description="Choose a mock endpoint from the list to view its response schema and send requests to it."
+        description="Choose a mock endpoint from the list to view its response schema."
       />
     );
+  }
 
   const { id, method, path, responseSchema } = draft;
 

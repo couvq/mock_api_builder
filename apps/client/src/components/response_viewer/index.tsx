@@ -5,6 +5,7 @@ import { JsonEditor } from "json-edit-react";
 import { useJsonEditorTheme } from "../../hooks/jsonEditorTheme";
 import { MOCK_API_BASE_URL } from "../endpoint_viewer";
 import { MockRequestError } from "../../api/mock_api";
+import { useEditor } from "../../context/Editor/EditorContext";
 import EmptyState from "../common/EmptyState";
 
 const ResponseViewer = () => {
@@ -15,6 +16,7 @@ const ResponseViewer = () => {
     data: response,
     variables,
   } = useMockRequest();
+  const { activeEndpointId } = useEditor();
   const jsonEditorTheme = useJsonEditorTheme();
 
   if (isPending)
@@ -47,11 +49,18 @@ const ResponseViewer = () => {
     );
 
   if (response === undefined)
-    return (
+    return activeEndpointId ? (
       <EmptyState
         icon={<SendIcon />}
-        title="Send a request to see the response"
-        description="Faker types in the schema are replaced with fresh fake data on every request."
+        title="No response yet"
+        description="Press Send to see the response here."
+      />
+    ) : (
+      <EmptyState
+        muted
+        icon={<SendIcon />}
+        title="No response to show"
+        description="Select an endpoint, then press Send. The response will appear here."
       />
     );
 

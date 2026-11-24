@@ -30,11 +30,9 @@ function Trigger() {
 }
 
 describe("ResponseViewer", () => {
-  it("should render the empty state before a request is sent", () => {
+  it("should render the greyed-out empty state when no endpoint is selected", () => {
     renderWithProviders(<ResponseViewer />);
-    expect(
-      screen.getByText(/send a request to see the response/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/no response to show/i)).toBeInTheDocument();
   });
 
   it("should display the loading spinner while the request is pending", async () => {
