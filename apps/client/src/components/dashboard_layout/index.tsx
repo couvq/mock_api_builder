@@ -9,9 +9,6 @@ interface DashboardLayoutProps {
   responsePanel: ReactNode;
 }
 
-// Separator applies its className to its own root div, so styled() targets it
-// directly. flex-grow/flex-shrink and the resize cursor are managed by the
-// library; flex-basis sets the divider thickness (works for both orientations).
 const ResizeHandle = styled(Separator)(({ theme }) => ({
   flexBasis: 6,
   borderRadius: theme.shape.borderRadius,
