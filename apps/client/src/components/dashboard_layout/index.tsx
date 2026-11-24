@@ -18,12 +18,12 @@ const ResizeHandle = styled(Separator)(({ theme }) => ({
   // 0px; `!important` is needed to give it a visible thickness. Kept to a thin
   // 2px line (the grab target is widened separately via resizeTargetMinimumSize).
   flexBasis: "2px !important",
-  backgroundColor: theme.palette.divider,
+  // Transparent at rest (the panels' own borders divide them); the sash only
+  // shows up in the accent colour while hovering/dragging/focused.
+  backgroundColor: "transparent",
   transition: theme.transitions.create("background-color", {
     duration: theme.transitions.duration.shortest,
   }),
-  // Light up in the accent colour while hovering/dragging/focused so the
-  // resize affordance is obvious (the library supplies the resize cursor).
   "&:hover, &[data-separator='active'], &[data-separator='focus']": {
     backgroundColor: theme.palette.primary.main,
   },
