@@ -5,8 +5,10 @@ export const MIN_DELAY = 0;
 export const MAX_DELAY = 10000;
 export const DEFAULT_DELAY = 0;
 
-// HTTP status codes span the informational (1xx) through server-error (5xx)
-// ranges; 200 OK is the default a newly created endpoint returns.
+/**
+ * HTTP status codes span the informational (1xx) through server-error (5xx)
+ * ranges; 200 OK is the default a newly created endpoint returns.
+ */
 export const MIN_STATUS_CODE = 100;
 export const MAX_STATUS_CODE = 599;
 export const DEFAULT_STATUS_CODE = 200;
