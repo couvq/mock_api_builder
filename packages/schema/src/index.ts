@@ -3,3 +3,4 @@ export * from "./dto/endpoint/index.js";
 export * from "./generators.js";
 export * from "./mock_schema.js";
 export * from "./transpiler.js";
+export * from "./status_codes.js";

@@ -2,75 +2,10 @@ import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import type { SxProps, Theme } from "@mui/material/styles";
-
-// Reason phrases for the standard HTTP status codes (mirrors Node's
-// http.STATUS_CODES). The response viewer shows the live reason phrase returned
-// by the server; these labels mirror it so choosing a code reads the same
-// ("201 Created").
-const STATUS_CODE_REASONS: Record<number, string> = {
-  100: "Continue",
-  101: "Switching Protocols",
-  102: "Processing",
-  103: "Early Hints",
-  200: "OK",
-  201: "Created",
-  202: "Accepted",
-  203: "Non-Authoritative Information",
-  204: "No Content",
-  205: "Reset Content",
-  206: "Partial Content",
-  207: "Multi-Status",
-  208: "Already Reported",
-  226: "IM Used",
-  300: "Multiple Choices",
-  301: "Moved Permanently",
-  302: "Found",
-  303: "See Other",
-  304: "Not Modified",
-  305: "Use Proxy",
-  307: "Temporary Redirect",
-  308: "Permanent Redirect",
-  400: "Bad Request",
-  401: "Unauthorized",
-  402: "Payment Required",
-  403: "Forbidden",
-  404: "Not Found",
-  405: "Method Not Allowed",
-  406: "Not Acceptable",
-  407: "Proxy Authentication Required",
-  408: "Request Timeout",
-  409: "Conflict",
-  410: "Gone",
-  411: "Length Required",
-  412: "Precondition Failed",
-  413: "Payload Too Large",
-  414: "URI Too Long",
-  415: "Unsupported Media Type",
-  416: "Range Not Satisfiable",
-  417: "Expectation Failed",
-  418: "I'm a Teapot",
-  421: "Misdirected Request",
-  422: "Unprocessable Entity",
-  423: "Locked",
-  424: "Failed Dependency",
-  425: "Too Early",
-  426: "Upgrade Required",
-  428: "Precondition Required",
-  429: "Too Many Requests",
-  431: "Request Header Fields Too Large",
-  451: "Unavailable For Legal Reasons",
-  500: "Internal Server Error",
-  501: "Not Implemented",
-  502: "Bad Gateway",
-  503: "Service Unavailable",
-  504: "Gateway Timeout",
-  505: "HTTP Version Not Supported",
-  506: "Variant Also Negotiates",
-  507: "Insufficient Storage",
-  508: "Loop Detected",
-  510: "Not Extended",
-  511: "Network Authentication Required",
-};
+import {
+  STATUS_CODE_REASONS,
+  isKnownStatusCode,
+} from "@mock-api-builder/schema";
 
 // Codes surfaced at the top of the dropdown, in this order, for quick access.
 const COMMON_STATUS_CODES = [
@@ -106,8 +41,8 @@ interface StatusCodeInputProps {
  * reused by the create/edit forms and the dashboard's inline editor.
  *
  * Lists every standard HTTP status code, with the common ones pinned to the
- * top. A stored value that is not a standard code (but still within the
- * schema's accepted range) is listed first so the field never renders blank.
+ * top. Defensively, a stored value that is not a standard code is listed first
+ * so the field never renders blank.
  */
 export default function StatusCodeInput({
   value,
@@ -118,7 +53,7 @@ export default function StatusCodeInput({
   fullWidth,
   sx,
 }: StatusCodeInputProps) {
-  const isKnownCode = value in STATUS_CODE_REASONS;
+  const isKnownCode = isKnownStatusCode(value);
 
   return (
     <TextField
