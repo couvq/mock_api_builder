@@ -1,6 +1,8 @@
 import { act, fireEvent, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
+import { useEffect } from "react";
+import { useEditorDispatch } from "../../context/Editor/EditorContext";
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import {
   sampleEndpoint,
@@ -29,10 +31,33 @@ function Trigger() {
   );
 }
 
+// Marks an endpoint active in the shared Editor state (as clicking an endpoint
+// in the sidebar would), without rendering the rest of the dashboard.
+function SelectActiveEndpoint() {
+  const dispatch = useEditorDispatch();
+  useEffect(() => {
+    dispatch({ type: "ADD_ENDPOINT", endpoint: sampleEndpoint });
+  }, [dispatch]);
+  return null;
+}
+
 describe("ResponseViewer", () => {
   it("should render the greyed-out empty state when no endpoint is selected", () => {
     renderWithProviders(<ResponseViewer />);
     expect(screen.getByText(/no response to show/i)).toBeInTheDocument();
+  });
+
+  it("should render the 'No response yet' empty state when an endpoint is selected but nothing has been sent", async () => {
+    renderWithProviders(
+      <>
+        <SelectActiveEndpoint />
+        <ResponseViewer />
+      </>,
+    );
+
+    expect(await screen.findByText(/no response yet/i)).toBeInTheDocument();
+    // The muted, no-selection copy should not be the one shown.
+    expect(screen.queryByText(/no response to show/i)).not.toBeInTheDocument();
   });
 
   it("should display the loading spinner while the request is pending", async () => {
