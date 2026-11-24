@@ -15,9 +15,9 @@ const RESIZE_HIT_TARGET = { coarse: 16, fine: 12 };
 
 const ResizeHandle = styled(Separator)(({ theme }) => ({
   // The library sets `flex: 0 0 auto` inline, which would collapse the sash to
-  // 0px; `!important` is needed to give it a visible thickness.
-  flexBasis: "6px !important",
-  borderRadius: theme.shape.borderRadius,
+  // 0px; `!important` is needed to give it a visible thickness. Kept to a thin
+  // 2px line (the grab target is widened separately via resizeTargetMinimumSize).
+  flexBasis: "2px !important",
   backgroundColor: theme.palette.divider,
   transition: theme.transitions.create("background-color", {
     duration: theme.transitions.duration.shortest,
@@ -44,7 +44,7 @@ const DashboardLayout = ({
     <Group
       orientation="horizontal"
       id="dashboard"
-      style={{ gap: 2 }}
+      style={{ gap: 0 }}
       resizeTargetMinimumSize={RESIZE_HIT_TARGET}
     >
       <Panel defaultSize="20%" minSize="15%">
@@ -58,7 +58,7 @@ const DashboardLayout = ({
       <Panel minSize="30%">
         <Group
           orientation="vertical"
-          style={{ gap: 2 }}
+          style={{ gap: 0 }}
           resizeTargetMinimumSize={RESIZE_HIT_TARGET}
         >
           <Panel defaultSize="50%" minSize="20%">
