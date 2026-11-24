@@ -19,6 +19,7 @@ describe("Dashboard", () => {
       ...sampleEndpoint,
       method: "POST",
       path: "best_friend",
+      statusCode: 404,
       delay: 250,
       responseSchema: { best_friends: [] },
     } satisfies EndpointConfig;
@@ -49,9 +50,14 @@ describe("Dashboard", () => {
 
     // edit the endpoint config, should disable sending responses until we save
     // edit method
-    await user.click(screen.getByRole("combobox"));
+    await user.click(screen.getByRole("combobox", { name: /http method/i }));
     await user.click(
       await screen.findByRole("option", { name: editedEndpoint.method }),
+    );
+    // edit status code
+    await user.click(screen.getByRole("combobox", { name: /status code/i }));
+    await user.click(
+      await screen.findByRole("option", { name: /404 Not Found/i }),
     );
     // edit path
     await user.clear(endpointPathInput);

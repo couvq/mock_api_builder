@@ -22,6 +22,7 @@ const Form = ({ endpoint }: FormProps) => {
     endpoint.responseSchema,
   );
   const [delay, setDelay] = useState(endpoint.delay);
+  const [statusCode, setStatusCode] = useState(endpoint.statusCode);
   const toast = useToast();
   const queryClient = useQueryClient();
   const { activeEndpointId } = useEditor();
@@ -52,6 +53,7 @@ const Form = ({ endpoint }: FormProps) => {
       id: endpoint.id,
       method: formData.method,
       path: formData.path,
+      statusCode,
       delay,
       responseSchema,
     });
@@ -62,7 +64,12 @@ const Form = ({ endpoint }: FormProps) => {
       defaultValues={{ method: endpoint.method, path: endpoint.path }}
       onSuccess={handleSave}
     >
-      <EndpointFields delay={delay} onDelayChange={setDelay} />
+      <EndpointFields
+        statusCode={statusCode}
+        onStatusCodeChange={setStatusCode}
+        delay={delay}
+        onDelayChange={setDelay}
+      />
 
       <ResponseSchemaEditor
         value={responseSchema}

@@ -8,7 +8,7 @@ const AddEndpointBtn = () => {
       component={Link}
       to="/endpoint/new"
       startIcon={<AddIcon />}
-      variant="contained"
+      variant="outlined"
     >
       New endpoint
     </Button>

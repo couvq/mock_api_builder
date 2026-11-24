@@ -10,6 +10,7 @@ const endpoint: EndpointConfig = {
   id: "1",
   method: "GET",
   path: "friends",
+  statusCode: 200,
   delay: 0,
   responseSchema: {},
 };

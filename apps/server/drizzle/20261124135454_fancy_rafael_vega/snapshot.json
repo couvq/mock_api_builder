@@ -1,0 +1,102 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "64d54090-39cb-4ca7-a389-30f76565d9ba",
+  "prevIds": [
+    "56e10b92-9787-46a0-bfb9-78c46f9727eb"
+  ],
+  "ddl": [
+    {
+      "name": "endpoints",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "endpoints"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "method",
+      "entityType": "columns",
+      "table": "endpoints"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "path",
+      "entityType": "columns",
+      "table": "endpoints"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "200",
+      "generated": null,
+      "name": "status_code",
+      "entityType": "columns",
+      "table": "endpoints"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "0",
+      "generated": null,
+      "name": "delay",
+      "entityType": "columns",
+      "table": "endpoints"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "response_schema",
+      "entityType": "columns",
+      "table": "endpoints"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "endpoints_pk",
+      "table": "endpoints",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        {
+          "value": "method",
+          "isExpression": false
+        },
+        {
+          "value": "path",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "origin": "manual",
+      "name": "method_path_idx",
+      "entityType": "indexes",
+      "table": "endpoints"
+    }
+  ],
+  "renames": []
+}

@@ -1,5 +1,9 @@
 import { Box, Button, Divider, Stack } from "@mui/material";
-import { EndpointConfig, type MockSchemaType } from "@mock-api-builder/schema";
+import {
+  DEFAULT_STATUS_CODE,
+  EndpointConfig,
+  type MockSchemaType,
+} from "@mock-api-builder/schema";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FormContainer } from "react-hook-form-mui";
@@ -16,6 +20,7 @@ const Form = () => {
     DEFAULT_RESPONSE_SCHEMA,
   );
   const [delay, setDelay] = useState(0);
+  const [statusCode, setStatusCode] = useState(DEFAULT_STATUS_CODE);
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -26,6 +31,7 @@ const Form = () => {
     const payload: Omit<EndpointConfig, "id"> = {
       method: formData.method,
       path: formData.path,
+      statusCode,
       delay,
       responseSchema,
     };
@@ -48,7 +54,12 @@ const Form = () => {
       defaultValues={{ method: "GET", path: "" }}
       onSuccess={handleCreate}
     >
-      <EndpointFields delay={delay} onDelayChange={setDelay} />
+      <EndpointFields
+        statusCode={statusCode}
+        onStatusCodeChange={setStatusCode}
+        delay={delay}
+        onDelayChange={setDelay}
+      />
 
       <ResponseSchemaEditor
         value={responseSchema}

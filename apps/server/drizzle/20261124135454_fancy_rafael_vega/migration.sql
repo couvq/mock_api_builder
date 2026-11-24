@@ -1,0 +1,1 @@
+ALTER TABLE `endpoints` ADD `status_code` integer DEFAULT 200 NOT NULL;

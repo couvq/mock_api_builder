@@ -45,6 +45,7 @@ describe('EndpointController', () => {
       const testEndpoint: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        statusCode: 200,
         delay: 0,
         responseSchema: {},
       };
@@ -85,6 +86,7 @@ describe('EndpointController', () => {
       const testEndpoint: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        statusCode: 200,
         delay: 0,
         responseSchema: {},
       };
@@ -118,6 +120,7 @@ describe('EndpointController', () => {
       const testEndpoint: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        statusCode: 200,
         delay: 0,
         responseSchema: {},
       };
@@ -150,6 +153,7 @@ describe('EndpointController', () => {
         id: 'test',
         method: 'GET',
         path: 'test',
+        statusCode: 200,
         delay: 0,
         responseSchema: {},
       };
@@ -177,6 +181,7 @@ describe('EndpointController', () => {
           id: 'test',
           method: 'GET',
           path: 'test',
+          statusCode: 200,
           delay: 0,
           responseSchema: {},
         }),
@@ -188,6 +193,7 @@ describe('EndpointController', () => {
       const createEndpointRequest: CreateEndpointRequest = {
         method: 'GET',
         path: 'test',
+        statusCode: 200,
         delay: 0,
         responseSchema: {},
       };
@@ -203,6 +209,7 @@ describe('EndpointController', () => {
         id: createdEndpoint?.id,
         method: 'GET',
         path: 'updated_path',
+        statusCode: 200,
         delay: 0,
         responseSchema: {},
       };
@@ -232,6 +239,7 @@ describe('EndpointController', () => {
     const createdEndpoint = await endpointController.addEndpoint({
       method: 'GET',
       path: 'test',
+      statusCode: 200,
       responseSchema: {},
       delay: 0,
     });
