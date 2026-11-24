@@ -32,7 +32,9 @@ function Trigger() {
 describe("ResponseViewer", () => {
   it("should render the empty state before a request is sent", () => {
     renderWithProviders(<ResponseViewer />);
-    expect(screen.getByText(/nothing here yet/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/send a request to see the response/i),
+    ).toBeInTheDocument();
   });
 
   it("should display the loading spinner while the request is pending", async () => {

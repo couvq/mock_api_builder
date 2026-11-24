@@ -1,9 +1,11 @@
 import { Box, Chip, CircularProgress, Stack, Typography } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { JsonEditor } from "json-edit-react";
 import { useJsonEditorTheme } from "../../hooks/jsonEditorTheme";
 import { MOCK_API_BASE_URL } from "../endpoint_viewer";
 import { MockRequestError } from "../../api/mock_api";
+import EmptyState from "../common/EmptyState";
 
 const ResponseViewer = () => {
   const {
@@ -45,7 +47,13 @@ const ResponseViewer = () => {
     );
 
   if (response === undefined)
-    return <Typography>Nothing here yet — try sending a request.</Typography>;
+    return (
+      <EmptyState
+        icon={<SendIcon />}
+        title="Send a request to see the response"
+        description="Faker types in the schema are replaced with fresh fake data on every request."
+      />
+    );
 
   return (
     <Box data-testid="response-json-viewer">

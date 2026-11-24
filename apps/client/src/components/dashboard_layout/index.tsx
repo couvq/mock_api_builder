@@ -35,7 +35,7 @@ const DashboardLayout = ({
       <Panel minSize="30%">
         <Group orientation="vertical" style={{ gap: 3 }}>
           <Panel defaultSize="50%" minSize="20%">
-            <Paper sx={{ height: "100%", overflow: "auto", p: 1 }}>
+            <Paper sx={{ height: "100%", overflow: "auto", p: 2 }}>
               {editorPanel}
             </Paper>
           </Panel>
@@ -43,7 +43,7 @@ const DashboardLayout = ({
           <ResizeHandle />
 
           <Panel defaultSize="50%" minSize="20%">
-            <Paper sx={{ height: "100%", overflow: "auto", p: 1 }}>
+            <Paper sx={{ height: "100%", overflow: "auto", p: 2 }}>
               {responsePanel}
             </Paper>
           </Panel>
