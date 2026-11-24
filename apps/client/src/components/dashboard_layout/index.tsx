@@ -48,7 +48,7 @@ const DashboardLayout = ({
       style={{ gap: 0 }}
       resizeTargetMinimumSize={RESIZE_HIT_TARGET}
     >
-      <Panel defaultSize="20%" minSize="15%">
+      <Panel defaultSize="25%" minSize="20%">
         <Paper variant="outlined" sx={{ ...panelPaperSx, overflow: "hidden" }}>
           {sidePanel}
         </Paper>
