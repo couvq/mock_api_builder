@@ -1,5 +1,5 @@
 import { Paper } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { alpha, styled, type Theme } from "@mui/material/styles";
 import type { ReactNode } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 
@@ -29,11 +29,12 @@ const ResizeHandle = styled(Separator)(({ theme }) => ({
   },
 }));
 
-// Flat, clearly bordered panels (VS Code-style) so each region is distinct.
+// Flat panels with a faint outline — subtle enough to just hint at each
+// region's bounds rather than box it in.
 const panelPaperSx = {
   height: "100%",
-  borderColor: "divider",
-} as const;
+  borderColor: (theme: Theme) => alpha(theme.palette.divider, 0.06),
+};
 
 const DashboardLayout = ({
   sidePanel,
