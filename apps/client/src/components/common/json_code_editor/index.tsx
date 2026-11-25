@@ -38,7 +38,12 @@ const JsonCodeEditor = <T,>({
     // with the sibling preview); when the alert appears the editor shrinks to
     // make room for it rather than being overlaid by it.
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+      {/* borderRadius + overflow clip Monaco's square corners to match the
+          json-edit-react tree; fixedOverflowWidgets renders the autocomplete
+          popup at the body so the clipping does not cut it off. */}
+      <Box
+        sx={{ flexGrow: 1, minHeight: 0, borderRadius: 2, overflow: "hidden" }}
+      >
         <Editor
           height="100%"
           theme={monacoTheme}
@@ -48,7 +53,11 @@ const JsonCodeEditor = <T,>({
           onValidate={(markers) =>
             setErrors(markers.map((marker) => marker.message))
           }
-          options={{ ariaLabel: label, quickSuggestions: { strings: true } }}
+          options={{
+            ariaLabel: label,
+            quickSuggestions: { strings: true },
+            fixedOverflowWidgets: true,
+          }}
         />
       </Box>
       {errors.length > 0 && (
