@@ -11,15 +11,13 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { JsonEditor } from "json-edit-react";
 import { useState } from "react";
 import {
   DEFAULT_FAKER_TYPE,
   FAKER_TYPE_SELECTION,
 } from "../../../config/jsonEditor";
-import { useJsonEditorTheme } from "../../../hooks/jsonEditorTheme";
-import { useMonacoTheme } from "../../../hooks/monacoTheme";
-import Editor from "@monaco-editor/react";
+import JsonCodeEditor from "../json_code_editor";
+import TreeEditor from "../tree_editor";
 
 type SchemaViewMode = "tree" | "json";
 
@@ -51,8 +49,6 @@ const ResponseSchemaEditor = ({
   const [exampleResponse, setExampleResponse] = useState<TranspiledSchema>(() =>
     transpile(value),
   );
-  const jsonEditorTheme = useJsonEditorTheme();
-  const monacoTheme = useMonacoTheme();
 
   const applyResponseSchema = (next: MockSchemaType) => {
     onChange(next);
@@ -68,9 +64,7 @@ const ResponseSchemaEditor = ({
     setViewMode(nextMode);
   };
 
-  const handleRegenerate = () => {
-    setExampleResponse(transpile(value));
-  };
+  const handleRegenerate = () => setExampleResponse(transpile(value));
 
   return (
     <Grid container spacing={4} sx={{ mt: 2 }}>
@@ -101,9 +95,8 @@ const ResponseSchemaEditor = ({
 
         <Box sx={editorFillSx}>
           {viewMode === "tree" ? (
-            <JsonEditor
+            <TreeEditor
               data={value}
-              theme={jsonEditorTheme}
               rootName="root"
               collapse={1}
               defaultValue={DEFAULT_FAKER_TYPE}
@@ -113,16 +106,10 @@ const ResponseSchemaEditor = ({
               }
             />
           ) : (
-            <Editor
-              height="100%"
-              theme={monacoTheme}
-              defaultLanguage="json"
-              value={JSON.stringify(value, null, 2)}
-              onChange={(value) => {
-                const jsonValue = JSON.parse(value ?? "{}");
-                onChange(jsonValue);
-                setExampleResponse(transpile(jsonValue));
-              }}
+            <JsonCodeEditor
+              value={value}
+              onChange={applyResponseSchema}
+              label="responseSchemaEditor"
             />
           )}
         </Box>
@@ -146,9 +133,8 @@ const ResponseSchemaEditor = ({
           </Button>
         </Box>
         <Box sx={editorFillSx} role="region" aria-label="Example response">
-          <JsonEditor
+          <TreeEditor
             data={exampleResponse}
-            theme={jsonEditorTheme}
             viewOnly
             collapse={1}
             rootName="root"
