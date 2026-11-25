@@ -1,6 +1,7 @@
 import { Alert, Box } from "@mui/material";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
+import { useFakerCompletions } from "../../../hooks/fakerCompletions";
 import { useMonacoTheme } from "../../../hooks/monacoTheme";
 
 interface JsonCodeEditorProps<T> {
@@ -19,6 +20,7 @@ const JsonCodeEditor = <T,>({
 }: JsonCodeEditorProps<T>) => {
   const monacoTheme = useMonacoTheme();
   const [errors, setErrors] = useState<string[]>([]);
+  useFakerCompletions();
 
   const handleChange = (nextText: string | undefined) => {
     // Monaco reports the full document on every edit, but only hands us text;
@@ -46,7 +48,7 @@ const JsonCodeEditor = <T,>({
           onValidate={(markers) =>
             setErrors(markers.map((marker) => marker.message))
           }
-          options={{ ariaLabel: label }}
+          options={{ ariaLabel: label, quickSuggestions: { strings: true } }}
         />
       </Box>
       {errors.length > 0 && (

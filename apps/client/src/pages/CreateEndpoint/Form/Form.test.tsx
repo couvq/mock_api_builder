@@ -9,6 +9,8 @@ import { http, HttpResponse } from "msw";
 // controlled <textarea> that forwards its full value through `onChange`, just
 // as Monaco reports the whole document on each edit.
 vi.mock("@monaco-editor/react", () => ({
+  // The faker-completions hook calls useMonaco; return null so it no-ops here.
+  useMonaco: () => null,
   default: ({
     value,
     onChange,

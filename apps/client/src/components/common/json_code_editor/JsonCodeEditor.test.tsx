@@ -7,6 +7,8 @@ import renderWithProviders from "../../../test/renderWithProviders";
 // reporting a marker through `onValidate` when the text does not parse, as the
 // real editor does.
 vi.mock("@monaco-editor/react", () => ({
+  // The faker-completions hook calls useMonaco; return null so it no-ops here.
+  useMonaco: () => null,
   default: ({
     value,
     onChange,
