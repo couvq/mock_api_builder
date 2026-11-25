@@ -3,28 +3,14 @@ import {
   type MockSchemaType,
   type TranspiledSchema,
 } from "@mock-api-builder/schema";
-import {
-  Box,
-  Button,
-  Grid,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useState } from "react";
-import {
-  DEFAULT_FAKER_TYPE,
-  FAKER_TYPE_SELECTION,
-} from "../../../config/jsonEditor";
-import JsonCodeEditor from "../json_code_editor";
+import SchemaEditor from "../schema_editor";
 import TreeEditor from "../tree_editor";
 
-type SchemaViewMode = "tree" | "json";
-
-// Fills the editor to its column height so the Response schema and Example
-// response panels stay the same height, with a floor so they never collapse
-// too small when the schema is short.
-const editorFillSx = {
+// Floors the example response so the two panels stay the same height and never
+// collapse too small; the editable schema (SchemaEditor) fills to match.
+const exampleFillSx = {
   flexGrow: 1,
   minHeight: 300,
   "& .jer-editor-container": { height: "100%" },
@@ -38,14 +24,13 @@ interface ResponseSchemaEditorProps {
 /**
  * Shared editor for an endpoint's response schema plus a live "example
  * response" preview. The schema is controlled by the parent via
- * `value`/`onChange`; the view mode, raw-JSON text, and generated preview are
- * local. Reused by both the create and edit endpoint pages.
+ * `value`/`onChange`; the generated preview is local. Reused by both the
+ * create and edit endpoint pages.
  */
 const ResponseSchemaEditor = ({
   value,
   onChange,
 }: ResponseSchemaEditorProps) => {
-  const [viewMode, setViewMode] = useState<SchemaViewMode>("tree");
   const [exampleResponse, setExampleResponse] = useState<TranspiledSchema>(() =>
     transpile(value),
   );
@@ -53,15 +38,6 @@ const ResponseSchemaEditor = ({
   const applyResponseSchema = (next: MockSchemaType) => {
     onChange(next);
     setExampleResponse(transpile(next));
-  };
-
-  const handleViewModeChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    nextMode: SchemaViewMode | null,
-  ) => {
-    // `exclusive` yields null when the active button is clicked; keep one on.
-    if (!nextMode) return;
-    setViewMode(nextMode);
   };
 
   const handleRegenerate = () => setExampleResponse(transpile(value));
@@ -72,47 +48,7 @@ const ResponseSchemaEditor = ({
         size={{ xs: 12, md: 6 }}
         sx={{ display: "flex", flexDirection: "column" }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mb: 1,
-          }}
-        >
-          <Typography>Response schema</Typography>
-          <ToggleButtonGroup
-            size="small"
-            exclusive
-            value={viewMode}
-            onChange={handleViewModeChange}
-            aria-label="Response schema view"
-          >
-            <ToggleButton value="tree">Tree</ToggleButton>
-            <ToggleButton value="json">Edit JSON</ToggleButton>
-          </ToggleButtonGroup>
-        </Box>
-
-        <Box sx={editorFillSx}>
-          {viewMode === "tree" ? (
-            <TreeEditor
-              data={value}
-              rootName="root"
-              collapse={1}
-              defaultValue={DEFAULT_FAKER_TYPE}
-              restrictTypeSelection={FAKER_TYPE_SELECTION}
-              onUpdate={(update) =>
-                applyResponseSchema(update.newData as MockSchemaType)
-              }
-            />
-          ) : (
-            <JsonCodeEditor
-              value={value}
-              onChange={applyResponseSchema}
-              label="responseSchemaEditor"
-            />
-          )}
-        </Box>
+        <SchemaEditor value={value} onChange={applyResponseSchema} />
       </Grid>
 
       <Grid
@@ -132,7 +68,7 @@ const ResponseSchemaEditor = ({
             Regenerate
           </Button>
         </Box>
-        <Box sx={editorFillSx} role="region" aria-label="Example response">
+        <Box sx={exampleFillSx} role="region" aria-label="Example response">
           <TreeEditor
             data={exampleResponse}
             viewOnly

@@ -1,7 +1,4 @@
-import {
-  type EndpointConfig,
-  type MockSchemaType,
-} from "@mock-api-builder/schema";
+import { type EndpointConfig } from "@mock-api-builder/schema";
 import {
   Box,
   Button,
@@ -11,11 +8,9 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import ApiIcon from "@mui/icons-material/Api";
-import { JsonEditor } from "json-edit-react";
 import { isEqual } from "lodash";
 import EmptyState from "../common/EmptyState";
 import { updateEndpoint } from "../../api/endpoint";
@@ -25,13 +20,9 @@ import {
 } from "../../context/Editor/EditorContext";
 import { useMockRequest } from "../../context/MockRequest/MockRequestProvider";
 import { useEndpoints } from "../../hooks/endpoints";
-import { useJsonEditorTheme } from "../../hooks/jsonEditorTheme";
 import { useToast } from "../../hooks/toast";
-import {
-  DEFAULT_FAKER_TYPE,
-  FAKER_TYPE_SELECTION,
-} from "../../config/jsonEditor";
 import DelayInput from "../common/delay_input";
+import SchemaEditor from "../common/schema_editor";
 import StatusCodeInput from "../common/status_code_input";
 
 export const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
@@ -50,7 +41,6 @@ const EndpointViewer = () => {
     },
   });
   const serveMockRequestMutation = useMockRequest();
-  const jsonEditorTheme = useJsonEditorTheme();
 
   if (!activeEndpointId || !draft) {
     const hasNoEndpoints = isSuccess && data.length === 0;
@@ -174,18 +164,19 @@ const EndpointViewer = () => {
             )}
           </Stack>
         </Stack>
-        <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
-          <Typography>Response schema</Typography>
-          <JsonEditor
-            data={responseSchema}
-            theme={jsonEditorTheme}
-            defaultValue={DEFAULT_FAKER_TYPE}
-            restrictTypeSelection={FAKER_TYPE_SELECTION}
-            onUpdate={(newSchema) =>
-              updateDraft({
-                responseSchema: newSchema.newData as MockSchemaType,
-              })
-            }
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0,
+            width: "50%",
+            mt: 3,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <SchemaEditor
+            value={responseSchema}
+            onChange={(next) => updateDraft({ responseSchema: next })}
           />
         </Box>
       </Stack>
