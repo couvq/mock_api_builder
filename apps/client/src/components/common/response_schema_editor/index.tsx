@@ -7,7 +7,6 @@ import {
   Box,
   Button,
   Grid,
-  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
@@ -19,14 +18,17 @@ import {
   FAKER_TYPE_SELECTION,
 } from "../../../config/jsonEditor";
 import { useJsonEditorTheme } from "../../../hooks/jsonEditorTheme";
+import { useMonacoTheme } from "../../../hooks/monacoTheme";
+import Editor from "@monaco-editor/react";
 
 type SchemaViewMode = "tree" | "json";
 
-// Fills the json-edit-react card to its column height so the Response schema
-// and Example response panels stay the same height.
+// Fills the editor to its column height so the Response schema and Example
+// response panels stay the same height, with a floor so they never collapse
+// too small when the schema is short.
 const editorFillSx = {
   flexGrow: 1,
-  minHeight: 0,
+  minHeight: 400,
   "& .jer-editor-container": { height: "100%" },
 };
 
@@ -46,17 +48,12 @@ const ResponseSchemaEditor = ({
   onChange,
 }: ResponseSchemaEditorProps) => {
   const [viewMode, setViewMode] = useState<SchemaViewMode>("tree");
-  const [jsonText, setJsonText] = useState(() =>
-    JSON.stringify(value, null, 2),
-  );
-  const [jsonError, setJsonError] = useState<string | null>(null);
   const [exampleResponse, setExampleResponse] = useState<TranspiledSchema>(() =>
     transpile(value),
   );
   const jsonEditorTheme = useJsonEditorTheme();
+  const monacoTheme = useMonacoTheme();
 
-  // Schema is the source of truth; refresh the preview wherever it changes
-  // (rather than in an effect) so edits and regeneration stay in sync.
   const applyResponseSchema = (next: MockSchemaType) => {
     onChange(next);
     setExampleResponse(transpile(next));
@@ -68,24 +65,7 @@ const ResponseSchemaEditor = ({
   ) => {
     // `exclusive` yields null when the active button is clicked; keep one on.
     if (!nextMode) return;
-    if (nextMode === "json") {
-      setJsonText(JSON.stringify(value, null, 2));
-      setJsonError(null);
-    }
     setViewMode(nextMode);
-  };
-
-  const handleJsonTextChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const text = event.target.value;
-    setJsonText(text);
-    try {
-      applyResponseSchema(JSON.parse(text) as MockSchemaType);
-      setJsonError(null);
-    } catch {
-      setJsonError("Invalid JSON");
-    }
   };
 
   const handleRegenerate = () => {
@@ -133,27 +113,15 @@ const ResponseSchemaEditor = ({
               }
             />
           ) : (
-            // TODO - refactor to use monaco editor in place of <TextField /> component https://www.npmjs.com/package/@monaco-editor/react
-            <TextField
-              fullWidth
-              multiline
-              minRows={10}
-              value={jsonText}
-              onChange={handleJsonTextChange}
-              error={Boolean(jsonError)}
-              helperText={jsonError ?? " "}
-              sx={{
-                height: "100%",
-                "& .MuiInputBase-root": {
-                  height: "100%",
-                  alignItems: "flex-start",
-                },
-              }}
-              slotProps={{
-                htmlInput: {
-                  "aria-label": "responseSchemaEditor",
-                  style: { fontFamily: "monospace" },
-                },
+            <Editor
+              height="100%"
+              theme={monacoTheme}
+              defaultLanguage="json"
+              value={JSON.stringify(value, null, 2)}
+              onChange={(value) => {
+                const jsonValue = JSON.parse(value ?? "{}");
+                onChange(jsonValue);
+                setExampleResponse(transpile(jsonValue));
               }}
             />
           )}
