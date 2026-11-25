@@ -66,7 +66,7 @@ const JsonCodeEditor = <T,>({
           }
           options={{
             ariaLabel: label,
-            quickSuggestions: { strings: true },
+            quickSuggestions: true,
             fixedOverflowWidgets: true,
           }}
         />

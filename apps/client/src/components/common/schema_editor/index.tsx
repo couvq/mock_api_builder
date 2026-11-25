@@ -17,11 +17,15 @@ type SchemaViewMode = "tree" | "json";
 
 // Fills the editor body to the component's height (so Monaco can size itself)
 // and scrolls long trees; `.jer-editor-container` is json-edit-react's root.
+// The tree root takes `minHeight` (not `height`) so its background grows with
+// a long schema: pinned to `height: 100%` the container's background stopped at
+// the viewport, so rows past it scrolled onto the bare page background.
+// `minHeight: 100%` still fills the box when the schema is short.
 const editorFillSx = {
   flexGrow: 1,
   minHeight: 0,
   overflow: "auto",
-  "& .jer-editor-container": { height: "100%" },
+  "& .jer-editor-container": { minHeight: "100%" },
 };
 
 interface SchemaEditorProps {

@@ -13,11 +13,14 @@ interface FakerCompletion {
 /**
  * Given the current line's text up to the cursor, returns the faker-type
  * completions to offer and the already-typed text they should replace, or null
- * when the cursor is not inside a string value that begins with "fake".
+ * when the cursor is not inside a string value that is (heading toward) a faker
+ * type.
  *
- * Gating on the full "fake" prefix keeps the ~250 suggestions out of ordinary
- * string values; it does not distinguish keys from values, so a key typed as
- * "fake…" would also see them.
+ * The gate matches a value that is a prefix of "fake" ("f", "fa", …) or already
+ * past it ("fake", "fake.person", …). Returning items from the very first
+ * character is deliberate — see the note in the provider — yet still keeps the
+ * ~250 suggestions out of ordinary strings, which rarely begin with "f". It
+ * does not distinguish keys from values, so a key typed as "fake…" sees them.
  */
 export const getFakerCompletions = (
   lineUpToCursor: string,
@@ -27,7 +30,15 @@ export const getFakerCompletions = (
   if (!openString) return null;
 
   const typed = openString[1];
-  if (!typed.startsWith("fake")) return null;
+  // Engage as soon as the value heads toward a faker type ("f", "fa", …) and
+  // stay engaged once past it ("fake", "fake.person", …). Returning items from
+  // the first character keeps this provider in Monaco's active suggest session
+  // so it keeps filtering as the value is typed; a provider that stays empty
+  // until "fake" is complete gets dropped from the session and is never
+  // re-queried (only a trigger character such as "." revives it) — which is why
+  // suggestions never appeared while adding a new value.
+  if (typed.length === 0) return null;
+  if (!"fake".startsWith(typed) && !typed.startsWith("fake")) return null;
 
   const items = FAKER_TYPES.filter((type) => type.startsWith(typed)).map(
     (type) => ({ type, description: FAKER_DESCRIPTIONS[type] }),
@@ -57,7 +68,10 @@ export const useFakerCompletions = () => {
         });
 
         const completion = getFakerCompletions(lineUpToCursor);
-        if (!completion) return { suggestions: [] };
+        // Stay `incomplete` even with nothing to offer so Monaco keeps this
+        // provider in the suggest session and asks again on the next keystroke
+        // (see the populated result below for why re-querying matters).
+        if (!completion) return { suggestions: [], incomplete: true };
 
         const { typed, items } = completion;
         const range = {
@@ -68,6 +82,11 @@ export const useFakerCompletions = () => {
         };
 
         return {
+          // `incomplete` re-queries this provider on every keystroke instead of
+          // letting Monaco cache one list and filter it itself. That keeps
+          // `range` in step with the growing value — essential once a "." is
+          // typed — so accepting a suggestion replaces the whole faker path.
+          incomplete: true,
           suggestions: items.map((item) => ({
             label: item.type,
             kind: monaco.languages.CompletionItemKind.Value,
