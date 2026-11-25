@@ -1,8 +1,18 @@
 import { Alert, Box } from "@mui/material";
-import Editor from "@monaco-editor/react";
+import Editor, { type BeforeMount } from "@monaco-editor/react";
 import { useState } from "react";
+import solarizedDarkTheme from "../../../config/solarizedDarkTheme";
+import solarizedLightTheme from "../../../config/solarizedLightTheme";
 import { useFakerCompletions } from "../../../hooks/fakerCompletions";
 import { useMonacoTheme } from "../../../hooks/monacoTheme";
+
+// Monaco only ships the "vs"/"vs-dark" themes, so register our custom ones
+// before the editor mounts; otherwise `theme="solarized-..."` silently falls
+// back to a built-in theme.
+const registerThemes: BeforeMount = (monaco) => {
+  monaco.editor.defineTheme("solarized-dark", solarizedDarkTheme);
+  monaco.editor.defineTheme("solarized-light", solarizedLightTheme);
+};
 
 interface JsonCodeEditorProps<T> {
   /** Object rendered as formatted JSON; the source of truth for the editor. */
@@ -46,6 +56,7 @@ const JsonCodeEditor = <T,>({
       >
         <Editor
           height="100%"
+          beforeMount={registerThemes}
           theme={monacoTheme}
           defaultLanguage="json"
           value={JSON.stringify(value, null, 2)}

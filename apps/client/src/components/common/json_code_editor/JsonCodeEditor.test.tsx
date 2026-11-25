@@ -14,27 +14,35 @@ vi.mock("@monaco-editor/react", () => ({
     onChange,
     onValidate,
     options,
+    beforeMount,
   }: {
     value?: string;
     onChange?: (value: string | undefined) => void;
     onValidate?: (markers: { message: string }[]) => void;
     options?: { ariaLabel?: string };
-  }) => (
-    <textarea
-      aria-label={options?.ariaLabel}
-      value={value}
-      onChange={(event) => {
-        const next = event.target.value;
-        onChange?.(next);
-        try {
-          JSON.parse(next);
-          onValidate?.([]);
-        } catch {
-          onValidate?.([{ message: "Invalid JSON" }]);
-        }
-      }}
-    />
-  ),
+    beforeMount?: (monaco: {
+      editor: { defineTheme: (name: string, data: unknown) => void };
+    }) => void;
+  }) => {
+    // Exercise theme registration the way the real editor does on mount.
+    beforeMount?.({ editor: { defineTheme: () => {} } });
+    return (
+      <textarea
+        aria-label={options?.ariaLabel}
+        value={value}
+        onChange={(event) => {
+          const next = event.target.value;
+          onChange?.(next);
+          try {
+            JSON.parse(next);
+            onValidate?.([]);
+          } catch {
+            onValidate?.([{ message: "Invalid JSON" }]);
+          }
+        }}
+      />
+    );
+  },
 }));
 
 describe("JsonCodeEditor", () => {
