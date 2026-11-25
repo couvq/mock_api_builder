@@ -5,6 +5,29 @@ import { userEvent } from "@testing-library/user-event/dist/cjs/setup/index.js";
 import { server } from "../../../test/server";
 import { http, HttpResponse } from "msw";
 
+// Monaco does not render a working editor in jsdom, so stand it in with a
+// controlled <textarea> that forwards its full value through `onChange`, just
+// as Monaco reports the whole document on each edit.
+vi.mock("@monaco-editor/react", () => ({
+  // The faker-completions hook calls useMonaco; return null so it no-ops here.
+  useMonaco: () => null,
+  default: ({
+    value,
+    onChange,
+    options,
+  }: {
+    value?: string;
+    onChange?: (value: string | undefined) => void;
+    options?: { ariaLabel?: string };
+  }) => (
+    <textarea
+      aria-label={options?.ariaLabel}
+      value={value}
+      onChange={(event) => onChange?.(event.target.value)}
+    />
+  ),
+}));
+
 const user = userEvent.setup();
 
 // The example-response tree opens only to its root by default (collapse={1} in
@@ -104,9 +127,9 @@ describe("Form", () => {
     const jsonEditor = screen.getByRole("textbox", {
       name: /responseSchemaEditor/i,
     });
-    await user.clear(jsonEditor);
-    await user.click(jsonEditor);
-    await user.paste('{"friends":["Alice","Bob"]}');
+    fireEvent.change(jsonEditor, {
+      target: { value: '{"friends":["Alice","Bob"]}' },
+    });
 
     const exampleResponse = expandExampleResponse();
     expect(await exampleResponse.findByText(/Alice/)).toBeInTheDocument();
@@ -122,9 +145,9 @@ describe("Form", () => {
     const jsonEditor = screen.getByRole("textbox", {
       name: /responseSchemaEditor/i,
     });
-    await user.clear(jsonEditor);
-    await user.click(jsonEditor);
-    await user.paste('{"greeting":"hello"}');
+    fireEvent.change(jsonEditor, {
+      target: { value: '{"greeting":"hello"}' },
+    });
 
     await user.click(screen.getByRole("button", { name: /Regenerate/i }));
 

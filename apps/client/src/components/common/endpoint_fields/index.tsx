@@ -2,7 +2,7 @@ import { Grid, InputAdornment, Typography } from "@mui/material";
 import { SelectElement, TextFieldElement } from "react-hook-form-mui";
 import DelayInput from "../delay_input";
 import StatusCodeInput from "../status_code_input";
-import { MOCK_API_BASE_URL } from "../endpoint_viewer";
+import { MOCK_API_BASE_URL } from "../../endpoint_viewer";
 
 // `EndpointConfig.method` only models these two, so the dropdown matches it.
 const HTTP_METHODS = ["GET", "POST"] as const;

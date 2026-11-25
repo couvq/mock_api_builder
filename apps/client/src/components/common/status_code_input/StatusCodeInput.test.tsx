@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event/dist/cjs/setup/index.js";
 import StatusCodeInput from ".";
-import renderWithProviders from "../../test/renderWithProviders";
+import renderWithProviders from "../../../test/renderWithProviders";
 
 const user = userEvent.setup();
 
