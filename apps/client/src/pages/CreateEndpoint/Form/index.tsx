@@ -8,8 +8,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { FormContainer } from "react-hook-form-mui";
 import { Link } from "react-router";
-import EndpointFields from "../../../components/endpoint_fields";
-import ResponseSchemaEditor from "../../../components/response_schema_editor";
+import EndpointFields from "../../../components/common/endpoint_fields";
+import ResponseSchemaEditor from "../../../components/common/response_schema_editor";
 import { createEndpoint } from "../../../api/endpoint";
 import { useToast } from "../../../hooks/toast";
 

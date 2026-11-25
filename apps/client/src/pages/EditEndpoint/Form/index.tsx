@@ -5,8 +5,8 @@ import { useState } from "react";
 import { FormContainer } from "react-hook-form-mui";
 import { Link } from "react-router";
 import { updateEndpoint } from "../../../api/endpoint";
-import EndpointFields from "../../../components/endpoint_fields";
-import ResponseSchemaEditor from "../../../components/response_schema_editor";
+import EndpointFields from "../../../components/common/endpoint_fields";
+import ResponseSchemaEditor from "../../../components/common/response_schema_editor";
 import {
   useEditor,
   useEditorDispatch,

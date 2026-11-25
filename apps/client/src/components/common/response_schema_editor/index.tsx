@@ -17,8 +17,8 @@ import { useState } from "react";
 import {
   DEFAULT_FAKER_TYPE,
   FAKER_TYPE_SELECTION,
-} from "../../config/jsonEditor";
-import { useJsonEditorTheme } from "../../hooks/jsonEditorTheme";
+} from "../../../config/jsonEditor";
+import { useJsonEditorTheme } from "../../../hooks/jsonEditorTheme";
 
 type SchemaViewMode = "tree" | "json";
 
@@ -133,6 +133,7 @@ const ResponseSchemaEditor = ({
               }
             />
           ) : (
+            // TODO - refactor to use monaco editor in place of <TextField /> component https://www.npmjs.com/package/@monaco-editor/react
             <TextField
               fullWidth
               multiline

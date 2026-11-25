@@ -31,8 +31,8 @@ import {
   DEFAULT_FAKER_TYPE,
   FAKER_TYPE_SELECTION,
 } from "../../config/jsonEditor";
-import DelayInput from "../delay_input";
-import StatusCodeInput from "../status_code_input";
+import DelayInput from "../common/delay_input";
+import StatusCodeInput from "../common/status_code_input";
 
 export const MOCK_API_BASE_URL = "http://localhost:3000/v1/api/mock_api/";
 
