@@ -26,7 +26,7 @@ type SchemaViewMode = "tree" | "json";
 // too small when the schema is short.
 const editorFillSx = {
   flexGrow: 1,
-  minHeight: 400,
+  minHeight: 300,
   "& .jer-editor-container": { height: "100%" },
 };
 

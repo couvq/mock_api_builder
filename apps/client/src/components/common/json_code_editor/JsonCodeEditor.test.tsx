@@ -3,21 +3,34 @@ import JsonCodeEditor from ".";
 import renderWithProviders from "../../../test/renderWithProviders";
 
 // Monaco does not render a working editor in jsdom, so stand it in with a
-// controlled <textarea> that forwards edits through the same `onChange` prop.
+// controlled <textarea>. It also stands in for Monaco's JSON validation,
+// reporting a marker through `onValidate` when the text does not parse, as the
+// real editor does.
 vi.mock("@monaco-editor/react", () => ({
   default: ({
     value,
     onChange,
+    onValidate,
     options,
   }: {
     value?: string;
     onChange?: (value: string | undefined) => void;
+    onValidate?: (markers: { message: string }[]) => void;
     options?: { ariaLabel?: string };
   }) => (
     <textarea
       aria-label={options?.ariaLabel}
       value={value}
-      onChange={(event) => onChange?.(event.target.value)}
+      onChange={(event) => {
+        const next = event.target.value;
+        onChange?.(next);
+        try {
+          JSON.parse(next);
+          onValidate?.([]);
+        } catch {
+          onValidate?.([{ message: "Invalid JSON" }]);
+        }
+      }}
     />
   ),
 }));
@@ -61,7 +74,7 @@ describe("JsonCodeEditor", () => {
       target: { value: "{ not json" },
     });
 
-    expect(screen.getByRole("alert")).toHaveTextContent("Invalid JSON");
+    expect(screen.getByRole("alert")).toHaveTextContent("Error with schema");
     expect(onChange).not.toHaveBeenCalled();
   });
 

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Alert, Box } from "@mui/material";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import { useMonacoTheme } from "../../../hooks/monacoTheme";
@@ -12,59 +12,47 @@ interface JsonCodeEditorProps<T> {
   label?: string;
 }
 
-/**
- * Monaco-based editor for editing a JSON value as formatted, multi-line text.
- * Theme-aware via `useMonacoTheme` and sized to fill its container. Parsing is
- * contained here: valid edits are parsed and reported through `onChange`, while
- * invalid JSON surfaces an inline error and is not propagated, so the parent
- * only ever receives well-formed values.
- */
 const JsonCodeEditor = <T,>({
   value,
   onChange,
   label,
 }: JsonCodeEditorProps<T>) => {
   const monacoTheme = useMonacoTheme();
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const handleChange = (nextText: string | undefined) => {
+    // Monaco reports the full document on every edit, but only hands us text;
+    // parse it to lift the object up. Invalid JSON is surfaced by onValidate
+    // (and Monaco's inline markers), so there is nothing to propagate here.
     try {
       onChange(JSON.parse(nextText ?? "") as T);
-      setError(null);
     } catch {
-      setError("Invalid JSON");
+      /* ignored: reported via onValidate */
     }
   };
 
   return (
-    <Box sx={{ position: "relative", height: "100%" }}>
-      <Editor
-        height="100%"
-        theme={monacoTheme}
-        defaultLanguage="json"
-        value={JSON.stringify(value, null, 2)}
-        onChange={handleChange}
-        options={{ ariaLabel: label }}
-      />
-      {error && (
-        // Overlaid (not in flow) so an invalid-JSON message never changes the
-        // editor's height, keeping it aligned with the sibling preview panel.
-        <Typography
-          role="alert"
-          variant="caption"
-          sx={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            px: 1,
-            py: 0.5,
-            color: "error.contrastText",
-            bgcolor: "error.main",
-          }}
-        >
-          {error}
-        </Typography>
+    // Column layout keeps the panel at its full height (so it stays aligned
+    // with the sibling preview); when the alert appears the editor shrinks to
+    // make room for it rather than being overlaid by it.
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+        <Editor
+          height="100%"
+          theme={monacoTheme}
+          defaultLanguage="json"
+          value={JSON.stringify(value, null, 2)}
+          onChange={handleChange}
+          onValidate={(markers) =>
+            setErrors(markers.map((marker) => marker.message))
+          }
+          options={{ ariaLabel: label }}
+        />
+      </Box>
+      {errors.length > 0 && (
+        <Alert severity="error" variant="filled" sx={{ borderRadius: 0 }}>
+          Error with schema
+        </Alert>
       )}
     </Box>
   );
